@@ -1,6 +1,6 @@
 import java.util.ArrayList;
 
-public class Signature
+public class Subjects
 {
     private int id;
     private String name;
@@ -9,9 +9,10 @@ public class Signature
     private double evaluated;
     private ArrayList<Grade> grades_list;
 
-    public Signature(int id,
-                     String name,
-                     int credits)
+    // constructor
+    public Subjects(int id,
+                    String name,
+                    int credits)
     {
         this.id = id;
         this.name = name;
@@ -66,12 +67,15 @@ public class Signature
         this.evaluated += increase;
     }
 
+
     // method to increase the percentage evaluated
     public void decrease_evaluated(double decrease)
     {
         this.evaluated -= decrease;
     }
 
+
+    // method to calculate the total score of the signature
     public void calculate_total()
     {
         this.total = 0;
@@ -81,8 +85,7 @@ public class Signature
         }
     }
 
-
-// setters and getters
+    // setters and getters
     public void set_id(int id)
     {
         this.id = id;

@@ -2,14 +2,15 @@ import java.util.InputMismatchException;
 import java.util.Locale;
 import java.util.Scanner;
 
+
 public class Main
 {
     Scanner input = new Scanner(System.in).useLocale(Locale.US);
-    Signature english = new Signature(204028,
+    Subjects english = new Subjects(204028,
             "English IV",
             2);
 
-
+    // constructor
     public Main()
     {
         while(true)

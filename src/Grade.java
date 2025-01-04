@@ -3,7 +3,7 @@ public class Grade
     private double score;
     private double percentage;
 
-// constructor
+    // constructor
     public Grade(double score, double percentage)
     {
         this.score = score;
@@ -16,8 +16,7 @@ public class Grade
         this.score = this.get_score() * (this.get_percentage()/100);
     }
 
-// setters and getters
-
+    // setters and getters
     public void set_score(double score)
     {
         this.score = score;
