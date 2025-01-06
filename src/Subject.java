@@ -5,6 +5,7 @@ public class Subjects
     private int id;
     private String name;
     private int credits;
+    private double max_score;
     private double total;
     private double evaluated;
     private ArrayList<Grade> grades_list;
@@ -17,25 +18,11 @@ public class Subjects
         this.id = id;
         this.name = name;
         this.credits = credits;
+        this.max_score = 5.0;
         this.total = 0;
         this.evaluated = 0;
         grades_list = new ArrayList<>();
     }
-
-
-    // method to verify if the number is positive
-    public boolean limit_verification(double number, double limit)
-    {
-        return number > limit;
-    }
-
-
-    // method to verify if the number is positive
-    public boolean negative_verification(double number)
-    {
-        return number < 0;
-    }
-
 
     // method to add a grade on the grades list
     public void add_grade(double score, double percentage)
@@ -102,6 +89,15 @@ public class Subjects
     public int get_credits()
     {
         return credits;
+    }
+
+    public void set_max_score(double max_score)
+    {
+        this.max_score = max_score;
+    }
+    public double get_max_score()
+    {
+        return max_score;
     }
 
     public void set_total(double total)
