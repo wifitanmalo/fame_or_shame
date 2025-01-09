@@ -24,14 +24,17 @@ public class AddSubject
     // method to add a subject
     public void add_subject()
     {
-        SubjectMenu.panel_count++;
         JPanel panel = new JPanel();
         panel.setPreferredSize(new Dimension(400, 80));
-        panel.setBackground(Component.default_button_background);
+        panel.setBackground(WindowComponent.default_button_background);
         panel.setLayout(null);
 
+    // id of the subject
+        JLabel subject_id = new JLabel();
+        subject_id.setText(String.valueOf(id));
+
     // name of the subject
-        JLabel subject_name = Component.set_text((name),
+        JLabel subject_name = WindowComponent.set_text((name),
                                             10,
                                             10,
                                             260,
@@ -49,65 +52,67 @@ public class AddSubject
         }
         else
         {
-            size = Component.get_height(subject_name);
+            size = WindowComponent.get_height(subject_name);
         }
 
-        Component.configure_container(subject_name,
-                                        Component.default_font_foreground,
+        WindowComponent.configure_container(subject_name,
+                                        WindowComponent.default_font_foreground,
                                         1,
                                         size);
 
     // value of the total score
-        JLabel total_score = Component.set_text(("Total score: " + 0.0),
+        JLabel total_score = WindowComponent.set_text(("Total score: " + 0.0),
                                                 10,
-                                                Component.distance_y(subject_name, 2),
+                                                WindowComponent.distance_y(subject_name, 2),
                                                 350,
                                                 14);
-        Component.configure_container(total_score,
+        WindowComponent.configure_container(total_score,
                                     Color.lightGray,
                                     2,
-                                    Component.get_height(total_score));
+                                    WindowComponent.get_height(total_score));
 
     // percentage of the total evaluated
-        JLabel total_evaluated = Component.set_text(("Total evaluated: " + 0.0 + "%"),
+        JLabel total_evaluated = WindowComponent.set_text(("Total evaluated: " + 0.0 + "%"),
                                                     10,
-                                                    Component.distance_y(total_score, 2),
+                                                    WindowComponent.distance_y(total_score, 2),
                                                     350,
                                                     14);
-        Component.configure_container(total_evaluated,
+        WindowComponent.configure_container(total_evaluated,
                                         Color.lightGray,
                                         2,
-                                        Component.get_height(total_evaluated));
+                                        WindowComponent.get_height(total_evaluated));
 
     // button to add a subject
-        JButton delete_button = Component.set_button("x",
+        JButton delete_button = WindowComponent.set_button("x",
                                                     320,
                                                     (30) / 2,
                                                     50,
                                                     50,
-                                                    Component.default_frame_background);
-        Component.configure_container(delete_button,
-                                        Component.default_font_foreground,
+                                                    WindowComponent.default_frame_background);
+        WindowComponent.configure_container(delete_button,
+                                        WindowComponent.default_font_foreground,
                                         1,
                                         18);
-        Component.button_event(delete_button,
-                                () -> new DeleteSubject(panel, subject_panel),
+        WindowComponent.button_event(delete_button,
+                                () -> new DeleteSubject(Integer.parseInt(subject_id.getText()),
+                                                        panel,
+                                                        subject_panel),
                                 delete_button.getBackground(),
                                 Color.decode("#FF0000"));
 
     // button to confirm the subject creation
-        JButton grade_button = Component.set_button("+",
+        JButton grade_button = WindowComponent.set_button("+",
                                                     (delete_button.getX()-60),
                                                     delete_button.getY(),
                                                     50,
                                                     50,
-                                                    Component.default_frame_background);
-        Component.configure_container(grade_button,
-                                        Component.default_font_foreground,
+                                                    WindowComponent.default_frame_background);
+        WindowComponent.configure_container(grade_button,
+                                        WindowComponent.default_font_foreground,
                                         1,
                                         18);
-        Component.button_event(grade_button,
-                                () -> System.out.println("Nothing here yet"),
+        WindowComponent.button_event(grade_button,
+                                () -> System.out.println("PANEL: "+SubjectMenu.panel_count+" - TOTAL CREDITS: "+Management.signed_credits),
                                 grade_button.getBackground(),
                                 Color.decode("#00FF00"));
 
@@ -121,8 +126,13 @@ public class AddSubject
         // add the panel to the subject panel
         subject_panel.add(panel);
 
-        // reload the panel to show the changes
-        Component.reload(subject_panel);
+        // increase the amount of panels
+        SubjectMenu.panel_count++;
 
+        // increase the amount of signed credits
+        Management.signed_credits+=credits;
+
+        // reload the panel to show the changes
+        WindowComponent.reload(subject_panel);
     }
 }

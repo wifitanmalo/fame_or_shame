@@ -3,15 +3,13 @@ import java.util.ArrayList;
 
 public class Management
 {
-    private int total_credits;
+    public static int signed_credits = 0;
     public static final int max_credits = 21;
-    private Subject subject;
     private ArrayList<Subject> subjects_list;
 
     // constructor
     public Management()
     {
-        this.total_credits = 0;
         subjects_list = new ArrayList<>();
     }
 
@@ -32,35 +30,20 @@ public class Management
         subjects_list.remove(index);
     }
 
-    // method to use a Subject object
-    public void use_subject(int index)
+    // method to get the subject index based in their id
+    public int get_index(int id)
     {
-        this.subject = subjects_list.get(index);
-    }
-
-    // method to use a Subject object
-    public Subject get_subject()
-    {
-        return subject;
+        for(int i=0; i<subjects_list.size(); i++)
+        {
+            if(id == subjects_list.get(i).get_id())
+            {
+                return i;
+            }
+        }
+        return 0;
     }
 
     // setters and getters
-
-    // method to increase the percentage evaluated
-    public void increase_credits(int increase)
-    {
-        this.total_credits += increase;
-    }
-    // method to increase the percentage evaluated
-    public void decrease_credits(int decrease)
-    {
-        this.total_credits -= decrease;
-    }
-    public int get_total_credits()
-    {
-        return total_credits;
-    }
-
     public void set_subjects_list(ArrayList<Subject> subjects_list)
     {
         this.subjects_list = subjects_list;

@@ -3,7 +3,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import javax.swing.*;
 
-public class Component
+public class WindowComponent
 {
     public static final String default_font = "Verdana";
     public static final Color default_font_foreground = Color.decode("#FFFFFF");
@@ -81,7 +81,7 @@ public class Component
                                             int size)
     {
         container.setForeground(color);
-        container.setFont(new Font(Component.default_font,
+        container.setFont(new Font(WindowComponent.default_font,
                                     style,
                                     size));
     }

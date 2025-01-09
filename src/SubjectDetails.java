@@ -34,107 +34,107 @@ public class SubjectDetails extends JPanel
     private void initialize_panel()
     {
         setLayout(null);
-        setBackground(Component.default_frame_background);
+        setBackground(WindowComponent.default_frame_background);
         setBounds(0, 0, Main.width, Main.height);
 
-        JPanel input_panel = Component.set_panel(Component.default_button_background,
+        JPanel input_panel = WindowComponent.set_panel(WindowComponent.default_button_background,
                                                     (Main.width-300)/2,
                                                     30,
                                                     300,
                                                     300);
 
     // back button settings
-        JButton back_button = Component.set_button("Back",
+        JButton back_button = WindowComponent.set_button("Back",
                 30,
                 (Main.height - 84) / 2,
                 84,
                 84,
-                Component.default_button_background);
-        Component.configure_container(back_button,
-                Component.default_font_foreground,
+                WindowComponent.default_button_background);
+        WindowComponent.configure_container(back_button,
+                WindowComponent.default_font_foreground,
                 1,
                 18);
-        Component.button_event(back_button,
+        WindowComponent.button_event(back_button,
                 back_event,
-                Component.default_button_background,
-                Component.default_pressed_button_background);
+                WindowComponent.default_button_background,
+                WindowComponent.default_pressed_button_background);
 
     // add button settings
-        JButton add_button = Component.set_button("Add",
+        JButton add_button = WindowComponent.set_button("Add",
                 480,
                 back_button.getY(),
                 84,
                 84,
-                Component.default_button_background);
-        Component.configure_container(add_button,
-                Component.default_font_foreground,
+                WindowComponent.default_button_background);
+        WindowComponent.configure_container(add_button,
+                WindowComponent.default_font_foreground,
                 1,
                 18);
-        Component.button_event(add_button,
+        WindowComponent.button_event(add_button,
                 this::add_validation,
-                Component.default_button_background,
+                WindowComponent.default_button_background,
                 Color.decode("#00FF00"));
 
     // id text settings
-        JLabel id_text = Component.set_text("ID",
+        JLabel id_text = WindowComponent.set_text("ID",
                                             (input_panel.getWidth()-260)/2,
                                             20,
                                             260,
                                             18);
-        Component.configure_container(id_text,
-                                        Component.default_font_foreground,
+        WindowComponent.configure_container(id_text,
+                                        WindowComponent.default_font_foreground,
                                         1,
-                                        Component.get_height(id_text));
+                                        WindowComponent.get_height(id_text));
 
     // id field settings
-        id_box = Component.set_text_field(id_text.getX(),
-                                            Component.distance_y(id_text,20),
+        id_box = WindowComponent.set_text_field(id_text.getX(),
+                                            WindowComponent.distance_y(id_text,20),
                                             260,
                                             30);
-        Component.configure_container(id_box,
-                Component.default_button_background,
+        WindowComponent.configure_container(id_box,
+                WindowComponent.default_button_background,
                 1,
                 18);
 
     // id text settings
-        JLabel name_text = Component.set_text("Name",
+        JLabel name_text = WindowComponent.set_text("Name",
                 (input_panel.getWidth()-260)/2,
-                Component.distance_y(id_box,20),
+                WindowComponent.distance_y(id_box,20),
                 260,
                 18);
-        Component.configure_container(name_text,
-                                        Component.default_font_foreground,
+        WindowComponent.configure_container(name_text,
+                                        WindowComponent.default_font_foreground,
                                         1,
-                                        Component.get_height(name_text));
+                                        WindowComponent.get_height(name_text));
 
     // name field settings
-        name_box = Component.set_text_field(id_text.getX(),
-                                            Component.distance_y(name_text,20),
+        name_box = WindowComponent.set_text_field(id_text.getX(),
+                                            WindowComponent.distance_y(name_text,20),
                                             260,
                                             30);
-        Component.configure_container(name_box,
-                                    Component.default_button_background,
+        WindowComponent.configure_container(name_box,
+                                    WindowComponent.default_button_background,
                                     1,
                                     18);
 
     // credits text settings
-        JLabel credits_text = Component.set_text("Credits",
+        JLabel credits_text = WindowComponent.set_text("Credits",
                                                 (input_panel.getWidth()-260)/2,
-                                                Component.distance_y(name_box,20),
+                                                WindowComponent.distance_y(name_box,20),
                                                 260,
                                                 18);
-        Component.configure_container(credits_text,
-                                        Component.default_font_foreground,
+        WindowComponent.configure_container(credits_text,
+                                        WindowComponent.default_font_foreground,
                                         1,
-                                        Component.get_height(credits_text));
+                                        WindowComponent.get_height(credits_text));
 
     // credits filed settings
-        credits_box = Component.set_text_field(id_text.getX(),
-                                                Component.distance_y(credits_text,20),
+        credits_box = WindowComponent.set_text_field(id_text.getX(),
+                                                WindowComponent.distance_y(credits_text,20),
                                                 260,
                                                 30);
-        Component.configure_container(credits_box,
-                                    Component.default_button_background,
+        WindowComponent.configure_container(credits_box,
+                                    WindowComponent.default_button_background,
                                     1,
                                     18);
 
@@ -163,14 +163,21 @@ public class SubjectDetails extends JPanel
             if(name_box.getText().length() > 50)
             {
                 JOptionPane.showMessageDialog(this,
-                        "Name cannot be HIGHER than: 50",
+                        "Name cannot be HIGHER than 50",
                         "Input error",
                         JOptionPane.ERROR_MESSAGE);
             }
-            else if(credits > Management.max_credits)
+            else if(name_box.getText().length() > 50)
             {
                 JOptionPane.showMessageDialog(this,
-                                            "Credits cannot be HIGHER than: " + Management.max_credits,
+                        "Name cannot be HIGHER than 50",
+                        "Input error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            else if(Management.signed_credits+credits > Management.max_credits)
+            {
+                JOptionPane.showMessageDialog(this,
+                                            "Signed credits cannot be HIGHER than " + Management.max_credits,
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
@@ -184,8 +191,8 @@ public class SubjectDetails extends JPanel
                                 name,
                                 credits,
                                 subject_panel);
-                Component.switch_panel(this, main_panel);
-                Component.reload(main_panel);
+                WindowComponent.switch_panel(this, main_panel);
+                WindowComponent.reload(main_panel);
             }
             else
             {
