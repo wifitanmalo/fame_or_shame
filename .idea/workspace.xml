@@ -6,9 +6,18 @@
   <component name="ChangeListManager">
     <list default="true" id="c9a42afd-cdd4-4fa5-9ea9-a489e599093d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Grade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Grade.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AddGradeView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/AddGradeView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AddSubject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/AddSubject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Component.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Component.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DeleteGradeView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DeleteGradeView.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DeleteSubject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DeleteSubject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/GradeMenuView.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GradeMenuView.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Main.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Main.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/Signature.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Subjects.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Management.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Management.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Subject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Subject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SubjectDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SubjectDetails.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SubjectMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SubjectMenu.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/ValidationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ValidationUtils.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -36,17 +45,22 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Application.Main.executor": "Run",
-    "Notification.DisplayName-DoNotAsk-WindowsDefender": "Microsoft Defender configuration",
-    "Notification.DoNotAsk-WindowsDefender": "true",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "master",
-    "kotlin-language-version-configured": "true",
-    "last_opened_file_path": "C:/Users/Sapoc/Downloads/Javeriana/fame_or_shame"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Application.Main.executor&quot;: &quot;Run&quot;,
+    &quot;Notification.DisplayName-DoNotAsk-WindowsDefender&quot;: &quot;Microsoft Defender configuration&quot;,
+    &quot;Notification.DoNotAsk-WindowsDefender&quot;: &quot;true&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;master&quot;,
+    &quot;kotlin-language-version-configured&quot;: &quot;true&quot;,
+    &quot;last_opened_file_path&quot;: &quot;C:/Users/Sapoc/Downloads/Javeriana/fame_or_shame&quot;
   }
-}]]></component>
+}</component>
+  <component name="RecentsManager">
+    <key name="CopyClassDialog.RECENTS_KEY">
+      <recent name="" />
+    </key>
+  </component>
   <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
   <component name="TaskManager">
     <task active="true" id="Default" summary="Default task">

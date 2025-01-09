@@ -1,61 +1,70 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
-public class SubjectMenuView extends JFrame
+public class SubjectMenu extends JFrame
 {
     public static int panel_count = 0;
-    private Management management = new Management();
+    private final Management management = new Management();
+    private final Container container;
+    private JPanel main_panel;
     private SubjectDetails subject_details;
 
-    private JPanel main_panel;
+    // constructor
+    public SubjectMenu(Container container)
+    {
+        this.container = container;
+        initialize_panel();
+    }
 
     // method to initialize the main panel
-    public void initialize_panel(Container contentPane)
+    public void initialize_panel()
     {
-        Component component = new Component();
-        main_panel = new JPanel();
-        main_panel.setLayout(null);
-        main_panel.setBackground(Component.default_frame_background);
-        main_panel.setBounds(0,
-                0,
-                Main.width,
-                Main.height);
+    // create the main panel
+        main_panel = Component.set_panel(Component.default_frame_background,
+                                        0,
+                                        0,
+                                        Main.width,
+                                        Main.height);
 
+    // create the subject panel
         JPanel subject_panel = new JPanel();
-        JScrollPane scroll_bar = component.set_scroll_bar(subject_panel,
+        JScrollPane scroll_subject = Component.set_scroll_bar(subject_panel,
                 155,
                 30,
                 400,
                 300);
-        main_panel.add(scroll_bar);
 
         subject_details = new SubjectDetails(management,
-                                            component,
                                             main_panel,
                                             subject_panel,
-                                            () -> component.switch_panel(subject_details, main_panel),
-                                            () -> component.switch_panel(subject_details, main_panel));
+                                            () -> Component.switch_panel(subject_details, main_panel));
         subject_details.setVisible(false);
 
-        // button to add a subject
-        JButton plus = component.set_button("+",
-                50,
-                (Main.height-50) / 2,
-                50,
-                50,
-                Component.default_button_background);
-        component.configure_container(plus,
-                                    Component.default_font_foreground,
-                                    1,
-                                    18);
-        component.button_event(plus,
-                () -> component.switch_panel(main_panel, subject_details),
-                Component.default_button_background,
-                Color.decode("#00FF00"));
+    // button to add a subject
+        JButton add_button = Component.set_button("+",
+                                                    50,
+                                                    (Main.height-50) / 2,
+                                                    50,
+                                                    50,
+                                                    Component.default_button_background);
+        Component.configure_container(add_button,
+                                        Component.default_font_foreground,
+                                        1,
+                                        18);
+        Component.button_event(add_button,
+                                () -> Component.switch_panel(main_panel, subject_details),
+                                Component.default_button_background,
+                                Color.decode("#00FF00"));
 
-        main_panel.add(plus);
-        contentPane.add(main_panel);
-        contentPane.add(subject_details);
-        component.reload(main_panel);
+    // add the components to the main panel
+        main_panel.add(scroll_subject);
+        main_panel.add(add_button);
+
+    // add the panels to the container
+        container.add(main_panel);
+        container.add(subject_details);
+
+    // reload the panel to show the changes
+        Component.reload(main_panel);
     }
 }

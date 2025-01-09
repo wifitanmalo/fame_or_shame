@@ -1,24 +1,23 @@
 import java.util.ArrayList;
 
-public class Subjects
+public class Subject
 {
     private int id;
     private String name;
     private int credits;
-    private double max_score;
+    public static final double max_score = 5.0;
     private double total;
     private double evaluated;
     private ArrayList<Grade> grades_list;
 
     // constructor
-    public Subjects(int id,
-                    String name,
-                    int credits)
+    public Subject(int id,
+                   String name,
+                   int credits)
     {
         this.id = id;
         this.name = name;
         this.credits = credits;
-        this.max_score = 5.0;
         this.total = 0;
         this.evaluated = 0;
         grades_list = new ArrayList<>();
@@ -33,13 +32,11 @@ public class Subjects
         increase_total(grade.get_score());
     }
 
-
     // method to delete a grade based in their position
     public void delete_grade(int index)
     {
         grades_list.remove(index);
     }
-
 
     // method to increase the total score
     public void increase_total(double increase)
@@ -47,13 +44,11 @@ public class Subjects
         this.total += increase;
     }
 
-
     // method to increase the percentage evaluated
     public void increase_evaluated(double increase)
     {
         this.evaluated += increase;
     }
-
 
     // method to increase the percentage evaluated
     public void decrease_evaluated(double decrease)
@@ -61,14 +56,13 @@ public class Subjects
         this.evaluated -= decrease;
     }
 
-
     // method to calculate the total score of the signature
     public void calculate_total()
     {
         this.total = 0;
-        for(int i=0; i<grades_list.size(); i++)
+        for (Grade grade : grades_list)
         {
-            this.total += grades_list.get(i).get_score();
+            this.total += grade.get_score();
         }
     }
 
@@ -82,6 +76,15 @@ public class Subjects
         return id;
     }
 
+    public void set_name(String name)
+    {
+        this.name = name;
+    }
+    public String get_name()
+    {
+        return name;
+    }
+
     public void set_credits(int credits)
     {
         this.credits = credits;
@@ -89,15 +92,6 @@ public class Subjects
     public int get_credits()
     {
         return credits;
-    }
-
-    public void set_max_score(double max_score)
-    {
-        this.max_score = max_score;
-    }
-    public double get_max_score()
-    {
-        return max_score;
     }
 
     public void set_total(double total)
