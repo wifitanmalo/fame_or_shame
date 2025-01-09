@@ -160,7 +160,21 @@ public class SubjectDetails extends JPanel
             String name = name_box.getText().trim();
             int credits = Integer.parseInt(credits_box.getText().trim());
 
-            if(!name.isEmpty())
+            if(name_box.getText().length() > 50)
+            {
+                JOptionPane.showMessageDialog(this,
+                        "Name cannot be HIGHER than: 50",
+                        "Input error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            else if(credits > Management.max_credits)
+            {
+                JOptionPane.showMessageDialog(this,
+                                            "Credits cannot be HIGHER than: " + Management.max_credits,
+                                            "Input error",
+                                            JOptionPane.ERROR_MESSAGE);
+            }
+            else if(!name.isEmpty())
             {
                 manager.add_subject(id,
                                     name,

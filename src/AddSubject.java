@@ -4,18 +4,18 @@ import java.awt.*;
 public class AddSubject
 {
     private final int id;
-    private final String subject_name;
+    private final String name;
     private final int credits;
     private final JPanel subject_panel;
 
     // constructor
     public AddSubject(int id,
-                      String subject_name,
+                      String name,
                       int credits,
                       JPanel subject_panel)
     {
         this.id = id;
-        this.subject_name = subject_name;
+        this.name = name;
         this.credits = credits;
         this.subject_panel = subject_panel;
         add_subject();
@@ -31,22 +31,38 @@ public class AddSubject
         panel.setLayout(null);
 
     // name of the subject
-        JLabel name = Component.set_text((subject_name + " (" + id + ")"),
+        JLabel subject_name = Component.set_text((name),
                                             10,
                                             10,
-                                            350,
+                                            260,
                                             16);
-        Component.configure_container(name,
+
+        // condition to set the subject_name size
+        int size;
+        if(name.length() > 24 && name.length() < 34)
+        {
+            size = 12;
+        }
+        else if(name.length() >= 34 && name.length() <= 50)
+        {
+            size = 8;
+        }
+        else
+        {
+            size = Component.get_height(subject_name);
+        }
+
+        Component.configure_container(subject_name,
                                         Component.default_font_foreground,
                                         1,
-                                        Component.get_height(name));
+                                        size);
 
     // value of the total score
         JLabel total_score = Component.set_text(("Total score: " + 0.0),
                                                 10,
-                                                Component.distance_y(name, 2),
+                                                Component.distance_y(subject_name, 2),
                                                 350,
-                                                16);
+                                                14);
         Component.configure_container(total_score,
                                     Color.lightGray,
                                     2,
@@ -57,7 +73,7 @@ public class AddSubject
                                                     10,
                                                     Component.distance_y(total_score, 2),
                                                     350,
-                                                    16);
+                                                    14);
         Component.configure_container(total_evaluated,
                                         Color.lightGray,
                                         2,
@@ -96,7 +112,7 @@ public class AddSubject
                                 Color.decode("#00FF00"));
 
         // add the components on the panel
-        panel.add(name);
+        panel.add(subject_name);
         panel.add(total_score);
         panel.add(total_evaluated);
         panel.add(delete_button);
