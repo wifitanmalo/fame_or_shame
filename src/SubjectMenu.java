@@ -3,7 +3,6 @@ import javax.swing.*;
 
 public class SubjectMenu extends JFrame
 {
-    public static int panel_count = 0;
     public static final Management management = new Management();
     private final Container container;
     private JPanel main_panel;
@@ -51,10 +50,10 @@ public class SubjectMenu extends JFrame
                                         1,
                                         18);
         WindowComponent.button_event(add_button,
-                                () -> WindowComponent.switch_panel(main_panel, subject_details),
-                                WindowComponent.default_button_background,
-                                Color.decode("#00FF00"));
-        add_button.setEnabled(Management.signed_credits != 21);
+                                    this::button_action,
+                                    WindowComponent.default_button_background,
+                                    Color.decode("#C5EF48"),
+                                    Color.decode("#9DD100"));
 
     // add the components to the main panel
         main_panel.add(scroll_subject);
@@ -66,5 +65,22 @@ public class SubjectMenu extends JFrame
 
     // reload the panel to show the changes
         WindowComponent.reload(main_panel);
+    }
+
+    // method to set the add action based in the amount of signed credits
+    public void button_action()
+    {
+        if(Management.signed_credits == Management.max_credits)
+        {
+            JOptionPane.showMessageDialog(this,
+                                                    "You have already reached the credit limit.",
+                                                    "Number limit",
+                                                    JOptionPane.ERROR_MESSAGE);
+        }
+        else
+        {
+            WindowComponent.switch_panel(main_panel, subject_details);
+        }
+
     }
 }

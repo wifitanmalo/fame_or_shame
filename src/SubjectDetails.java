@@ -53,23 +53,25 @@ public class SubjectDetails extends JPanel
         WindowComponent.button_event(back_button,
                 back_event,
                 WindowComponent.default_button_background,
+                WindowComponent.default_entered_button_background,
                 WindowComponent.default_pressed_button_background);
 
     // add button settings
         JButton add_button = WindowComponent.set_button("Add",
-                480,
-                back_button.getY(),
-                84,
-                84,
-                WindowComponent.default_button_background);
+                                                        480,
+                                                        back_button.getY(),
+                                                        84,
+                                                        84,
+                                                        WindowComponent.default_button_background);
         WindowComponent.configure_container(add_button,
-                WindowComponent.default_font_foreground,
-                1,
-                18);
+                                            WindowComponent.default_font_foreground,
+                                            1,
+                                            18);
         WindowComponent.button_event(add_button,
-                this::add_validation,
-                WindowComponent.default_button_background,
-                Color.decode("#00FF00"));
+                                    this::add_validation,
+                                    WindowComponent.default_button_background,
+                                    Color.decode("#C5EF48"),
+                                    Color.decode("#9DD100"));
 
     // id text settings
         JLabel id_text = WindowComponent.set_text("ID",
@@ -161,17 +163,17 @@ public class SubjectDetails extends JPanel
             if(SubjectMenu.management.subject_exists(id))
             {
                 JOptionPane.showMessageDialog(this,
-                        "Subject already exists.",
-                        "Input error",
-                        JOptionPane.ERROR_MESSAGE);
+                                            "Subject already exists.",
+                                            "Input error",
+                                            JOptionPane.ERROR_MESSAGE);
             }
             // name box is empty
             else if(name.isEmpty())
             {
                 JOptionPane.showMessageDialog(this,
-                        "Name cannot be EMPTY.",
-                        "Input error",
-                        JOptionPane.ERROR_MESSAGE);
+                                            "Name cannot be EMPTY.",
+                                            "Input error",
+                                            JOptionPane.ERROR_MESSAGE);
             }
             // name length is higher than 50 characters
             else if(name_box.getText().length() > 50)
@@ -185,7 +187,7 @@ public class SubjectDetails extends JPanel
             else if(Management.signed_credits+credits > Management.max_credits)
             {
                 JOptionPane.showMessageDialog(this,
-                                            "Signed credits cannot be HIGHER than " + Management.max_credits,
+                                            "Credits cannot be HIGHER than " + Management.max_credits + ".",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }

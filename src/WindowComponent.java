@@ -8,7 +8,8 @@ public class WindowComponent
     public static final String default_font = "Verdana";
     public static final Color default_font_foreground = Color.decode("#FFFFFF");
     public static final Color default_button_background = Color.decode("#3D3D3D");
-    public static final Color default_pressed_button_background = Color.decode("#4D5156");
+    public static final Color default_entered_button_background = Color.decode("#4D5156");
+    public static final Color default_pressed_button_background = Color.decode("#AAAAAA");
     public static final Color default_frame_background = Color.decode("#1F1F1F");
 
     // method to add a panel
@@ -117,42 +118,41 @@ public class WindowComponent
         return button;
     }
 
-    // method to set the event of the button
+    // method to set a button event
     public static void button_event(JButton button,
                                     Runnable function,
                                     Color idle_color,
+                                    Color enter_color,
                                     Color pressed_color)
     {
+        button.addActionListener(e -> function.run());
+
         button.addMouseListener(new MouseAdapter()
         {
             @Override
-            public void mouseClicked(MouseEvent e)
-            {
-                function.run();
-            }
-
-            @Override
             public void mouseEntered(MouseEvent e)
             {
+                button.setBackground(enter_color);
                 button.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
-                button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
-            }
-
-            @Override
-            public void mouseReleased(MouseEvent e)
-            {
                 button.setBackground(idle_color);
+                button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
 
             @Override
             public void mousePressed(MouseEvent e)
             {
                 button.setBackground(pressed_color);
+            }
+
+            @Override
+            public void mouseReleased(MouseEvent e)
+            {
+                button.setBackground(idle_color);
             }
         });
     }

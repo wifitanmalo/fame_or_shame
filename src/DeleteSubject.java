@@ -1,5 +1,4 @@
 import javax.swing.*;
-import java.awt.*;
 
 public class DeleteSubject
 {
@@ -27,7 +26,6 @@ public class DeleteSubject
                                                     JOptionPane.YES_NO_OPTION);
         if(choice == JOptionPane.YES_OPTION)
         {
-            SubjectMenu.panel_count--;
             int index = SubjectMenu.management.get_index(subject_id);
             int credits = SubjectMenu.management.get_subjects_list().get(index).get_credits();
             Management.signed_credits-=credits;
