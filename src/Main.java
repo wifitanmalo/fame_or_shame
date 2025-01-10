@@ -9,7 +9,8 @@ public class Main extends JFrame
     public Main()
     {
         initialize_window();
-        new SubjectMenu(this.getContentPane());
+        WindowComponent.set_container(this.getContentPane());
+        new SubjectMenu();
     }
 
     // method to run the main window

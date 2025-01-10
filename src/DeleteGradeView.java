@@ -11,9 +11,9 @@ public class DeleteGradeView
     {
         this.subject = subject;
         this.input = input;
-        delete_menu();
     }
 
+    /*
     // method to show the delete menu
     public void delete_menu()
     {
@@ -53,4 +53,6 @@ public class DeleteGradeView
             }
         }
     }
+
+     */
 }

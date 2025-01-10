@@ -11,9 +11,9 @@ public class AddGradeView
     {
         this.subject = subject;
         this.input = input;
-        add_menu();
     }
 
+    /*
     // method to show the add menu
     public void add_menu()
     {
@@ -61,4 +61,6 @@ public class AddGradeView
             }
         }
     }
+
+     */
 }

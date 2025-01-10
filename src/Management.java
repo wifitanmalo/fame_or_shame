@@ -22,11 +22,13 @@ public class Management
                                     name,
                                     credits);
         subjects_list.add(subject);
+        signed_credits += credits;
     }
 
     // method to delete a subject based in their position
     public void delete_subject(int index)
     {
+        signed_credits -= subjects_list.get(index).get_credits();
         subjects_list.remove(index);
     }
 

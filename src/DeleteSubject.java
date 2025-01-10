@@ -27,13 +27,12 @@ public class DeleteSubject
         if(choice == JOptionPane.YES_OPTION)
         {
             int index = SubjectMenu.management.get_index(subject_id);
-            int credits = SubjectMenu.management.get_subjects_list().get(index).get_credits();
-            Management.signed_credits-=credits;
 
-            SubjectMenu.management.delete_subject(index);
+            // remove the subject from the panel and the list
             subject_panel.remove(to_delete);
+            SubjectMenu.management.delete_subject(index);
 
-            // Recarga el panel para reflejar los cambios
+            // reload the panel to show the changes
             WindowComponent.reload(subject_panel);
         }
     }

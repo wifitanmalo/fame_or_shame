@@ -4,7 +4,6 @@ import javax.swing.*;
 public class SubjectDetails extends JPanel
 {
     // panels
-    private final JPanel main_panel;
     private final JPanel subject_panel;
 
     // text boxes
@@ -12,17 +11,10 @@ public class SubjectDetails extends JPanel
     private JTextField name_box;
     private JTextField credits_box;
 
-    // back event
-    private final Runnable back_event;
-
     // constructor
-    public SubjectDetails(JPanel main_panel,
-                          JPanel subject_panel,
-                          Runnable back_event)
+    public SubjectDetails(JPanel subject_panel)
     {
-        this.main_panel = main_panel;
         this.subject_panel = subject_panel;
-        this.back_event = back_event;
         initialize_panel();
     }
 
@@ -31,7 +23,10 @@ public class SubjectDetails extends JPanel
     {
         setLayout(null);
         setBackground(WindowComponent.default_frame_background);
-        setBounds(0, 0, Main.width, Main.height);
+        setBounds(0,
+                    0,
+                    Main.width,
+                    Main.height);
 
         JPanel input_panel = WindowComponent.set_panel(WindowComponent.default_button_background,
                                                     (Main.width-300)/2,
@@ -41,32 +36,40 @@ public class SubjectDetails extends JPanel
 
     // back button settings
         JButton back_button = WindowComponent.set_button("Back",
-                30,
-                (Main.height - 84) / 2,
-                84,
-                84,
-                WindowComponent.default_button_background);
+                                                        34,
+                                                        (Main.height - 84) / 2,
+                                                        78,
+                                                        50,
+                                                        WindowComponent.default_button_background);
         WindowComponent.configure_container(back_button,
-                WindowComponent.default_font_foreground,
-                1,
-                18);
+                                            WindowComponent.default_font_foreground,
+                                            1,
+                                            16);
         WindowComponent.button_event(back_button,
-                back_event,
-                WindowComponent.default_button_background,
-                WindowComponent.default_entered_button_background,
-                WindowComponent.default_pressed_button_background);
+                                    () ->
+                                    {
+                                        WindowComponent.switch_panel(SubjectMenu.subject_details,
+                                                                    SubjectMenu.main_panel);
+                                        // clear the text boxes
+                                        WindowComponent.clear_box(id_box);
+                                        WindowComponent.clear_box(name_box);
+                                        WindowComponent.clear_box(credits_box);
+                                    },
+                                    WindowComponent.default_button_background,
+                                    WindowComponent.default_entered_button_background,
+                                    WindowComponent.default_pressed_button_background);
 
     // add button settings
         JButton add_button = WindowComponent.set_button("Add",
                                                         480,
                                                         back_button.getY(),
-                                                        84,
-                                                        84,
+                                                        78,
+                                                        50,
                                                         WindowComponent.default_button_background);
         WindowComponent.configure_container(add_button,
                                             WindowComponent.default_font_foreground,
                                             1,
-                                            18);
+                                            16);
         WindowComponent.button_event(add_button,
                                     this::add_validation,
                                     WindowComponent.default_button_background,
@@ -78,7 +81,7 @@ public class SubjectDetails extends JPanel
                                             (input_panel.getWidth()-260)/2,
                                             20,
                                             260,
-                                            18);
+                                            22);
         WindowComponent.configure_container(id_text,
                                         WindowComponent.default_font_foreground,
                                         1,
@@ -86,7 +89,7 @@ public class SubjectDetails extends JPanel
 
     // id field settings
         id_box = WindowComponent.set_text_field(id_text.getX(),
-                                            WindowComponent.distance_y(id_text,20),
+                                            WindowComponent.negative_y(id_text,20),
                                             260,
                                             30);
         WindowComponent.configure_container(id_box,
@@ -97,9 +100,9 @@ public class SubjectDetails extends JPanel
     // id text settings
         JLabel name_text = WindowComponent.set_text("Name",
                 (input_panel.getWidth()-260)/2,
-                WindowComponent.distance_y(id_box,20),
+                WindowComponent.negative_y(id_box,20),
                 260,
-                18);
+                22);
         WindowComponent.configure_container(name_text,
                                         WindowComponent.default_font_foreground,
                                         1,
@@ -107,7 +110,7 @@ public class SubjectDetails extends JPanel
 
     // name field settings
         name_box = WindowComponent.set_text_field(id_text.getX(),
-                                            WindowComponent.distance_y(name_text,20),
+                                            WindowComponent.negative_y(name_text,20),
                                             260,
                                             30);
         WindowComponent.configure_container(name_box,
@@ -118,9 +121,9 @@ public class SubjectDetails extends JPanel
     // credits text settings
         JLabel credits_text = WindowComponent.set_text("Credits",
                                                 (input_panel.getWidth()-260)/2,
-                                                WindowComponent.distance_y(name_box,20),
+                                                WindowComponent.negative_y(name_box,20),
                                                 260,
-                                                18);
+                                                22);
         WindowComponent.configure_container(credits_text,
                                         WindowComponent.default_font_foreground,
                                         1,
@@ -128,7 +131,7 @@ public class SubjectDetails extends JPanel
 
     // credits filed settings
         credits_box = WindowComponent.set_text_field(id_text.getX(),
-                                                WindowComponent.distance_y(credits_text,20),
+                                                WindowComponent.negative_y(credits_text,20),
                                                 260,
                                                 30);
         WindowComponent.configure_container(credits_box,
@@ -200,8 +203,8 @@ public class SubjectDetails extends JPanel
                                 name,
                                 credits,
                                 subject_panel);
-                WindowComponent.switch_panel(this, main_panel);
-                WindowComponent.reload(main_panel);
+                WindowComponent.switch_panel(this, SubjectMenu.main_panel);
+                WindowComponent.reload(SubjectMenu.main_panel);
             }
         }
         // error in the id or credits values
@@ -214,8 +217,8 @@ public class SubjectDetails extends JPanel
         }
 
         // clear the text boxes
-        id_box.setText("");
-        name_box.setText("");
-        credits_box.setText("");
+        WindowComponent.clear_box(id_box);
+        WindowComponent.clear_box(name_box);
+        WindowComponent.clear_box(credits_box);
     }
 }

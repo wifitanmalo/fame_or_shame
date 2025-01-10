@@ -12,6 +12,20 @@ public class WindowComponent
     public static final Color default_pressed_button_background = Color.decode("#AAAAAA");
     public static final Color default_frame_background = Color.decode("#1F1F1F");
 
+    public static Container current_container;
+
+    // method to set a container
+    public static void set_container(Container container)
+    {
+        current_container = container;
+    }
+
+    // method to get a container
+    public static Container get_container()
+    {
+        return current_container;
+    }
+
     // method to add a panel
     public static JPanel set_panel(Color color,
                                     int x,
@@ -72,7 +86,13 @@ public class WindowComponent
     // method to get the label height
     public static int get_height(Container container)
     {
-        return container.getHeight()-4;
+        return container.getHeight()-6;
+    }
+
+    // method to clear the text boxes
+    public static void clear_box(JTextField text_box)
+    {
+        text_box.setText("");
     }
 
     // method to configure a container
@@ -163,8 +183,13 @@ public class WindowComponent
         return (container.getX()+container.getWidth()) + distance;
     }
 
-    // method to move a container in y
-    public static int distance_y(Container container, int distance)
+    // method to move a container in positive y
+    public static int positive_y(Container container, int distance)
+    {
+        return (container.getY()-container.getHeight()) - distance;
+    }
+    // method to move a container in negative y
+    public static int negative_y(Container container, int distance)
     {
         return (container.getY()+container.getHeight()) + distance;
     }

@@ -7,6 +7,7 @@ public class AddSubject
     private final String name;
     private final int credits;
     private final JPanel subject_panel;
+    public static GradeMenu grade_details;
 
     // constructor
     public AddSubject(int id,
@@ -38,7 +39,7 @@ public class AddSubject
                                             10,
                                             10,
                                             260,
-                                            16);
+                                            18);
 
         WindowComponent.configure_container(subject_name,
                                         WindowComponent.default_font_foreground,
@@ -48,9 +49,9 @@ public class AddSubject
     // value of the total score
         JLabel total_score = WindowComponent.set_text(("Total score: " + 0.0),
                                                 10,
-                                                WindowComponent.distance_y(subject_name, 2),
+                                                WindowComponent.negative_y(subject_name, 2),
                                                 350,
-                                                14);
+                                                16);
         WindowComponent.configure_container(total_score,
                                             Color.lightGray,
                                             2,
@@ -59,9 +60,9 @@ public class AddSubject
     // percentage of the total evaluated
         JLabel total_evaluated = WindowComponent.set_text(("Total evaluated: " + 0.0 + "%"),
                                                             10,
-                                                            WindowComponent.distance_y(total_score, 2),
+                                                            WindowComponent.negative_y(total_score, 2),
                                                             350,
-                                                            14);
+                                                            16);
         WindowComponent.configure_container(total_evaluated,
                                             Color.lightGray,
                                             2,
@@ -87,6 +88,10 @@ public class AddSubject
                                     Color.decode("#FF1D18"));
 
     // button to confirm the subject creation
+        grade_details = new GradeMenu();
+        grade_details.setVisible(false);
+        WindowComponent.get_container().add(grade_details);
+
         JButton grade_button = WindowComponent.set_button("+",
                                                             (delete_button.getX()-60),
                                                             delete_button.getY(),
@@ -98,7 +103,7 @@ public class AddSubject
                                             1,
                                             18);
         WindowComponent.button_event(grade_button,
-                                    () -> System.out.println("SIGNED CREDITS: "+Management.signed_credits+ " - TOTAL CREDITS: "+Management.max_credits),
+                                    () -> WindowComponent.switch_panel(SubjectMenu.main_panel, grade_details),
                                     grade_button.getBackground(),
                                     Color.decode("#C5EF48"),
                                     Color.decode("#9DD100"));
@@ -112,9 +117,6 @@ public class AddSubject
 
         // add the panel to the subject panel
         subject_panel.add(panel);
-
-        // increase the amount of signed credits
-        Management.signed_credits+=credits;
 
         // reload the panel to show the changes
         WindowComponent.reload(subject_panel);
