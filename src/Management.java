@@ -43,6 +43,19 @@ public class Management
         return 0;
     }
 
+    // method to verify if a subject already exists
+    public boolean subject_exists(int id)
+    {
+        for (Subject subject : subjects_list)
+        {
+            if (id == subject.get_id())
+            {
+                return true;
+            }
+        }
+        return false;
+    }
+
     // setters and getters
     public void set_subjects_list(ArrayList<Subject> subjects_list)
     {

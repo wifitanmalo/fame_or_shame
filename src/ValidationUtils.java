@@ -11,10 +11,4 @@ public class ValidationUtils
     {
         return number > limit;
     }
-
-    // method to verify if the current id exists
-    public static boolean id_exists(double current, double id)
-    {
-        return current == id;
-    }
 }

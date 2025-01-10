@@ -15,15 +15,11 @@ public class SubjectDetails extends JPanel
     // back event
     private final Runnable back_event;
 
-    private final Management manager;
-
     // constructor
-    public SubjectDetails(Management manager,
-                            JPanel main_panel,
-                            JPanel subject_panel,
-                            Runnable back_event)
+    public SubjectDetails(JPanel main_panel,
+                          JPanel subject_panel,
+                          Runnable back_event)
     {
-        this.manager = manager;
         this.main_panel = main_panel;
         this.subject_panel = subject_panel;
         this.back_event = back_event;
@@ -156,24 +152,36 @@ public class SubjectDetails extends JPanel
     {
         try
         {
+            // subject values
             int id = Integer.parseInt(id_box.getText().trim());
             String name = name_box.getText().trim();
             int credits = Integer.parseInt(credits_box.getText().trim());
 
-            if(name_box.getText().length() > 50)
+            // subject already exists
+            if(SubjectMenu.management.subject_exists(id))
             {
                 JOptionPane.showMessageDialog(this,
-                        "Name cannot be HIGHER than 50",
+                        "Subject already exists.",
                         "Input error",
                         JOptionPane.ERROR_MESSAGE);
             }
+            // name box is empty
+            else if(name.isEmpty())
+            {
+                JOptionPane.showMessageDialog(this,
+                        "Name cannot be EMPTY.",
+                        "Input error",
+                        JOptionPane.ERROR_MESSAGE);
+            }
+            // name length is higher than 50 characters
             else if(name_box.getText().length() > 50)
             {
                 JOptionPane.showMessageDialog(this,
-                        "Name cannot be HIGHER than 50",
+                        "Name cannot be HIGHER than 50.",
                         "Input error",
                         JOptionPane.ERROR_MESSAGE);
             }
+            // signed credits are higher than the limit
             else if(Management.signed_credits+credits > Management.max_credits)
             {
                 JOptionPane.showMessageDialog(this,
@@ -181,12 +189,11 @@ public class SubjectDetails extends JPanel
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
-            else if(!name.isEmpty())
+            else
             {
-                manager.add_subject(id,
-                                    name,
-                                    credits);
-
+                SubjectMenu.management.add_subject(id,
+                                                    name,
+                                                    credits);
                 new AddSubject(id,
                                 name,
                                 credits,
@@ -194,14 +201,8 @@ public class SubjectDetails extends JPanel
                 WindowComponent.switch_panel(this, main_panel);
                 WindowComponent.reload(main_panel);
             }
-            else
-            {
-                JOptionPane.showMessageDialog(this,
-                                            "Name cannot be EMPTY.",
-                                            "Input error",
-                                            JOptionPane.ERROR_MESSAGE);
-            }
         }
+        // error in the id or credits values
         catch (NumberFormatException e)
         {
             JOptionPane.showMessageDialog(this,

@@ -34,8 +34,7 @@ public class SubjectMenu extends JFrame
                 400,
                 300);
 
-        subject_details = new SubjectDetails(management,
-                                            main_panel,
+        subject_details = new SubjectDetails(main_panel,
                                             subject_panel,
                                             () -> WindowComponent.switch_panel(subject_details, main_panel));
         subject_details.setVisible(false);

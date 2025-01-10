@@ -112,9 +112,9 @@ public class AddSubject
                                         1,
                                         18);
         WindowComponent.button_event(grade_button,
-                                () -> System.out.println("PANEL: "+SubjectMenu.panel_count+" - TOTAL CREDITS: "+Management.signed_credits),
-                                grade_button.getBackground(),
-                                Color.decode("#00FF00"));
+                                    () -> System.out.println("PANEL: "+SubjectMenu.panel_count+" - TOTAL CREDITS: "+Management.signed_credits),
+                                    grade_button.getBackground(),
+                                    Color.decode("#00FF00"));
 
         // add the components on the panel
         panel.add(subject_name);
