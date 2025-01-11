@@ -68,10 +68,10 @@ public class AddSubject
                                             2,
                                             WindowComponent.get_height(total_evaluated));
 
-    // button to add a subject
+    // button to delete a subject
         JButton delete_button = WindowComponent.set_button("x",
                                                             320,
-                                                            (30) / 2,
+                                                            15,
                                                             50,
                                                             50,
                                                             WindowComponent.default_frame_background);
@@ -88,7 +88,7 @@ public class AddSubject
                                     Color.decode("#FF1D18"));
 
     // button to confirm the subject creation
-        grade_details = new GradeMenu();
+        grade_details = new GradeMenu(SubjectMenu.management.get_index(id));
         grade_details.setVisible(false);
         WindowComponent.get_container().add(grade_details);
 

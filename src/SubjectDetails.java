@@ -182,9 +182,9 @@ public class SubjectDetails extends JPanel
             else if(name_box.getText().length() > 50)
             {
                 JOptionPane.showMessageDialog(this,
-                        "Name cannot be HIGHER than 50.",
-                        "Input error",
-                        JOptionPane.ERROR_MESSAGE);
+                                            "Name cannot be HIGHER than 50.",
+                                            "Input error",
+                                            JOptionPane.ERROR_MESSAGE);
             }
             // signed credits are higher than the limit
             else if(Management.signed_credits+credits > Management.max_credits)

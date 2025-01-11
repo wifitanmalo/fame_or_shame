@@ -2,6 +2,7 @@ public class Grade
 {
     private double score;
     private double percentage;
+    private double final_grade;
 
     // constructor
     public Grade(double score, double percentage)
@@ -13,7 +14,11 @@ public class Grade
     // method to calculate the grade based on the percentage
     public void calculate_grade()
     {
-        this.score = this.get_score() * (this.get_percentage()/100);
+        this.final_grade = this.get_score() * (this.get_percentage()/100);
+    }
+    public double get_grade()
+    {
+        return final_grade;
     }
 
     // setters and getters

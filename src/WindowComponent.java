@@ -177,10 +177,15 @@ public class WindowComponent
         });
     }
 
-    // method to move a container in x
-    public static int distance_x(Container container, int distance)
+    // method to move a container in positive x
+    public static int positive_x(Container container, int distance)
     {
         return (container.getX()+container.getWidth()) + distance;
+    }
+    // method to move a container in negative x
+    public static int negative_x(Container container, int distance)
+    {
+        return (container.getX()-container.getWidth()) - distance;
     }
 
     // method to move a container in positive y

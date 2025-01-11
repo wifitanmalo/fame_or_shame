@@ -5,7 +5,8 @@ public class Subject
     private int id;
     private String name;
     private int credits;
-    public static double total_evaluated = 0;
+    private double total_score;
+    private double total_evaluated;
     public static final double max_score = 5.0;
     private ArrayList<Grade> grades_list;
 
@@ -17,6 +18,7 @@ public class Subject
         this.id = id;
         this.name = name;
         this.credits = credits;
+        this.total_evaluated = 0.0;
         grades_list = new ArrayList<>();
     }
 
@@ -27,26 +29,16 @@ public class Subject
         grade.calculate_grade();
         grades_list.add(grade);
         total_evaluated += percentage;
+        total_score += grade.get_grade();
     }
 
     // method to delete a grade based in their position
     public void delete_grade(int index)
     {
-        grades_list.remove(index);
         total_evaluated -= grades_list.get(index).get_percentage();
+        total_score -= grades_list.get(index).get_grade();
+        grades_list.remove(index);
     }
-
-    /* method to calculate the total score of the signature
-    public void calculate_total()
-    {
-        this.total = 0;
-        for (Grade grade : grades_list)
-        {
-            this.total += grade.get_score();
-        }
-    }
-
-     */
 
     // setters and getters
     public void set_id(int id)
@@ -83,5 +75,14 @@ public class Subject
     public ArrayList<Grade> get_grades_list()
     {
         return grades_list;
+    }
+
+    public void set_total_evaluated(double total_evaluated)
+    {
+        this.total_evaluated = total_evaluated;
+    }
+    public double get_total_evaluated()
+    {
+        return total_evaluated;
     }
 }

@@ -1,11 +1,16 @@
 import javax.swing.*;
 import java.awt.*;
+import java.util.ArrayList;
 
 public class GradeMenu extends JPanel
 {
+    private final int index;
+    private final ArrayList<AddGrade> gradeList = new ArrayList<>();
+
     // constructor
-    public GradeMenu()
+    public GradeMenu(int index)
     {
+        this.index = index;
         initialize_panel();
     }
 
@@ -67,7 +72,14 @@ public class GradeMenu extends JPanel
                                             1,
                                             18);
         WindowComponent.button_event(add_button,
-                                    this::button_action,
+                                    () ->
+                                    {
+                                        if (validate_grades())
+                                        {
+                                            AddGrade new_grade = new AddGrade(grade_panel);
+                                            gradeList.add(new_grade);
+                                        }
+                                    },
                                     WindowComponent.default_button_background,
                                     Color.decode("#C5EF48"),
                                     Color.decode("#9DD100"));
@@ -91,20 +103,72 @@ public class GradeMenu extends JPanel
         add(score_text);
     }
 
-    // method to set the add action based in the amount of signed credits
-    public void button_action()
+    private boolean validate_grades()
     {
-        if(Management.signed_credits == Management.max_credits)
-        {
-            JOptionPane.showMessageDialog(this,
-                    "You have already reached the credit limit.",
-                    "Number limit",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-        else
-        {
-            WindowComponent.switch_panel(this, SubjectMenu.main_panel);
-        }
+        double totalGrade = 0;
+        SubjectMenu.management.get_subjects_list().get(index).set_total_evaluated(0);
 
+        for (AddGrade grade : gradeList)
+        {
+            String scoreText = grade.get_score();
+            String percentageText = grade.get_percentage();
+
+            try
+            {
+                double score = Double.parseDouble(scoreText);
+                double percentage = Double.parseDouble(percentageText);
+                totalGrade = SubjectMenu.management.get_subjects_list().get(index).get_total_evaluated();
+
+                if(score<0 || percentage<=0)
+                {
+                    JOptionPane.showMessageDialog(this,
+                                                "Score and percentage must be positive numbers.",
+                                                "Input Error",
+                                                JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(totalGrade >= 100)
+                {
+                    JOptionPane.showMessageDialog(this,
+                                                "You have already evaluated 100% of the subject.",
+                                                "Number limit",
+                                                JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                SubjectMenu.management.get_subjects_list().get(index).add_grade(score, percentage);
+
+            } catch (NumberFormatException e)
+            {
+                JOptionPane.showMessageDialog(this,
+                                            "Please enter valid numbers for score and percentage.",
+                                            "Input Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+        System.out.println(totalGrade);
+        update_score(totalGrade);
+        return true;
     }
+
+    private void update_score(double current_score)
+    {
+        JLabel scoreLabel = (JLabel) getComponentByName("score_text");
+        if (scoreLabel != null)
+        {
+            scoreLabel.setText(String.format("%.2f", current_score));
+        }
+    }
+
+    private Component getComponentByName(String name)
+    {
+        for (Component component : getComponents())
+        {
+            if (name.equals(component.getName()))
+            {
+                return component;
+            }
+        }
+        return null;
+    }
+
 }
