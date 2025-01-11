@@ -163,7 +163,7 @@ public class SubjectDetails extends JPanel
             int credits = Integer.parseInt(credits_box.getText().trim());
 
             // subject already exists
-            if(SubjectMenu.management.subject_exists(id))
+            if(SubjectMenu.manager.subject_exists(id))
             {
                 JOptionPane.showMessageDialog(this,
                                             "Subject already exists.",
@@ -196,7 +196,7 @@ public class SubjectDetails extends JPanel
             }
             else
             {
-                SubjectMenu.management.add_subject(id,
+                SubjectMenu.manager.add_subject(id,
                                                     name,
                                                     credits);
                 new AddSubject(id,

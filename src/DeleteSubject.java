@@ -26,11 +26,11 @@ public class DeleteSubject
                                                     JOptionPane.YES_NO_OPTION);
         if(choice == JOptionPane.YES_OPTION)
         {
-            int index = SubjectMenu.management.get_index(subject_id);
+            int index = SubjectMenu.manager.get_index(subject_id);
 
             // remove the subject from the panel and the list
             subject_panel.remove(to_delete);
-            SubjectMenu.management.delete_subject(index);
+            SubjectMenu.manager.delete_subject(index);
 
             // reload the panel to show the changes
             WindowComponent.reload(subject_panel);

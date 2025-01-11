@@ -3,7 +3,7 @@ import javax.swing.*;
 
 public class SubjectMenu extends JFrame
 {
-    public static final Management management = new Management();
+    public static final Management manager = new Management();
     public static JPanel main_panel;
     public static SubjectDetails subject_details;
     private final Container container;

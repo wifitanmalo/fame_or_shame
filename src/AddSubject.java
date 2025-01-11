@@ -3,9 +3,13 @@ import java.awt.*;
 
 public class AddSubject
 {
+    // subject values
     private final int id;
     private final String name;
     private final int credits;
+
+    // subject panels
+    public static JLabel total_score;
     private final JPanel subject_panel;
     public static GradeMenu grade_details;
 
@@ -30,16 +34,16 @@ public class AddSubject
         panel.setBackground(WindowComponent.default_button_background);
         panel.setLayout(null);
 
-    // id of the subject
+        // id of the subject
         JLabel subject_id = new JLabel();
         subject_id.setText(String.valueOf(id));
 
     // name of the subject
-        JLabel subject_name = WindowComponent.set_text((name),
-                                            10,
-                                            10,
-                                            260,
-                                            18);
+        JLabel subject_name = WindowComponent.set_text(name,
+                                                        10,
+                                                        10,
+                                                        260,
+                                                        18);
 
         WindowComponent.configure_container(subject_name,
                                         WindowComponent.default_font_foreground,
@@ -47,25 +51,25 @@ public class AddSubject
                                         subject_name_size(subject_name));
 
     // value of the total score
-        JLabel total_score = WindowComponent.set_text(("Total score: " + 0.0),
+        total_score = WindowComponent.set_text(("Total score: 0.0"),
                                                 10,
                                                 WindowComponent.negative_y(subject_name, 2),
                                                 350,
                                                 16);
         WindowComponent.configure_container(total_score,
                                             Color.lightGray,
-                                            2,
+                                            3,
                                             WindowComponent.get_height(total_score));
 
     // percentage of the total evaluated
-        JLabel total_evaluated = WindowComponent.set_text(("Total evaluated: " + 0.0 + "%"),
+        JLabel total_evaluated = WindowComponent.set_text(("Total evaluated: 0.0%"),
                                                             10,
                                                             WindowComponent.negative_y(total_score, 2),
                                                             350,
                                                             16);
         WindowComponent.configure_container(total_evaluated,
                                             Color.lightGray,
-                                            2,
+                                            3,
                                             WindowComponent.get_height(total_evaluated));
 
     // button to delete a subject
@@ -80,15 +84,20 @@ public class AddSubject
                                             1,
                                             18);
         WindowComponent.button_event(delete_button,
-                                    () -> new DeleteSubject(Integer.parseInt(subject_id.getText()),
-                                                            panel,
-                                                            subject_panel),
+                                    () ->
+                                    {
+                                        new DeleteSubject(Integer.parseInt(subject_id.getText()),
+                                                                            panel,
+                                                                            subject_panel);
+                                    },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
 
     // button to confirm the subject creation
-        grade_details = new GradeMenu(SubjectMenu.management.get_index(id));
+        grade_details = new GradeMenu(SubjectMenu.manager.get_index(id),
+                                    total_score,
+                                    total_evaluated);
         grade_details.setVisible(false);
         WindowComponent.get_container().add(grade_details);
 

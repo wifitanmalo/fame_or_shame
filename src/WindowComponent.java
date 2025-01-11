@@ -1,6 +1,7 @@
 import java.awt.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.util.ArrayList;
 import javax.swing.*;
 
 public class WindowComponent
@@ -93,6 +94,22 @@ public class WindowComponent
     public static void clear_box(JTextField text_box)
     {
         text_box.setText("");
+    }
+
+    // method to change the text and color of the total score
+    public static void set_text_score(JLabel label,
+                                      double current_score)
+    {
+        label.setText(String.valueOf(Math.round(current_score*100.0) / 100.0));
+        if(current_score >= Subject.passing_score)
+        {
+            label.setForeground(Color.decode("#C5EF48"));
+        }
+        else
+        {
+            label.setForeground(Color.decode("#FF6865"));
+        }
+        WindowComponent.reload(label);
     }
 
     // method to configure a container

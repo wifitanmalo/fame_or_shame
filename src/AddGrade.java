@@ -4,14 +4,17 @@ import java.awt.*;
 public class AddGrade
 {
     private final JPanel grade_panel;
+    private final GradeMenu grade_menu;
 
     // text boxes
     private JTextField score_box;
     private JTextField percentage_box;
 
     // constructor
-    public AddGrade(JPanel grade_panel)
+    public AddGrade(GradeMenu grade_menu,
+                    JPanel grade_panel)
     {
+        this.grade_menu = grade_menu;
         this.grade_panel = grade_panel;
         add_grade();
     }
@@ -33,6 +36,7 @@ public class AddGrade
                                             WindowComponent.default_button_background,
                                             1,
                                             18);
+        score_box.addActionListener(e -> grade_menu.grade_validation());
 
         // score text
         JLabel score_text = WindowComponent.set_text("Score:",
@@ -54,6 +58,7 @@ public class AddGrade
                                             WindowComponent.default_button_background,
                                             1,
                                             18);
+        percentage_box.addActionListener(e -> grade_menu.grade_validation());
 
         // percentage text
         JLabel percentage_symbol = WindowComponent.set_text("%",
@@ -78,7 +83,13 @@ public class AddGrade
                                             1,
                                             18);
         WindowComponent.button_event(delete_button,
-                                    DeleteGradeView::new,
+                                    () ->
+                                    {
+                                        new DeleteGrade(this,
+                                                        grade_menu,
+                                                        panel,
+                                                        grade_panel);
+                                    },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
@@ -109,4 +120,5 @@ public class AddGrade
     {
         return percentage_box.getText().trim();
     }
+
 }

@@ -2,12 +2,20 @@ import java.util.ArrayList;
 
 public class Subject
 {
+    // subject values
     private int id;
     private String name;
     private int credits;
+
+    // performance values
     private double total_score;
     private double total_evaluated;
+
+    // value of the score limit
+    public static final double passing_score = 3.0;
     public static final double max_score = 5.0;
+
+    // grades list
     private ArrayList<Grade> grades_list;
 
     // constructor
@@ -18,6 +26,7 @@ public class Subject
         this.id = id;
         this.name = name;
         this.credits = credits;
+        this.total_score = 0.0;
         this.total_evaluated = 0.0;
         grades_list = new ArrayList<>();
     }
@@ -26,18 +35,7 @@ public class Subject
     public void add_grade(double score, double percentage)
     {
         Grade grade = new Grade(score, percentage);
-        grade.calculate_grade();
         grades_list.add(grade);
-        total_evaluated += percentage;
-        total_score += grade.get_grade();
-    }
-
-    // method to delete a grade based in their position
-    public void delete_grade(int index)
-    {
-        total_evaluated -= grades_list.get(index).get_percentage();
-        total_score -= grades_list.get(index).get_grade();
-        grades_list.remove(index);
     }
 
     // setters and getters
@@ -75,6 +73,15 @@ public class Subject
     public ArrayList<Grade> get_grades_list()
     {
         return grades_list;
+    }
+
+    public void set_total_score(double total_score)
+    {
+        this.total_score = total_score;
+    }
+    public double get_total_score()
+    {
+        return total_score;
     }
 
     public void set_total_evaluated(double total_evaluated)
