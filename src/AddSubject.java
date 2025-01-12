@@ -9,7 +9,7 @@ public class AddSubject
     // subject panels
     public static JLabel total_score;
     private final JPanel subject_panel;
-    public static GradeMenu grade_details;
+    public static GradeMenu grade_menu;
 
     // constructor
     public AddSubject(Subject subject,
@@ -32,7 +32,7 @@ public class AddSubject
         JLabel subject_id = new JLabel();
         subject_id.setText(String.valueOf(subject.get_id()));
 
-    // name of the subject
+        // name of the subject
         JLabel subject_name = WindowComponent.set_text(subject.get_name(),
                                                         10,
                                                         10,
@@ -44,7 +44,7 @@ public class AddSubject
                                         1,
                                         subject_name_size(subject_name));
 
-    // value of the total score
+        // text of the total score
         total_score = WindowComponent.set_text(("Total score: 0.0"),
                                                 10,
                                                 WindowComponent.negative_y(subject_name, 2),
@@ -55,7 +55,7 @@ public class AddSubject
                                             3,
                                             WindowComponent.get_height(total_score));
 
-    // percentage of the total evaluated
+        // text of the total percentage evaluated
         JLabel total_evaluated = WindowComponent.set_text(("Total evaluated: 0.0%"),
                                                             10,
                                                             WindowComponent.negative_y(total_score, 2),
@@ -66,7 +66,7 @@ public class AddSubject
                                             3,
                                             WindowComponent.get_height(total_evaluated));
 
-    // button to delete a subject
+        // button to delete a subject
         JButton delete_button = WindowComponent.set_button("x",
                                                             320,
                                                             15,
@@ -85,13 +85,14 @@ public class AddSubject
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
 
-    // button to confirm the subject creation
-        grade_details = new GradeMenu(SubjectMenu.manager.get_index(subject.get_id()),
+        // create the grade menu panel
+        grade_menu = new GradeMenu(SubjectMenu.manager.get_index(subject.get_id()),
                                     total_score,
                                     total_evaluated);
-        grade_details.setVisible(false);
-        WindowComponent.get_container().add(grade_details);
+        grade_menu.setVisible(false);
+        WindowComponent.get_container().add(grade_menu);
 
+        // button to enter on the grades menu
         JButton grade_button = WindowComponent.set_button("+",
                                                             (delete_button.getX()-60),
                                                             delete_button.getY(),
@@ -103,10 +104,7 @@ public class AddSubject
                                             1,
                                             18);
         WindowComponent.button_event(grade_button,
-                                    () ->
-                                    {
-                                        WindowComponent.switch_panel(SubjectMenu.main_panel, grade_details);
-                                    },
+                                    () -> WindowComponent.switch_panel(Main.subject_menu, grade_menu),
                                     grade_button.getBackground(),
                                     Color.decode("#C5EF48"),
                                     Color.decode("#9DD100"));
@@ -125,7 +123,7 @@ public class AddSubject
         WindowComponent.reload(subject_panel);
     }
 
-    // method to set the subject name size based in their length
+    // method to set the subject name size based in its length
     public int subject_name_size(JLabel subject_name)
     {
         if((subject.get_name().length()>24) && (subject.get_name().length()<34))

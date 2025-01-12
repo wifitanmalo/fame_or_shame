@@ -23,33 +23,30 @@ public class SubjectDetails extends JPanel
     {
         setLayout(null);
         setBackground(WindowComponent.default_frame_background);
-        setBounds(0,
-                    0,
-                    Main.width,
-                    Main.height);
+        setBounds(0, 0, Main.width, Main.height);
 
+        // create the panel with the text boxes
         JPanel input_panel = WindowComponent.set_panel(WindowComponent.default_button_background,
-                                                    (Main.width-300)/2,
-                                                    30,
-                                                    300,
-                                                    300);
+                                                        (this.getWidth()/2) - (300/2),
+                                                        (this.getHeight()-340)/2,
+                                                        300,
+                                                        300);
 
-    // back button settings
+        // create the back button
         JButton back_button = WindowComponent.set_button("Back",
-                                                        34,
-                                                        (Main.height - 84) / 2,
+                                                        input_panel.getX()/4,
+                                                        161,
                                                         78,
                                                         50,
                                                         WindowComponent.default_button_background);
         WindowComponent.configure_text(back_button,
-                                            WindowComponent.default_font_foreground,
-                                            1,
-                                            16);
+                                        WindowComponent.default_font_foreground,
+                                        1,
+                                        16);
         WindowComponent.button_event(back_button,
                                     () ->
                                     {
-                                        WindowComponent.switch_panel(SubjectMenu.subject_details,
-                                                                    SubjectMenu.main_panel);
+                                        WindowComponent.switch_panel(this, Main.subject_menu);
                                         // clear the text boxes
                                         WindowComponent.clear_box(id_box);
                                         WindowComponent.clear_box(name_box);
@@ -59,9 +56,9 @@ public class SubjectDetails extends JPanel
                                     WindowComponent.default_entered_button_background,
                                     WindowComponent.default_pressed_button_background);
 
-    // add button settings
+        // create the add button
         JButton add_button = WindowComponent.set_button("Add",
-                                                        480,
+                                                        WindowComponent.positive_x(input_panel, 29),
                                                         back_button.getY(),
                                                         78,
                                                         50,
@@ -199,11 +196,11 @@ public class SubjectDetails extends JPanel
             }
             else
             {
-                Subject new_subject = new(id, name, credits);
+                Subject new_subject = new Subject(id, name, credits);
                 SubjectMenu.manager.add_subject(new_subject);
                 new AddSubject(new Subject(id, name, credits), subject_panel);
-                WindowComponent.switch_panel(this, SubjectMenu.main_panel);
-                WindowComponent.reload(SubjectMenu.main_panel);
+                WindowComponent.switch_panel(this, Main.subject_menu);
+                WindowComponent.reload(Main.subject_menu);
             }
         }
         // error in the id or credits values

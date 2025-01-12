@@ -176,6 +176,18 @@ public class WindowComponent
         });
     }
 
+    // method to show a message
+    public static void message_box(Container container,
+                                    String message,
+                                    String title,
+                                    int option)
+    {
+        JOptionPane.showMessageDialog(container,
+                                    message,
+                                    title,
+                                    option);
+    }
+
     // methods to move a container in x
     public static int positive_x(Container container, int distance)
     {

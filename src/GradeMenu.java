@@ -45,7 +45,7 @@ public class GradeMenu extends JPanel
                                                                     400,
                                                                     270);
 
-        // back button settings
+        // button to back to the main menu
         JButton back_button = WindowComponent.set_button("Back",
                                                         50,
                                                         WindowComponent.negative_y(scroll_grade, -50),
@@ -57,7 +57,7 @@ public class GradeMenu extends JPanel
                                             1,
                                             16);
         WindowComponent.button_event(back_button,
-                                    () -> WindowComponent.switch_panel(this, SubjectMenu.main_panel),
+                                    () -> WindowComponent.switch_panel(this, Main.subject_menu),
                                     WindowComponent.default_button_background,
                                     WindowComponent.default_entered_button_background,
                                     WindowComponent.default_pressed_button_background);

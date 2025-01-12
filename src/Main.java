@@ -4,13 +4,14 @@ public class Main extends JFrame
 {
     // window size values
     public static final int width = 600, height = 400;
+    public static SubjectMenu subject_menu;
 
     // constructor
     public Main()
     {
         initialize_window();
         WindowComponent.set_container(this.getContentPane());
-        new SubjectMenu();
+        subject_menu = new SubjectMenu();
     }
 
     // method to run the main window
