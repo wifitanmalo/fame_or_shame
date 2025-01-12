@@ -18,17 +18,18 @@ public class Management
     }
 
     // method to add a subject on the subjects list
-    public void add_subject(Subject subject)
+    public void create_subject(Subject subject)
     {
         subjects_list.add(subject);
+        new SubjectPanel(subject);
         signed_credits += subject.get_credits();
     }
 
     // method to delete a subject by its position
-    public void delete_subject(int index)
+    public void delete_subject(Subject subject)
     {
-        signed_credits -= subjects_list.get(index).get_credits();
-        subjects_list.remove(index);
+        signed_credits -= subject.get_credits();
+        subjects_list.remove(subject);
     }
 
     // method to verify if a subject already exists

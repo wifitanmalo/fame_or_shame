@@ -7,8 +7,8 @@ public class SubjectMenu extends JPanel
     public static final Management manager = new Management();
 
     // subject panels
-    private final JPanel subject_panel;
-    private final SubjectDetails subject_details;
+    private static final JPanel subject_box = new JPanel();
+    private final CreateSubject create_subject;
 
     // container
     private final Container container;
@@ -16,9 +16,8 @@ public class SubjectMenu extends JPanel
     // constructor
     public SubjectMenu()
     {
-        this.subject_panel = new JPanel();
-        this.subject_details = new SubjectDetails(subject_panel);
-        subject_details.setVisible(false);
+        this.create_subject = new CreateSubject();
+        create_subject.setVisible(false);
         this.container = WindowComponent.get_container();
         initialize_panel();
     }
@@ -31,8 +30,8 @@ public class SubjectMenu extends JPanel
         setBackground(WindowComponent.default_frame_background);
         setBounds(0, 0, Main.width, Main.height);
 
-        // create the subject panel with scroll bar
-        JScrollPane scroll_subject = WindowComponent.set_scroll_bar(subject_panel,
+        // add a vertical scroll bar on the subject box
+        JScrollPane scroll_subject = WindowComponent.set_scroll_bar(subject_box,
                                                                     155,
                                                                     60,
                                                                     400,
@@ -40,8 +39,7 @@ public class SubjectMenu extends JPanel
 
         // subject example
         Subject uwu = new Subject(1, "uwu", 3);
-        new AddSubject(uwu, subject_panel);
-        SubjectMenu.manager.add_subject(uwu);
+        SubjectMenu.manager.create_subject(uwu);
 
         // subjects title
         JLabel subjects_title = WindowComponent.set_text("Subjects",
@@ -77,7 +75,7 @@ public class SubjectMenu extends JPanel
                                         }
                                         else
                                         {
-                                            WindowComponent.switch_panel(this, subject_details);
+                                            WindowComponent.switch_panel(this, create_subject);
                                         }
                                     },
                                     WindowComponent.default_button_background,
@@ -91,9 +89,15 @@ public class SubjectMenu extends JPanel
 
         // add the panels to the container
         container.add(this);
-        container.add(subject_details);
+        container.add(create_subject);
 
         // reload the panel to show the changes
         WindowComponent.reload(this);
+    }
+
+    // method to get the subject box
+    public static JPanel get_subject_box()
+    {
+        return subject_box;
     }
 }

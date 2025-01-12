@@ -17,11 +17,11 @@ public class GradeMenu extends JPanel
     private final ArrayList<AddGrade> grade_panel_list = new ArrayList<>();
 
     // constructor
-    public GradeMenu(int index,
+    public GradeMenu(Subject subject,
                      JLabel subject_score,
                      JLabel subject_percentage)
     {
-        this.index = index;
+        this.index = subject.get_id();
         this.subject_score = subject_score;
         this.subject_percentage = subject_percentage;
         initialize_panel();

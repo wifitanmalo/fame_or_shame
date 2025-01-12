@@ -1,20 +1,16 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class SubjectDetails extends JPanel
+public class CreateSubject extends JPanel
 {
-    // panels
-    private final JPanel subject_panel;
-
     // text boxes
-    private JTextField id_box;
-    private JTextField name_box;
-    private JTextField credits_box;
+    private JTextField id_text_box;
+    private JTextField name_text_box;
+    private JTextField credits_text_box;
 
     // constructor
-    public SubjectDetails(JPanel subject_panel)
+    public CreateSubject()
     {
-        this.subject_panel = subject_panel;
         initialize_panel();
     }
 
@@ -47,10 +43,7 @@ public class SubjectDetails extends JPanel
                                     () ->
                                     {
                                         WindowComponent.switch_panel(this, Main.subject_menu);
-                                        // clear the text boxes
-                                        WindowComponent.clear_box(id_box);
-                                        WindowComponent.clear_box(name_box);
-                                        WindowComponent.clear_box(credits_box);
+                                        clear_boxes();
                                     },
                                     WindowComponent.default_button_background,
                                     WindowComponent.default_entered_button_background,
@@ -73,68 +66,68 @@ public class SubjectDetails extends JPanel
                                     Color.decode("#C5EF48"),
                                     Color.decode("#9DD100"));
 
-    // id text settings
-        JLabel id_text = WindowComponent.set_text("ID",
-                                            (input_panel.getWidth()-260)/2,
-                                            20,
-                                            260,
-                                            22);
-        WindowComponent.configure_text(id_text,
+        // id title
+        JLabel id_title = WindowComponent.set_text("ID",
+                                                    (input_panel.getWidth()-260)/2,
+                                                    20,
+                                                    260,
+                                                    22);
+        WindowComponent.configure_text(id_title,
                                         WindowComponent.default_font_foreground,
                                         1,
-                                        WindowComponent.get_height(id_text));
+                                        WindowComponent.get_height(id_title));
 
-    // id field settings
-        id_box = WindowComponent.set_text_field("",
-                                            id_text.getX(),
-                                            WindowComponent.negative_y(id_text,20),
+        // id text box
+        id_text_box = WindowComponent.set_text_field("",
+                                            id_title.getX(),
+                                            WindowComponent.negative_y(id_title,20),
                                             260,
                                             30);
-        WindowComponent.configure_text(id_box,
+        WindowComponent.configure_text(id_text_box,
                 WindowComponent.default_button_background,
                 1,
                 18);
 
-    // id text settings
-        JLabel name_text = WindowComponent.set_text("Name",
-                (input_panel.getWidth()-260)/2,
-                WindowComponent.negative_y(id_box,20),
-                260,
-                22);
-        WindowComponent.configure_text(name_text,
+        // name title
+        JLabel name_title = WindowComponent.set_text("Name",
+                                                    (input_panel.getWidth()-260)/2,
+                                                    WindowComponent.negative_y(id_text_box,20),
+                                                    260,
+                                                    22);
+        WindowComponent.configure_text(name_title,
                                         WindowComponent.default_font_foreground,
                                         1,
-                                        WindowComponent.get_height(name_text));
+                                        WindowComponent.get_height(name_title));
 
-    // name field settings
-        name_box = WindowComponent.set_text_field("",
-                                            id_text.getX(),
-                                            WindowComponent.negative_y(name_text,20),
-                                            260,
-                                            30);
-        WindowComponent.configure_text(name_box,
+        // name text box
+        name_text_box = WindowComponent.set_text_field("",
+                                                    id_title.getX(),
+                                                    WindowComponent.negative_y(name_title,20),
+                                                    260,
+                                                    30);
+        WindowComponent.configure_text(name_text_box,
                                     WindowComponent.default_button_background,
                                     1,
                                     18);
 
-    // credits text settings
-        JLabel credits_text = WindowComponent.set_text("Credits",
+        // credits title
+        JLabel credits_title = WindowComponent.set_text("Credits",
                                                 (input_panel.getWidth()-260)/2,
-                                                WindowComponent.negative_y(name_box,20),
+                                                WindowComponent.negative_y(name_text_box,20),
                                                 260,
                                                 22);
-        WindowComponent.configure_text(credits_text,
+        WindowComponent.configure_text(credits_title,
                                         WindowComponent.default_font_foreground,
                                         1,
-                                        WindowComponent.get_height(credits_text));
+                                        WindowComponent.get_height(credits_title));
 
-    // credits filed settings
-        credits_box = WindowComponent.set_text_field("",
-                                                    id_text.getX(),
-                                                    WindowComponent.negative_y(credits_text,20),
+        // credits text box
+        credits_text_box = WindowComponent.set_text_field("",
+                                                    id_title.getX(),
+                                                    WindowComponent.negative_y(credits_title,20),
                                                     260,
                                                     30);
-        WindowComponent.configure_text(credits_box,
+        WindowComponent.configure_text(credits_text_box,
                                     WindowComponent.default_button_background,
                                     1,
                                     18);
@@ -145,76 +138,89 @@ public class SubjectDetails extends JPanel
         add(add_button);
 
         // add the components to the details panel
-        input_panel.add(id_text);
-        input_panel.add(id_box);
-        input_panel.add(name_text);
-        input_panel.add(name_box);
-        input_panel.add(credits_text);
-        input_panel.add(credits_box);
+        input_panel.add(id_title);
+        input_panel.add(id_text_box);
+        input_panel.add(name_title);
+        input_panel.add(name_text_box);
+        input_panel.add(credits_title);
+        input_panel.add(credits_text_box);
     }
 
+    // method to verify if the subject data is valid
     private void add_validation()
     {
         try
         {
-            // subject values
-            int id = Integer.parseInt(id_box.getText().trim());
-            String name = name_box.getText().trim();
-            int credits = Integer.parseInt(credits_box.getText().trim());
+            // get the values from the text boxes
+            int id = Integer.parseInt(id_text_box.getText().trim());
+            String name = name_text_box.getText().trim();
+            int credits = Integer.parseInt(credits_text_box.getText().trim());
 
-            // subject already exists
             if(SubjectMenu.manager.subject_exists(id))
             {
-                JOptionPane.showMessageDialog(this,
-                                            "Subject already exists.",
+                WindowComponent.message_box(this,
+                                            "ID already exists.",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
-            // name box is empty
+            else if(ValidationUtils.is_negative(id) || ValidationUtils.is_negative(credits))
+            {
+                WindowComponent.message_box(this,
+                                            "ID/Credits cannot be NEGATIVE.",
+                                            "Input error",
+                                            JOptionPane.ERROR_MESSAGE);
+            }
             else if(name.isEmpty())
             {
-                JOptionPane.showMessageDialog(this,
+                WindowComponent.message_box(this,
                                             "Name cannot be EMPTY.",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
-            // name length is higher than 50 characters
-            else if(name_box.getText().length() > 50)
+            else if(ValidationUtils.exceeds_limit(name_text_box.getText().length(), 50))
             {
-                JOptionPane.showMessageDialog(this,
-                                            "Name cannot be HIGHER than 50.",
+                WindowComponent.message_box(this,
+                                            "Name cannot be longer than 50 characters.",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
-            // signed credits are higher than the limit
-            else if(Management.signed_credits+credits > Management.max_credits)
+            else if(ValidationUtils.exceeds_limit(Management.signed_credits + credits,
+                                                Management.max_credits))
             {
-                JOptionPane.showMessageDialog(this,
+                WindowComponent.message_box(this,
                                             "Credits cannot be HIGHER than " + Management.max_credits + ".",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
             else
             {
+                // create the subject on the subject box/list
                 Subject new_subject = new Subject(id, name, credits);
-                SubjectMenu.manager.add_subject(new_subject);
-                new AddSubject(new Subject(id, name, credits), subject_panel);
+                SubjectMenu.manager.create_subject(new_subject);
+
+                // switch to the subject menu
                 WindowComponent.switch_panel(this, Main.subject_menu);
+
+                // reload the panel to show the new subject
                 WindowComponent.reload(Main.subject_menu);
             }
         }
-        // error in the id or credits values
         catch (NumberFormatException e)
         {
-            JOptionPane.showMessageDialog(this,
-                                        "ID and Credits must be POSITIVE integers.",
+            WindowComponent.message_box(this,
+                                        "ID/Credits value are not valid.",
                                         "Input error",
                                         JOptionPane.ERROR_MESSAGE);
         }
 
-        // clear the text boxes
-        WindowComponent.clear_box(id_box);
-        WindowComponent.clear_box(name_box);
-        WindowComponent.clear_box(credits_box);
+        clear_boxes();
+    }
+
+    // method to clear all the text boxes
+    public void clear_boxes()
+    {
+        WindowComponent.clear_box(id_text_box);
+        WindowComponent.clear_box(name_text_box);
+        WindowComponent.clear_box(credits_text_box);
     }
 }

@@ -2,38 +2,35 @@ import javax.swing.*;
 
 public class DeleteSubject
 {
-    private final int subject_id;
+    private final Subject subject;
     private final JPanel to_delete;
-    private final JPanel subject_panel;
+    private final JPanel subject_box;
 
     // constructor
-    public DeleteSubject(int subject_id,
-                         JPanel to_delete,
-                         JPanel subject_panel)
+    public DeleteSubject(Subject subject,
+                        JPanel to_delete)
     {
-        this.subject_id = subject_id;
+        this.subject = subject;
         this.to_delete = to_delete;
-        this.subject_panel = subject_panel;
+        this.subject_box = SubjectMenu.get_subject_box();
         delete_subject();
     }
 
     // method to delete a subject
     public void delete_subject()
     {
-        int choice = JOptionPane.showConfirmDialog(subject_panel,
-                                                    "Are you sure?",
+        int choice = JOptionPane.showConfirmDialog(subject_box,
+                                                    "You want to delete this subject?",
                                                     "Delete subject",
                                                     JOptionPane.YES_NO_OPTION);
         if(choice == JOptionPane.YES_OPTION)
         {
-            int index = SubjectMenu.manager.get_index(subject_id);
+            // remove the subject from the panel/list
+            subject_box.remove(to_delete);
+            SubjectMenu.manager.delete_subject(subject);
 
-            // remove the subject from the panel and the list
-            subject_panel.remove(to_delete);
-            SubjectMenu.manager.delete_subject(index);
-
-            // reload the panel to show the changes
-            WindowComponent.reload(subject_panel);
+            // reload the subject box to show the changes
+            WindowComponent.reload(subject_box);
         }
     }
 }

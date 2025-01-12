@@ -1,32 +1,30 @@
 import java.awt.*;
 import javax.swing.*;
 
-public class AddSubject
+public class SubjectPanel extends JPanel
 {
     // subject object
     private final Subject subject;
 
     // subject panels
     public static JLabel total_score;
-    private final JPanel subject_panel;
+    private final JPanel subject_box;
     public static GradeMenu grade_menu;
 
     // constructor
-    public AddSubject(Subject subject,
-                      JPanel subject_panel)
+    public SubjectPanel(Subject subject)
     {
         this.subject = subject;
-        this.subject_panel = subject_panel;
-        add_subject();
+        this.subject_box = SubjectMenu.get_subject_box();
+        subject_panel();
     }
 
     // method to add a subject
-    public void add_subject()
+    public void subject_panel()
     {
-        JPanel panel = new JPanel();
-        panel.setPreferredSize(new Dimension(400, 80));
-        panel.setBackground(WindowComponent.default_button_background);
-        panel.setLayout(null);
+        setPreferredSize(new Dimension(400, 80));
+        setBackground(WindowComponent.default_button_background);
+        setLayout(null);
 
         // id of the subject
         JLabel subject_id = new JLabel();
@@ -74,21 +72,17 @@ public class AddSubject
                                                             50,
                                                             WindowComponent.default_frame_background);
         WindowComponent.configure_text(delete_button,
-                                            WindowComponent.default_font_foreground,
-                                            1,
-                                            18);
+                                        WindowComponent.default_font_foreground,
+                                        1,
+                                        18);
         WindowComponent.button_event(delete_button,
-                                    () -> new DeleteSubject(Integer.parseInt(subject_id.getText()),
-                                                                            panel,
-                                                                            subject_panel),
+                                    () -> new DeleteSubject(subject, this),
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
 
         // create the grade menu panel
-        grade_menu = new GradeMenu(SubjectMenu.manager.get_index(subject.get_id()),
-                                    total_score,
-                                    total_evaluated);
+        grade_menu = new GradeMenu(subject, total_score, total_evaluated);
         grade_menu.setVisible(false);
         WindowComponent.get_container().add(grade_menu);
 
@@ -110,17 +104,17 @@ public class AddSubject
                                     Color.decode("#9DD100"));
 
         // add the components on the panel
-        panel.add(subject_name);
-        panel.add(total_score);
-        panel.add(total_evaluated);
-        panel.add(delete_button);
-        panel.add(grade_button);
+        add(subject_name);
+        add(total_score);
+        add(total_evaluated);
+        add(delete_button);
+        add(grade_button);
 
-        // add the panel to the subject panel
-        subject_panel.add(panel);
+        // add the panel to the subject box
+        subject_box.add(this);
 
         // reload the panel to show the changes
-        WindowComponent.reload(subject_panel);
+        WindowComponent.reload(subject_box);
     }
 
     // method to set the subject name size based in its length

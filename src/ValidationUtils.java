@@ -1,3 +1,5 @@
+import javax.swing.*;
+
 public class ValidationUtils
 {
     // method to verify if a number is positive
