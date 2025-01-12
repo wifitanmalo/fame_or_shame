@@ -1,12 +1,10 @@
-import javax.swing.*;
 import java.awt.*;
+import javax.swing.*;
 
 public class AddSubject
 {
-    // subject values
-    private final int id;
-    private final String name;
-    private final int credits;
+    // subject object
+    private final Subject subject;
 
     // subject panels
     public static JLabel total_score;
@@ -14,14 +12,10 @@ public class AddSubject
     public static GradeMenu grade_details;
 
     // constructor
-    public AddSubject(int id,
-                      String name,
-                      int credits,
+    public AddSubject(Subject subject,
                       JPanel subject_panel)
     {
-        this.id = id;
-        this.name = name;
-        this.credits = credits;
+        this.subject = subject;
         this.subject_panel = subject_panel;
         add_subject();
     }
@@ -36,16 +30,16 @@ public class AddSubject
 
         // id of the subject
         JLabel subject_id = new JLabel();
-        subject_id.setText(String.valueOf(id));
+        subject_id.setText(String.valueOf(subject.get_id()));
 
     // name of the subject
-        JLabel subject_name = WindowComponent.set_text(name,
+        JLabel subject_name = WindowComponent.set_text(subject.get_name(),
                                                         10,
                                                         10,
                                                         260,
                                                         18);
 
-        WindowComponent.configure_container(subject_name,
+        WindowComponent.configure_text(subject_name,
                                         WindowComponent.default_font_foreground,
                                         1,
                                         subject_name_size(subject_name));
@@ -56,7 +50,7 @@ public class AddSubject
                                                 WindowComponent.negative_y(subject_name, 2),
                                                 350,
                                                 16);
-        WindowComponent.configure_container(total_score,
+        WindowComponent.configure_text(total_score,
                                             Color.lightGray,
                                             3,
                                             WindowComponent.get_height(total_score));
@@ -67,7 +61,7 @@ public class AddSubject
                                                             WindowComponent.negative_y(total_score, 2),
                                                             350,
                                                             16);
-        WindowComponent.configure_container(total_evaluated,
+        WindowComponent.configure_text(total_evaluated,
                                             Color.lightGray,
                                             3,
                                             WindowComponent.get_height(total_evaluated));
@@ -79,23 +73,20 @@ public class AddSubject
                                                             50,
                                                             50,
                                                             WindowComponent.default_frame_background);
-        WindowComponent.configure_container(delete_button,
+        WindowComponent.configure_text(delete_button,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             18);
         WindowComponent.button_event(delete_button,
-                                    () ->
-                                    {
-                                        new DeleteSubject(Integer.parseInt(subject_id.getText()),
+                                    () -> new DeleteSubject(Integer.parseInt(subject_id.getText()),
                                                                             panel,
-                                                                            subject_panel);
-                                    },
+                                                                            subject_panel),
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
 
     // button to confirm the subject creation
-        grade_details = new GradeMenu(SubjectMenu.manager.get_index(id),
+        grade_details = new GradeMenu(SubjectMenu.manager.get_index(subject.get_id()),
                                     total_score,
                                     total_evaluated);
         grade_details.setVisible(false);
@@ -107,12 +98,15 @@ public class AddSubject
                                                             50,
                                                             50,
                                                             WindowComponent.default_frame_background);
-        WindowComponent.configure_container(grade_button,
+        WindowComponent.configure_text(grade_button,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             18);
         WindowComponent.button_event(grade_button,
-                                    () -> WindowComponent.switch_panel(SubjectMenu.main_panel, grade_details),
+                                    () ->
+                                    {
+                                        WindowComponent.switch_panel(SubjectMenu.main_panel, grade_details);
+                                    },
                                     grade_button.getBackground(),
                                     Color.decode("#C5EF48"),
                                     Color.decode("#9DD100"));
@@ -134,11 +128,11 @@ public class AddSubject
     // method to set the subject name size based in their length
     public int subject_name_size(JLabel subject_name)
     {
-        if((name.length()>24) && (name.length()<34))
+        if((subject.get_name().length()>24) && (subject.get_name().length()<34))
         {
             return 12;
         }
-        else if((name.length()>=34) && (name.length() <= 50))
+        else if((subject.get_name().length()>=34) && (subject.get_name().length() <= 50))
         {
             return 8;
         }

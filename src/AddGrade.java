@@ -6,14 +6,22 @@ public class AddGrade
     private final JPanel grade_panel;
     private final GradeMenu grade_menu;
 
+    // grade values
+    private String score;
+    private String percentage;
+
     // text boxes
     private JTextField score_box;
     private JTextField percentage_box;
 
     // constructor
-    public AddGrade(GradeMenu grade_menu,
+    public AddGrade(String score,
+                    String percentage,
+                    GradeMenu grade_menu,
                     JPanel grade_panel)
     {
+        this.score = score;
+        this.percentage = percentage;
         this.grade_menu = grade_menu;
         this.grade_panel = grade_panel;
         add_grade();
@@ -28,11 +36,12 @@ public class AddGrade
         panel.setLayout(null);
 
         // score field settings
-        score_box = WindowComponent.set_text_field(94,
+        score_box = WindowComponent.set_text_field(score,
+                                                    94,
                                                     25,
                                                     80,
                                                     30);
-        WindowComponent.configure_container(score_box,
+        WindowComponent.configure_text(score_box,
                                             WindowComponent.default_button_background,
                                             1,
                                             18);
@@ -44,17 +53,18 @@ public class AddGrade
                                                         score_box.getY(),
                                                         64,
                                                         30);
-        WindowComponent.configure_container(score_text,
+        WindowComponent.configure_text(score_text,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             18);
 
         // score field settings
-        percentage_box = WindowComponent.set_text_field(WindowComponent.positive_x(score_box, 16),
-                                                                                    score_box.getY(),
-                                                                                    score_box.getWidth(),
-                                                                                    score_box.getHeight());
-        WindowComponent.configure_container(percentage_box,
+        percentage_box = WindowComponent.set_text_field(percentage,
+                                                        WindowComponent.positive_x(score_box, 16),
+                                                        score_box.getY(),
+                                                        score_box.getWidth(),
+                                                        score_box.getHeight());
+        WindowComponent.configure_text(percentage_box,
                                             WindowComponent.default_button_background,
                                             1,
                                             18);
@@ -66,7 +76,7 @@ public class AddGrade
                                                             score_text.getY(),
                                                             50,
                                                             30);
-        WindowComponent.configure_container(percentage_symbol,
+        WindowComponent.configure_text(percentage_symbol,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             18);
@@ -78,7 +88,7 @@ public class AddGrade
                                                             50,
                                                             50,
                                                             WindowComponent.default_frame_background);
-        WindowComponent.configure_container(delete_button,
+        WindowComponent.configure_text(delete_button,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             18);

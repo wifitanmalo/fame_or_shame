@@ -2,20 +2,22 @@ import java.util.ArrayList;
 
 public class Subject
 {
-    // subject values
+    // attributes
     private int id;
     private String name;
     private int credits;
 
-    // performance values
+    // performance attributes
     private double total_score;
     private double total_evaluated;
 
-    // value of the score limit
+    // minimum score to approve
     public static final double passing_score = 3.0;
+
+    // maximum score possible
     public static final double max_score = 5.0;
 
-    // grades list
+    // grades lists
     private ArrayList<Grade> grades_list;
 
     // constructor
@@ -32,9 +34,8 @@ public class Subject
     }
 
     // method to add a grade on the grades list
-    public void add_grade(double score, double percentage)
+    public void add_grade(Grade grade)
     {
-        Grade grade = new Grade(score, percentage);
         grades_list.add(grade);
     }
 

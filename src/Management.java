@@ -1,10 +1,14 @@
 import java.util.ArrayList;
 
-
 public class Management
 {
+    // amount of signed credits
     public static int signed_credits = 0;
+
+    // maximum amount of credits
     public static final int max_credits = 21;
+
+    // subjects list
     private ArrayList<Subject> subjects_list;
 
     // constructor
@@ -14,35 +18,17 @@ public class Management
     }
 
     // method to add a subject on the subjects list
-    public void add_subject(int id,
-                            String name,
-                            int credits)
+    public void add_subject(Subject subject)
     {
-        Subject subject = new Subject(id,
-                                    name,
-                                    credits);
         subjects_list.add(subject);
-        signed_credits += credits;
+        signed_credits += subject.get_credits();
     }
 
-    // method to delete a subject based in their position
+    // method to delete a subject by its position
     public void delete_subject(int index)
     {
         signed_credits -= subjects_list.get(index).get_credits();
         subjects_list.remove(index);
-    }
-
-    // method to get the subject index based in their id
-    public int get_index(int id)
-    {
-        for(int i=0; i<subjects_list.size(); i++)
-        {
-            if(id == subjects_list.get(i).get_id())
-            {
-                return i;
-            }
-        }
-        return 0;
     }
 
     // method to verify if a subject already exists
@@ -66,6 +52,19 @@ public class Management
     public ArrayList<Subject> get_subjects_list()
     {
         return subjects_list;
+    }
+
+    // method to get the subject index based in their id
+    public int get_index(int id)
+    {
+        for(int i=0; i<subjects_list.size(); i++)
+        {
+            if(id == subjects_list.get(i).get_id())
+            {
+                return i;
+            }
+        }
+        return 0;
     }
 }
 

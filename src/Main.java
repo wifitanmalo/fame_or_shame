@@ -2,7 +2,7 @@ import javax.swing.*;
 
 public class Main extends JFrame
 {
-    // window size constants
+    // window size values
     public static final int width = 600, height = 400;
 
     // constructor

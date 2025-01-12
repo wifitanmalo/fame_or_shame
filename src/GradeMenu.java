@@ -7,6 +7,7 @@ public class GradeMenu extends JPanel
     private final int index;
     private double current_score;
     private double current_percentage;
+    public static JPanel grade_panel;
 
     // imported labels
     private JLabel score_text;
@@ -37,7 +38,7 @@ public class GradeMenu extends JPanel
                 Main.height);
 
         // create the grade panel
-        JPanel grade_panel = new JPanel();
+        grade_panel = new JPanel();
         JScrollPane scroll_grade = WindowComponent.set_scroll_bar(grade_panel,
                                                                     155,
                                                                     60,
@@ -51,7 +52,7 @@ public class GradeMenu extends JPanel
                                                         78,
                                                         50,
                                                         WindowComponent.default_button_background);
-        WindowComponent.configure_container(back_button,
+        WindowComponent.configure_text(back_button,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             16);
@@ -68,7 +69,7 @@ public class GradeMenu extends JPanel
                                                             78,
                                                             50,
                                                             WindowComponent.default_button_background);
-        WindowComponent.configure_container(total_button,
+        WindowComponent.configure_text(total_button,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             14);
@@ -96,14 +97,17 @@ public class GradeMenu extends JPanel
                                                         50,
                                                         50,
                                                         WindowComponent.default_button_background);
-        WindowComponent.configure_container(add_button,
+        WindowComponent.configure_text(add_button,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             18);
         WindowComponent.button_event(add_button,
                                     () ->
                                     {
-                                        AddGrade new_grade = new AddGrade(this, grade_panel);
+                                        AddGrade new_grade = new AddGrade("",
+                                                                        "",
+                                                                        this,
+                                                                        grade_panel);
                                         grade_panel_list.add(new_grade);
                                     },
                                     WindowComponent.default_button_background,
@@ -116,7 +120,7 @@ public class GradeMenu extends JPanel
                                                     scroll_grade.getY()-32,
                                                     scroll_grade.getWidth(),
                                                     26);
-        WindowComponent.configure_container(name_text,
+        WindowComponent.configure_text(name_text,
                                             WindowComponent.default_pressed_button_background,
                                             3,
                                             WindowComponent.get_height(name_text));
@@ -127,7 +131,7 @@ public class GradeMenu extends JPanel
                                                     WindowComponent.positive_y(add_button, 14),
                                                     80,
                                                     20);
-        WindowComponent.configure_container(score_text,
+        WindowComponent.configure_text(score_text,
                                             WindowComponent.default_pressed_button_background,
                                             3,
                                             WindowComponent.get_height(name_text));
@@ -141,6 +145,7 @@ public class GradeMenu extends JPanel
         add(score_text);
     }
 
+    // method to validate the grade
     public boolean grade_validation()
     {
         // reboot the grade values

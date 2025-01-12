@@ -41,7 +41,7 @@ public class SubjectDetails extends JPanel
                                                         78,
                                                         50,
                                                         WindowComponent.default_button_background);
-        WindowComponent.configure_container(back_button,
+        WindowComponent.configure_text(back_button,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             16);
@@ -66,7 +66,7 @@ public class SubjectDetails extends JPanel
                                                         78,
                                                         50,
                                                         WindowComponent.default_button_background);
-        WindowComponent.configure_container(add_button,
+        WindowComponent.configure_text(add_button,
                                             WindowComponent.default_font_foreground,
                                             1,
                                             16);
@@ -82,17 +82,18 @@ public class SubjectDetails extends JPanel
                                             20,
                                             260,
                                             22);
-        WindowComponent.configure_container(id_text,
+        WindowComponent.configure_text(id_text,
                                         WindowComponent.default_font_foreground,
                                         1,
                                         WindowComponent.get_height(id_text));
 
     // id field settings
-        id_box = WindowComponent.set_text_field(id_text.getX(),
+        id_box = WindowComponent.set_text_field("",
+                                            id_text.getX(),
                                             WindowComponent.negative_y(id_text,20),
                                             260,
                                             30);
-        WindowComponent.configure_container(id_box,
+        WindowComponent.configure_text(id_box,
                 WindowComponent.default_button_background,
                 1,
                 18);
@@ -103,17 +104,18 @@ public class SubjectDetails extends JPanel
                 WindowComponent.negative_y(id_box,20),
                 260,
                 22);
-        WindowComponent.configure_container(name_text,
+        WindowComponent.configure_text(name_text,
                                         WindowComponent.default_font_foreground,
                                         1,
                                         WindowComponent.get_height(name_text));
 
     // name field settings
-        name_box = WindowComponent.set_text_field(id_text.getX(),
+        name_box = WindowComponent.set_text_field("",
+                                            id_text.getX(),
                                             WindowComponent.negative_y(name_text,20),
                                             260,
                                             30);
-        WindowComponent.configure_container(name_box,
+        WindowComponent.configure_text(name_box,
                                     WindowComponent.default_button_background,
                                     1,
                                     18);
@@ -124,17 +126,18 @@ public class SubjectDetails extends JPanel
                                                 WindowComponent.negative_y(name_box,20),
                                                 260,
                                                 22);
-        WindowComponent.configure_container(credits_text,
+        WindowComponent.configure_text(credits_text,
                                         WindowComponent.default_font_foreground,
                                         1,
                                         WindowComponent.get_height(credits_text));
 
     // credits filed settings
-        credits_box = WindowComponent.set_text_field(id_text.getX(),
-                                                WindowComponent.negative_y(credits_text,20),
-                                                260,
-                                                30);
-        WindowComponent.configure_container(credits_box,
+        credits_box = WindowComponent.set_text_field("",
+                                                    id_text.getX(),
+                                                    WindowComponent.negative_y(credits_text,20),
+                                                    260,
+                                                    30);
+        WindowComponent.configure_text(credits_box,
                                     WindowComponent.default_button_background,
                                     1,
                                     18);
@@ -196,13 +199,9 @@ public class SubjectDetails extends JPanel
             }
             else
             {
-                SubjectMenu.manager.add_subject(id,
-                                                    name,
-                                                    credits);
-                new AddSubject(id,
-                                name,
-                                credits,
-                                subject_panel);
+                Subject new_subject = new(id, name, credits);
+                SubjectMenu.manager.add_subject(new_subject);
+                new AddSubject(new Subject(id, name, credits), subject_panel);
                 WindowComponent.switch_panel(this, SubjectMenu.main_panel);
                 WindowComponent.reload(SubjectMenu.main_panel);
             }
