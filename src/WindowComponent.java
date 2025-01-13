@@ -101,14 +101,12 @@ public class WindowComponent
     }
 
     // method to add a text field
-    public static JTextField set_text_field(String text,
-                                            int x,
+    public static JTextField set_text_field(int x,
                                             int y,
                                             int width,
                                             int height)
     {
         JTextField text_box = new JTextField();
-        text_box.setText(text);
         text_box.setBounds(x, y, width, height);
         return text_box;
     }

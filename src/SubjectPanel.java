@@ -7,9 +7,12 @@ public class SubjectPanel extends JPanel
     private final Subject subject;
 
     // subject panels
-    public static JLabel total_score;
     private final JPanel subject_box;
     public static GradeMenu grade_menu;
+
+    // performance labels
+    private static JLabel total_score;
+    private static JLabel total_evaluated;
 
     // constructor
     public SubjectPanel(Subject subject)
@@ -54,7 +57,7 @@ public class SubjectPanel extends JPanel
                                             WindowComponent.get_height(total_score));
 
         // text of the total percentage evaluated
-        JLabel total_evaluated = WindowComponent.set_text(("Total evaluated: 0.0%"),
+        total_evaluated = WindowComponent.set_text(("Total evaluated: 0.0%"),
                                                             10,
                                                             WindowComponent.negative_y(total_score, 2),
                                                             350,
@@ -115,6 +118,17 @@ public class SubjectPanel extends JPanel
 
         // reload the panel to show the changes
         WindowComponent.reload(subject_box);
+    }
+
+    // method to set the evaluated text
+    public static void set_score(double score)
+    {
+        total_score.setText("Total score: " + score);
+    }
+    // method to set the evaluated text
+    public static void set_evaluated(double percentage)
+    {
+        total_evaluated.setText("Evaluated percentage: " + percentage);
     }
 
     // method to set the subject name size based in its length

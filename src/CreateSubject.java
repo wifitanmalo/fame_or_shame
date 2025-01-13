@@ -78,11 +78,10 @@ public class CreateSubject extends JPanel
                                         WindowComponent.get_height(id_title));
 
         // id text box
-        id_text_box = WindowComponent.set_text_field("",
-                                            id_title.getX(),
-                                            WindowComponent.negative_y(id_title,20),
-                                            260,
-                                            30);
+        id_text_box = WindowComponent.set_text_field(id_title.getX(),
+                                                    WindowComponent.negative_y(id_title,20),
+                                                    260,
+                                                    30);
         WindowComponent.configure_text(id_text_box,
                 WindowComponent.default_button_background,
                 1,
@@ -100,11 +99,10 @@ public class CreateSubject extends JPanel
                                         WindowComponent.get_height(name_title));
 
         // name text box
-        name_text_box = WindowComponent.set_text_field("",
-                                                    id_title.getX(),
-                                                    WindowComponent.negative_y(name_title,20),
-                                                    260,
-                                                    30);
+        name_text_box = WindowComponent.set_text_field(id_title.getX(),
+                                                        WindowComponent.negative_y(name_title,20),
+                                                        260,
+                                                        30);
         WindowComponent.configure_text(name_text_box,
                                     WindowComponent.default_button_background,
                                     1,
@@ -122,11 +120,10 @@ public class CreateSubject extends JPanel
                                         WindowComponent.get_height(credits_title));
 
         // credits text box
-        credits_text_box = WindowComponent.set_text_field("",
-                                                    id_title.getX(),
-                                                    WindowComponent.negative_y(credits_title,20),
-                                                    260,
-                                                    30);
+        credits_text_box = WindowComponent.set_text_field(id_title.getX(),
+                                                        WindowComponent.negative_y(credits_title,20),
+                                                        260,
+                                                        30);
         WindowComponent.configure_text(credits_text_box,
                                     WindowComponent.default_button_background,
                                     1,

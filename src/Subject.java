@@ -37,6 +37,13 @@ public class Subject
     public void add_grade(Grade grade)
     {
         grades_list.add(grade);
+        new GradePanel();
+    }
+
+    // method to delete a subject by its position
+    public void delete_grade(Grade grade)
+    {
+        grades_list.remove(grade);
     }
 
     // setters and getters

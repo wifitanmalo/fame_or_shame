@@ -17,7 +17,7 @@ public class Management
         subjects_list = new ArrayList<>();
     }
 
-    // method to add a subject on the subjects list
+    // method to create a subject on the subjects box/list
     public void create_subject(Subject subject)
     {
         subjects_list.add(subject);

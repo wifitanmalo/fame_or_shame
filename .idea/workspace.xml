@@ -6,13 +6,14 @@
   <component name="ChangeListManager">
     <list default="true" id="c9a42afd-cdd4-4fa5-9ea9-a489e599093d" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/AddSubject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SubjectPanel.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/DeleteSubject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DeleteSubject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/AddGrade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GradePanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/CreateSubject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CreateSubject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DeleteGrade.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/DeleteGrade.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/GradeMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/GradeMenu.java" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/Management.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Management.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SubjectDetails.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/CreateSubject.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/SubjectMenu.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SubjectMenu.java" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/ValidationUtils.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/ValidationUtils.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Subject.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/Subject.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/SubjectPanel.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/SubjectPanel.java" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/WindowComponent.java" beforeDir="false" afterPath="$PROJECT_DIR$/src/WindowComponent.java" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
