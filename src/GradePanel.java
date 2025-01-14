@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.awt.event.*;
 import javax.swing.*;
 
 public class GradePanel extends JPanel
@@ -6,13 +7,21 @@ public class GradePanel extends JPanel
     // panel where the grades are added
     private final JPanel grade_box;
 
+    // subject object
+    private final Subject subject;
+
+    // subject id
+    private int subject_id;
+
     // text boxes
-    private static JTextField score_box;
-    private static JTextField percentage_box;
+    private JTextField score_box;
+    private JTextField percentage_box;
 
     // constructor
-    public GradePanel()
+    public GradePanel(Subject subject)
     {
+        this.subject = subject;
+        this.subject_id = subject.get_id();
         this.grade_box = GradeMenu.get_grade_box();
         grade_panel();
     }
@@ -33,13 +42,22 @@ public class GradePanel extends JPanel
                                         WindowComponent.default_button_background,
                                         1,
                                         18);
+        score_box.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyReleased(KeyEvent e)
+            {
+                subject.set_grade_panel(GradePanel.this);
+                super.keyReleased(e);
+            }
+        });
 
         // score text
         JLabel score_text = WindowComponent.set_text("Score:",
-                                                        WindowComponent.negative_x(score_box, 0),
-                                                        score_box.getY(),
-                                                        64,
-                                                        30);
+                WindowComponent.negative_x(score_box, 0),
+                score_box.getY(),
+                64,
+                30);
         WindowComponent.configure_text(score_text,
                                             WindowComponent.default_font_foreground,
                                             1,
@@ -54,6 +72,15 @@ public class GradePanel extends JPanel
                                         WindowComponent.default_button_background,
                                         1,
                                         18);
+        percentage_box.addKeyListener(new KeyAdapter()
+        {
+            @Override
+            public void keyReleased(KeyEvent e)
+            {
+                subject.set_grade_panel(GradePanel.this);
+                super.keyReleased(e);
+            }
+        });
 
         // percentage symbol
         JLabel percentage_symbol = WindowComponent.set_text("%",
@@ -78,7 +105,11 @@ public class GradePanel extends JPanel
                                         1,
                                         18);
         WindowComponent.button_event(delete_button,
-                                    () -> new DeleteGrade(this, grade_box),
+                                    () ->
+                                    {
+                                        new DeleteGrade(subject, this, grade_box);
+                                        subject.get_grades_list().remove(this);
+                                    },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
@@ -98,7 +129,16 @@ public class GradePanel extends JPanel
     }
 
     // setters and getters
-    public static void set_score_text(String score)
+    public void set_subject_id(int id)
+    {
+        this.subject_id = subject.get_id();
+    }
+    public int get_subject_id()
+    {
+        return subject_id;
+    }
+
+    public void set_score_text(String score)
     {
         score_box.setText(score);
     }
@@ -107,7 +147,7 @@ public class GradePanel extends JPanel
         return score_box.getText().trim();
     }
 
-    public static void set_percentage_text(String percentage)
+    public void set_percentage_text(String percentage)
     {
         percentage_box.setText(percentage);
     }

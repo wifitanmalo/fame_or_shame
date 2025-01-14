@@ -18,7 +18,7 @@ public class Subject
     public static final double max_score = 5.0;
 
     // grades lists
-    private ArrayList<Grade> grades_list;
+    private ArrayList<GradePanel> grades_list;
 
     // constructor
     public Subject(int id,
@@ -30,20 +30,31 @@ public class Subject
         this.credits = credits;
         this.total_score = 0.0;
         this.total_evaluated = 0.0;
-        grades_list = new ArrayList<>();
+        this.grades_list = new ArrayList<>();
     }
 
-    // method to add a grade on the grades list
-    public void add_grade(Grade grade)
+    // method to add a grade
+    public void create_grade(GradePanel grade)
     {
         grades_list.add(grade);
-        new GradePanel();
     }
 
-    // method to delete a subject by its position
-    public void delete_grade(Grade grade)
+    // method to add a grade
+    public void delete_grade(GradePanel grade)
     {
         grades_list.remove(grade);
+    }
+
+    // method to change a subject by its position
+    public void set_grade_panel(GradePanel grade)
+    {
+        grades_list.set(get_index_panel(grade), grade);
+    }
+
+    // method to get the index of the grade panel
+    public int get_index_panel(GradePanel grade)
+    {
+        return grades_list.indexOf(grade);
     }
 
     // setters and getters
@@ -74,11 +85,11 @@ public class Subject
         return credits;
     }
 
-    public void set_grades_list(ArrayList<Grade> grades_list)
+    public void set_grades_list(ArrayList<GradePanel> grades_list)
     {
         this.grades_list = grades_list;
     }
-    public ArrayList<Grade> get_grades_list()
+    public ArrayList<GradePanel> get_grades_list()
     {
         return grades_list;
     }

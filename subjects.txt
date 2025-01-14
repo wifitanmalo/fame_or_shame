@@ -1,0 +1,2 @@
+0,"Calculo Monovariable",3,0.0,0.0
+1,"Matematicas Discretas II",4,0.0,0.0

@@ -191,9 +191,10 @@ public class CreateSubject extends JPanel
             }
             else
             {
-                // create the subject on the subject box/list
+                // create the subject on the subject box/list/file
                 Subject new_subject = new Subject(id, name, credits);
                 SubjectMenu.manager.create_subject(new_subject);
+                Main.subject_menu.create_subject(new_subject);
 
                 // switch to the subject menu
                 WindowComponent.switch_panel(this, Main.subject_menu);

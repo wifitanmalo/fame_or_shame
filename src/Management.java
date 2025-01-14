@@ -54,18 +54,5 @@ public class Management
     {
         return subjects_list;
     }
-
-    // method to get the subject index based in their id
-    public int get_index(int id)
-    {
-        for(int i=0; i<subjects_list.size(); i++)
-        {
-            if(id == subjects_list.get(i).get_id())
-            {
-                return i;
-            }
-        }
-        return 0;
-    }
 }
 

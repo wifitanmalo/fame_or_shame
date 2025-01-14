@@ -5,7 +5,8 @@ public class Grade
     private double percentage;
 
     // constructor
-    public Grade(double score, double percentage)
+    public Grade(double score,
+                 double percentage)
     {
         this.score = score;
         this.percentage = percentage;

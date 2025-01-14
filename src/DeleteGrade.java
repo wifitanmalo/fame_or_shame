@@ -2,6 +2,9 @@ import javax.swing.*;
 
 public class DeleteGrade
 {
+    // subject object
+    private final Subject subject;
+
     // grade panel object
     private final GradePanel grade;
 
@@ -9,21 +12,27 @@ public class DeleteGrade
     private final JPanel grade_box;
 
     // constructor
-    public DeleteGrade(GradePanel grade,
+    public DeleteGrade(Subject subject,
+                        GradePanel grade,
                        JPanel grade_panel)
     {
+        this.subject = subject;
         this.grade = grade;
         this.grade_box = grade_panel;
         delete_grade();
     }
 
-    // method to delete a grade
     public void delete_grade()
     {
-        // remove the subject from the panel and the list
-        grade_box.remove(grade);
+        if (subject.get_grades_list().contains(grade))
+        {
+            // delete the grade from the grades panel/list
+            grade_box.remove(grade);
+            subject.delete_grade(grade);
 
-        // reload the panel to show the changes
-        WindowComponent.reload(grade_box);
+            // reload the panel to show the changes
+            WindowComponent.reload(grade_box);
+        }
     }
+
 }

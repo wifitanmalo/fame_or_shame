@@ -1,4 +1,5 @@
 import java.awt.*;
+import java.io.*;
 import javax.swing.*;
 
 public class SubjectMenu extends JPanel
@@ -36,10 +37,6 @@ public class SubjectMenu extends JPanel
                                                                     60,
                                                                     400,
                                                                     270);
-
-        // subject example
-        Subject uwu = new Subject(1, "uwu", 3);
-        SubjectMenu.manager.create_subject(uwu);
 
         // subjects title
         JLabel subjects_title = WindowComponent.set_text("Subjects",
@@ -91,8 +88,118 @@ public class SubjectMenu extends JPanel
         container.add(this);
         container.add(create_subject);
 
+        // load the saved subjects
+        load_subjects();
+
         // reload the panel to show the changes
         WindowComponent.reload(this);
+    }
+
+    // method to load the grades
+    public void load_subjects()
+    {
+        try
+        {
+            String line;
+            BufferedReader read = new BufferedReader(new FileReader("subjects.txt"));
+            while ((line = read.readLine()) != null)
+            {
+                String[] data = line.split(",");
+
+                // subject values
+                int id = Integer.parseInt(data[0]);
+                String name = data[1];
+                int credits = Integer.parseInt(data[2]);
+                double score = Double.parseDouble(data[3]);
+                double evaluated = Double.parseDouble(data[4]);
+
+                // create the subject with the line values
+                Subject subject = new Subject(id, name, credits);
+                subject.set_total_score(score);
+                subject.set_total_evaluated(evaluated);
+
+                // create the subject in the subject panel/list
+                manager.create_subject(subject);
+            }
+            read.close();
+        }
+        catch (IOException error)
+        {
+            WindowComponent.message_box(this,
+                                        "Error while reading the file",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to create a subject in the file
+    public void create_subject(Subject subject)
+    {
+        try
+        {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("subjects.txt", true));
+            String data = subject.get_id()
+                    + ","
+                    + subject.get_total_score()
+                    + ","
+                    + subject.get_total_evaluated()
+                    + ",0.0,0.0";
+            writer.write(data);
+            writer.newLine();
+            writer.close();
+        }
+        catch (IOException e)
+        {
+            WindowComponent.message_box(this,
+                                        "Error while writing the file",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to modify a subject in the file
+    public void update_subject(Subject subject,
+                               double new_score,
+                               double new_evaluated)
+    {
+        File file = new File("subjects.txt");
+        File temporal = new File("temporal.txt");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(file));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(temporal)))
+        {
+            String current_line;
+            while ((current_line = reader.readLine()) != null)
+            {
+                String[] data = current_line.split(",");
+                int current_id = Integer.parseInt(data[0].trim());
+
+                if (current_id == subject.get_id())
+                {
+                    data[3] = String.valueOf(new_score);
+                    data[4] = String.valueOf(new_evaluated);
+                    current_line = String.join(",", data);
+                }
+                writer.write(current_line);
+                writer.newLine();
+            }
+        }
+        catch (IOException e)
+        {
+            WindowComponent.message_box(this,
+                                        "Error while writing the file",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+
+        // replace the old file with the new file
+        if (!file.delete() || !temporal.renameTo(file))
+        {
+            WindowComponent.message_box(this,
+                                        "Error while updating the file",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
     }
 
     // method to get the subject box

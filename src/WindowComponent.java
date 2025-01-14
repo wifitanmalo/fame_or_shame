@@ -75,21 +75,6 @@ public class WindowComponent
         return label;
     }
 
-    // method to change the text and color of the total score
-    public static void set_text_score(JLabel label, double current_score)
-    {
-        label.setText(String.valueOf(Math.round(current_score*100.0) / 100.0));
-        if(current_score >= Subject.passing_score)
-        {
-            label.setForeground(Color.decode("#C5EF48"));
-        }
-        else
-        {
-            label.setForeground(Color.decode("#FF6865"));
-        }
-        WindowComponent.reload(label);
-    }
-
     // method to configure a container
     public static void configure_text(Container container,
                                       Color color,
