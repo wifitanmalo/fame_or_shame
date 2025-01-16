@@ -34,5 +34,4 @@ public class DeleteGrade
             WindowComponent.reload(grade_box);
         }
     }
-
 }

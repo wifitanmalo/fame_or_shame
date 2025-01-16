@@ -18,13 +18,6 @@ public class WindowComponent
     // container object
     public static Container current_container;
 
-    // method to reload the window items
-    public static void reload(Container container)
-    {
-        container.revalidate();
-        container.repaint();
-    }
-
     // method to add a panel
     public static JPanel set_panel(Color color,
                                     int x,
@@ -40,7 +33,8 @@ public class WindowComponent
     }
 
     // method to switch the panel
-    public static void switch_panel(Container previous_panel, Container next_panel)
+    public static void switch_panel(Container previous_panel,
+                                    Container next_panel)
     {
         previous_panel.setVisible(false);
         next_panel.setVisible(true);
@@ -169,6 +163,13 @@ public class WindowComponent
                                     message,
                                     title,
                                     option);
+    }
+
+    // method to reload the window items
+    public static void reload(Container container)
+    {
+        container.revalidate();
+        container.repaint();
     }
 
     // methods to move a container in x

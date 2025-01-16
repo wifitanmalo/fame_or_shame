@@ -1,8 +1,7 @@
 import java.awt.*;
-import java.io.BufferedWriter;
-import java.io.FileWriter;
-import java.io.IOException;
+import java.io.*;
 import javax.swing.*;
+import java.util.ArrayList;
 
 public class GradeMenu extends JPanel
 {
@@ -51,6 +50,7 @@ public class GradeMenu extends JPanel
         WindowComponent.button_event(back_button,
                                     () ->
                                     {
+                                        Main.subject_menu.refresh_subjects();
                                         WindowComponent.switch_panel(this, Main.subject_menu);
                                     },
                                     WindowComponent.default_button_background,
@@ -100,7 +100,7 @@ public class GradeMenu extends JPanel
                                     {
                                         GradePanel new_grade = new GradePanel(subject);
                                         subject.create_grade(new_grade);
-                                        add_grade(new_grade);
+                                        update_grade(subject);
                                     },
                                     WindowComponent.default_button_background,
                                     Color.decode("#C5EF48"),
@@ -135,6 +135,9 @@ public class GradeMenu extends JPanel
         add(total_button);
         add(add_button);
         add(score_text);
+
+        // load the saved grades
+        load_grades();
     }
 
     // method to validate the grade
@@ -200,8 +203,137 @@ public class GradeMenu extends JPanel
         return true;
     }
 
+    // method to load the grades from the grades file
+    public void load_grades()
+    {
+        try
+        {
+            String line;
+            ArrayList<String> all_lines = new ArrayList<>();
+            BufferedReader reader = new BufferedReader(new FileReader("grades.txt"));
+
+            // add on the list all non-empty lines
+            while ((line = reader.readLine()) != null)
+            {
+                all_lines.add(line);
+            }
+            reader.close();
+
+            // loop to add each grade in its respective list
+            for (Subject subject : SubjectMenu.manager.get_subjects_list())
+            {
+                subject.set_grades_list(new ArrayList<>());
+
+                // loop to get the lines that match the subject id
+                for (String grade : all_lines)
+                {
+                    String[] data = grade.split(",");
+                    int id = Integer.parseInt(data[0]);
+
+                    if (id == subject.get_id())
+                    {
+                        String score = data[1];
+                        String percentage = data[2];
+
+                        // create a new grade and set the score/percentage
+                        GradePanel new_grade = new GradePanel(subject);
+                        new_grade.set_score_text(score);
+                        new_grade.set_percentage_text(percentage);  // Assuming you have this method
+
+                        // add the new grade to the grades list
+                        subject.create_grade(new_grade);
+                    }
+                }
+            }
+        }
+        catch (IOException error)
+        {
+            WindowComponent.message_box(this,
+                                        "Error while reading the file",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to create a grade in the file
+    public void create_grade(Subject subject)
+    {
+        try
+        {
+            BufferedWriter writer = new BufferedWriter(new FileWriter("grades.txt", true));
+            for(GradePanel grade : subject.get_grades_list())
+            {
+                String data = grade.get_subject_id()
+                        + ","
+                        + grade.get_score_text()
+                        + ","
+                        + grade.get_percentage_text();
+                writer.write(data);
+                writer.newLine();
+            }
+            writer.close();
+        }
+        catch (IOException e)
+        {
+            WindowComponent.message_box(this,
+                                        "Error while writing the file",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to delete a grade in the file
+    public void delete_grade(Subject subject)
+    {
+        // file names
+        File input = new File("grades.txt");
+        File temporal = new File("temporal.txt");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(input));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(temporal)))
+        {
+            String line;
+            while ((line = reader.readLine()) != null)
+            {
+                // split the line in commas
+                String[] data = line.split(",");
+                int current_id = Integer.parseInt(data[0]);
+
+                // ignore the lines with the same id of the subject
+                if(current_id != subject.get_id())
+                {
+                    writer.write(line);
+                    writer.newLine();
+                }
+            }
+        }
+        catch (IOException e)
+        {
+            WindowComponent.message_box(this,
+                                        "Error while reading the file",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+
+        // replace the original file with the temporal one
+        if (!input.delete() || !temporal.renameTo(input))
+        {
+            WindowComponent.message_box(this,
+                                        "Error while rewriting file.",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to delete the grades in the file
+    public void update_grade(Subject subject)
+    {
+        delete_grade(subject);
+        create_grade(subject);
+    }
+
     // method to load the grades
-    public void load_grades(Subject current_subject)
+    public void refresh_grades(Subject current_subject)
     {
         grade_box.removeAll();
         this.subject = current_subject;
@@ -218,35 +350,12 @@ public class GradeMenu extends JPanel
         }
     }
 
-    // method to create a grade in the file
-    public void add_grade(GradePanel grade)
-    {
-        try
-        {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("grades.txt", true));
-            String data = grade.get_subject_id()
-                            + ","
-                            + grade.get_score_text()
-                            + ","
-                            + grade.get_percentage_text();
-            writer.write(data);
-            writer.newLine();
-            writer.close();
-        }
-        catch (IOException e)
-        {
-            WindowComponent.message_box(this,
-                                        "Error while writing the file",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     // method to change the text and color of the total score
     public void set_text_score(double score)
     {
-        score_text.setText(String.valueOf(Math.round(score*100.0) / 100.0));
-        if(subject.get_total_score() >= Subject.passing_score)
+        score = SubjectMenu.two_decimals(score);
+        score_text.setText(String.valueOf(score));
+        if(score >= Subject.passing_score)
         {
             score_text.setForeground(Color.decode("#C5EF48"));
         }

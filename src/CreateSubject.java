@@ -42,6 +42,7 @@ public class CreateSubject extends JPanel
         WindowComponent.button_event(back_button,
                                     () ->
                                     {
+                                        Main.subject_menu.refresh_subjects();
                                         WindowComponent.switch_panel(this, Main.subject_menu);
                                         clear_boxes();
                                     },
@@ -134,7 +135,7 @@ public class CreateSubject extends JPanel
         add(back_button);
         add(add_button);
 
-        // add the components to the details panel
+        // add the components to the panel
         input_panel.add(id_title);
         input_panel.add(id_text_box);
         input_panel.add(name_title);
@@ -143,12 +144,12 @@ public class CreateSubject extends JPanel
         input_panel.add(credits_text_box);
     }
 
-    // method to verify if the subject data is valid
+    // method to verify if subject data is valid
     private void add_validation()
     {
         try
         {
-            // get the values from the text boxes
+            // get subject values from text boxes
             int id = Integer.parseInt(id_text_box.getText().trim());
             String name = name_text_box.getText().trim();
             int credits = Integer.parseInt(credits_text_box.getText().trim());
@@ -163,14 +164,14 @@ public class CreateSubject extends JPanel
             else if(ValidationUtils.is_negative(id) || ValidationUtils.is_negative(credits))
             {
                 WindowComponent.message_box(this,
-                                            "ID/Credits cannot be NEGATIVE.",
+                                            "ID/Credits cannot be negative.",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
             else if(name.isEmpty())
             {
                 WindowComponent.message_box(this,
-                                            "Name cannot be EMPTY.",
+                                            "Name cannot be empty.",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
@@ -185,32 +186,34 @@ public class CreateSubject extends JPanel
                                                 Management.max_credits))
             {
                 WindowComponent.message_box(this,
-                                            "Credits cannot be HIGHER than " + Management.max_credits + ".",
+                                            "Credits cannot be higher than " + Management.max_credits + ".",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
             else
             {
-                // create the subject on the subject box/list/file
+                // create the subject on the subject list/file
                 Subject new_subject = new Subject(id, name, credits);
                 SubjectMenu.manager.create_subject(new_subject);
                 Main.subject_menu.create_subject(new_subject);
 
-                // switch to the subject menu
-                WindowComponent.switch_panel(this, Main.subject_menu);
+                // refresh the subjects on the subject box
+                Main.subject_menu.refresh_subjects();
 
                 // reload the panel to show the new subject
                 WindowComponent.reload(Main.subject_menu);
+
+                // switch to the subject menu
+                WindowComponent.switch_panel(this, Main.subject_menu);
             }
         }
         catch (NumberFormatException e)
         {
             WindowComponent.message_box(this,
-                                        "ID/Credits value are not valid.",
+                                        "ID/Credits values are not valid.",
                                         "Input error",
                                         JOptionPane.ERROR_MESSAGE);
         }
-
         clear_boxes();
     }
 

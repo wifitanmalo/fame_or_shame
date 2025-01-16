@@ -26,7 +26,7 @@ public class GradePanel extends JPanel
         grade_panel();
     }
 
-    // method to add a subject
+    // method to create a grade
     public void grade_panel()
     {
         setPreferredSize(new Dimension(400, 80));
@@ -47,21 +47,22 @@ public class GradePanel extends JPanel
             @Override
             public void keyReleased(KeyEvent e)
             {
-                subject.set_grade_panel(GradePanel.this);
+                subject.update_grade(GradePanel.this);
+                SubjectPanel.grade_menu.update_grade(subject);
                 super.keyReleased(e);
             }
         });
 
         // score text
         JLabel score_text = WindowComponent.set_text("Score:",
-                WindowComponent.negative_x(score_box, 0),
-                score_box.getY(),
-                64,
-                30);
+                                                    WindowComponent.negative_x(score_box, 0),
+                                                    score_box.getY(),
+                                                    64,
+                                                    30);
         WindowComponent.configure_text(score_text,
-                                            WindowComponent.default_font_foreground,
-                                            1,
-                                            18);
+                                        WindowComponent.default_font_foreground,
+                                        1,
+                                        18);
 
         // text field where you enter the percentage
         percentage_box = WindowComponent.set_text_field(WindowComponent.positive_x(score_box, 16),
@@ -77,7 +78,8 @@ public class GradePanel extends JPanel
             @Override
             public void keyReleased(KeyEvent e)
             {
-                subject.set_grade_panel(GradePanel.this);
+                subject.update_grade(GradePanel.this);
+                SubjectPanel.grade_menu.update_grade(subject);
                 super.keyReleased(e);
             }
         });
@@ -109,6 +111,7 @@ public class GradePanel extends JPanel
                                     {
                                         new DeleteGrade(subject, this, grade_box);
                                         subject.get_grades_list().remove(this);
+                                        SubjectPanel.grade_menu.update_grade(subject);
                                     },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
@@ -121,7 +124,7 @@ public class GradePanel extends JPanel
         add(percentage_symbol);
         add(delete_button);
 
-        // add the panel to the subject panel
+        // add the panel to the grade box
         grade_box.add(this);
 
         // reload the panel to show the changes

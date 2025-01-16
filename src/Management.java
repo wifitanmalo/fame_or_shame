@@ -17,15 +17,14 @@ public class Management
         subjects_list = new ArrayList<>();
     }
 
-    // method to create a subject on the subjects box/list
+    // method to create a subject
     public void create_subject(Subject subject)
     {
         subjects_list.add(subject);
-        new SubjectPanel(subject);
         signed_credits += subject.get_credits();
     }
 
-    // method to delete a subject by its position
+    // method to delete a subject
     public void delete_subject(Subject subject)
     {
         signed_credits -= subject.get_credits();

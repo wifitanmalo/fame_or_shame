@@ -30,29 +30,28 @@ public class Subject
         this.credits = credits;
         this.total_score = 0.0;
         this.total_evaluated = 0.0;
-        this.grades_list = new ArrayList<>();
     }
 
-    // method to add a grade
+    // method to create a grade
     public void create_grade(GradePanel grade)
     {
         grades_list.add(grade);
     }
 
-    // method to add a grade
+    // method to delete a grade
     public void delete_grade(GradePanel grade)
     {
         grades_list.remove(grade);
     }
 
-    // method to change a subject by its position
-    public void set_grade_panel(GradePanel grade)
+    // method to update a grade by its index
+    public void update_grade(GradePanel grade)
     {
-        grades_list.set(get_index_panel(grade), grade);
+        grades_list.set(get_grade_index(grade), grade);
     }
 
-    // method to get the index of the grade panel
-    public int get_index_panel(GradePanel grade)
+    // method to get the index of the GradePanel
+    public int get_grade_index(GradePanel grade)
     {
         return grades_list.indexOf(grade);
     }
@@ -85,15 +84,6 @@ public class Subject
         return credits;
     }
 
-    public void set_grades_list(ArrayList<GradePanel> grades_list)
-    {
-        this.grades_list = grades_list;
-    }
-    public ArrayList<GradePanel> get_grades_list()
-    {
-        return grades_list;
-    }
-
     public void set_total_score(double total_score)
     {
         this.total_score = total_score;
@@ -110,5 +100,14 @@ public class Subject
     public double get_total_evaluated()
     {
         return total_evaluated;
+    }
+
+    public void set_grades_list(ArrayList<GradePanel> grades_list)
+    {
+        this.grades_list = grades_list;
+    }
+    public ArrayList<GradePanel> get_grades_list()
+    {
+        return grades_list;
     }
 }

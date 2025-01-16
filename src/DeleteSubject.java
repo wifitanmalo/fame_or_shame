@@ -3,7 +3,10 @@ import javax.swing.*;
 
 public class DeleteSubject
 {
+    // subject object
     private final Subject subject;
+
+    // subject panels
     private final JPanel to_delete;
     private final JPanel subject_box;
 
@@ -26,10 +29,9 @@ public class DeleteSubject
                                                     JOptionPane.YES_NO_OPTION);
         if(choice == JOptionPane.YES_OPTION && SubjectMenu.manager.get_subjects_list().contains(subject))
         {
-            // remove the subject from the panel/list
+            // remove the subject from the box/list/file
             subject_box.remove(to_delete);
             SubjectMenu.manager.delete_subject(subject);
-
             delete_from_file(subject);
 
             // reload the subject box to show the changes
@@ -47,31 +49,37 @@ public class DeleteSubject
              BufferedWriter writer = new BufferedWriter(new FileWriter(temporal)))
         {
 
-            String currentLine;
-            String gradeData = subject.get_id()
+            String line;
+            String grade_data = subject.get_id()
                                 + "," + subject.get_name()
                                 + "," + subject.get_credits()
                                 + "," + subject.get_total_score()
                                 + "," + subject.get_total_evaluated();
 
-            while ((currentLine = reader.readLine()) != null)
+            while ((line = reader.readLine()) != null)
             {
-                if (!currentLine.trim().equals(gradeData))
+                if (!line.trim().equals(grade_data))
                 {
-                    writer.write(currentLine);
+                    writer.write(line);
                     writer.newLine();
                 }
             }
         }
         catch (IOException e)
         {
-            System.out.println("Error while writing the file.");
+            WindowComponent.message_box(Main.subject_menu,
+                                        "Error while reading the file.",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
         }
 
-        // replace the old file with the new file
+        // replace the original file with the temporal one
         if (!file.delete() || !temporal.renameTo(file))
         {
-            System.out.println("Error while writing the file.");
+            WindowComponent.message_box(Main.subject_menu,
+                                        "Error while rewriting file.",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
         }
     }
 

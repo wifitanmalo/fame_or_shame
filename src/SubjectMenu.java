@@ -11,7 +11,7 @@ public class SubjectMenu extends JPanel
     private static final JPanel subject_box = new JPanel();
     private final CreateSubject create_subject;
 
-    // container
+    // container object
     private final Container container;
 
     // constructor
@@ -91,11 +91,14 @@ public class SubjectMenu extends JPanel
         // load the saved subjects
         load_subjects();
 
+        // create the panels of the subjects in the subject box
+        refresh_subjects();
+
         // reload the panel to show the changes
         WindowComponent.reload(this);
     }
 
-    // method to load the grades
+    // method to load the grades from the subjects file
     public void load_subjects()
     {
         try
@@ -139,11 +142,11 @@ public class SubjectMenu extends JPanel
         {
             BufferedWriter writer = new BufferedWriter(new FileWriter("subjects.txt", true));
             String data = subject.get_id()
-                    + ","
-                    + subject.get_total_score()
-                    + ","
-                    + subject.get_total_evaluated()
-                    + ",0.0,0.0";
+                        + ","
+                        + subject.get_name()
+                        + ","
+                        + subject.get_credits()
+                        + ",0.0,0.0";
             writer.write(data);
             writer.newLine();
             writer.close();
@@ -162,6 +165,7 @@ public class SubjectMenu extends JPanel
                                double new_score,
                                double new_evaluated)
     {
+        // file names
         File file = new File("subjects.txt");
         File temporal = new File("temporal.txt");
 
@@ -171,9 +175,11 @@ public class SubjectMenu extends JPanel
             String current_line;
             while ((current_line = reader.readLine()) != null)
             {
+                // split the line in commas
                 String[] data = current_line.split(",");
                 int current_id = Integer.parseInt(data[0].trim());
 
+                // get the score/evaluated of the line if the id matches
                 if (current_id == subject.get_id())
                 {
                     data[3] = String.valueOf(new_score);
@@ -192,7 +198,7 @@ public class SubjectMenu extends JPanel
                                         JOptionPane.ERROR_MESSAGE);
         }
 
-        // replace the old file with the new file
+        // replace the original file with the temporal one
         if (!file.delete() || !temporal.renameTo(file))
         {
             WindowComponent.message_box(this,
@@ -200,6 +206,27 @@ public class SubjectMenu extends JPanel
                                         "File error",
                                         JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    // method to refresh the grades on the subject box
+    public void refresh_subjects()
+    {
+        subject_box.removeAll();
+        for(Subject subject : manager.get_subjects_list())
+        {
+            // create the panel in the subject box
+            SubjectPanel current_panel = new SubjectPanel(subject);
+            current_panel.set_score_label(subject.get_total_score());
+            current_panel.set_evaluated_label(subject.get_total_evaluated());
+        }
+        // reload the panel to show the changes
+        WindowComponent.reload(subject_box);
+    }
+
+    // method to cut the first two decimals of a number
+    public static double two_decimals(double number)
+    {
+        return (int)(number * 100) / 100.0;
     }
 
     // method to get the subject box

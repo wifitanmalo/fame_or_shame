@@ -4,6 +4,8 @@ public class Main extends JFrame
 {
     // window size values
     public static final int width = 600, height = 400;
+
+    // SubjectMenu object
     public static SubjectMenu subject_menu;
 
     // constructor
@@ -20,8 +22,8 @@ public class Main extends JFrame
         setTitle("Fame or Shame");
         setBounds(0, 0, width, height);
         setLocationRelativeTo(null);
-        setVisible(true);
         setResizable(false);
+        setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
 
