@@ -160,7 +160,7 @@ public class SubjectPanel extends JPanel
 
     public void set_evaluated_label(double percentage)
     {
-        total_evaluated.setText("Evaluated percentage: " + SubjectMenu.two_decimals(percentage));
+        total_evaluated.setText("Evaluated percentage: " + SubjectMenu.two_decimals(percentage) + "%");
     }
     public JLabel get_evaluated_label()
     {
