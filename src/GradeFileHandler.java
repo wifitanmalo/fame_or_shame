@@ -75,9 +75,9 @@ public class GradeFileHandler
             {
                 String data = grade.getSubjectId()
                                 + ","
-                                + grade.getScoreText()
+                                + ValidationUtils.emptyText(grade.getScoreText())
                                 + ","
-                                + grade.getPercentageText();
+                                + ValidationUtils.emptyText(grade.getPercentageText());
                 writer.write(data);
                 writer.newLine();
             }

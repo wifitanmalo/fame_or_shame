@@ -17,4 +17,17 @@ public class ValidationUtils
     {
         return current_number == number;
     }
+
+    // method to verify if a text is empty
+    public static String emptyText(String text)
+    {
+        if (text.isEmpty())
+        {
+            return "0";
+        }
+        else
+        {
+            return text;
+        }
+    }
 }
