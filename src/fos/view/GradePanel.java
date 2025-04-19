@@ -1,6 +1,10 @@
+package fos.view;
+
 import java.awt.*;
 import java.awt.event.*;
 import javax.swing.*;
+
+import fos.service.DeleteGrade;
 
 public class GradePanel extends JPanel
 {
@@ -8,7 +12,7 @@ public class GradePanel extends JPanel
     private final JPanel gradeBox;
 
     // subject object
-    private final Subject subject;
+    private final fos.service.Subject subject;
 
     // subject id
     private int subjectId;
@@ -18,7 +22,7 @@ public class GradePanel extends JPanel
     private JTextField percentageBox;
 
     // constructor
-    public GradePanel(Subject subject)
+    public GradePanel(fos.service.Subject subject)
     {
         this.subject = subject;
         this.subjectId = subject.getId();

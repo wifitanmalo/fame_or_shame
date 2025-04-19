@@ -1,3 +1,11 @@
+package fos.data;
+
+import fos.view.Main;
+import fos.view.SubjectMenu;
+import fos.view.WindowComponent;
+import fos.service.Subject;
+import fos.service.Management;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;

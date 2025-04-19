@@ -1,6 +1,12 @@
+package fos.view;
+
 import java.awt.*;
-import java.io.*;
 import javax.swing.*;
+
+import fos.service.CreateSubject;
+import fos.service.Management;
+import fos.service.ValidationUtils;
+import fos.data.SubjectFileHandler;
 
 public class SubjectMenu extends JPanel
 {
@@ -103,7 +109,7 @@ public class SubjectMenu extends JPanel
     public void refreshSubjects()
     {
         subjectBox.removeAll();
-        for(Subject subject : manager.getSubjectsList())
+        for(fos.service.Subject subject : manager.getSubjectsList())
         {
             // create the panel in the subject box
             SubjectPanel current_panel = new SubjectPanel(subject);

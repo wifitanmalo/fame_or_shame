@@ -1,5 +1,11 @@
+package fos.service;
+
 import java.awt.*;
 import javax.swing.*;
+
+import fos.view.Main;
+import fos.view.SubjectMenu;
+import fos.view.WindowComponent;
 
 public class CreateSubject extends JPanel
 {

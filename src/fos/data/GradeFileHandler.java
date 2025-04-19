@@ -1,7 +1,15 @@
+package fos.data;
+
 import javax.swing.*;
 import java.awt.*;
 import java.io.*;
 import java.util.ArrayList;
+
+import fos.view.GradePanel;
+import fos.view.SubjectMenu;
+import fos.view.WindowComponent;
+import fos.service.Subject;
+import fos.service.ValidationUtils;
 
 public class GradeFileHandler
 {

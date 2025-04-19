@@ -1,4 +1,9 @@
+package fos.service;
+
 import javax.swing.*;
+
+import fos.view.GradePanel;
+import fos.view.WindowComponent;
 
 public class DeleteGrade
 {
@@ -13,7 +18,7 @@ public class DeleteGrade
 
     // constructor
     public DeleteGrade(Subject subject,
-                        GradePanel grade,
+                       GradePanel grade,
                        JPanel grade_panel)
     {
         this.subject = subject;

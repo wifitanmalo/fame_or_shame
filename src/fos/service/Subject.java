@@ -1,3 +1,7 @@
+package fos.service;
+
+import fos.view.GradePanel;
+
 import java.util.ArrayList;
 
 public class Subject
@@ -50,7 +54,7 @@ public class Subject
         gradesList.set(getGradeIndex(grade), grade);
     }
 
-    // method to get the index of the GradePanel
+    // method to get the index of the fos.view.GradePanel
     public int getGradeIndex(GradePanel grade)
     {
         return gradesList.indexOf(grade);

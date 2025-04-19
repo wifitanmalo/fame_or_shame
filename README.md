@@ -20,7 +20,7 @@ The name [_Fame or Shame_](https://gta.fandom.com/wiki/Fame_or_Shame) is owned b
 
 When you run the program, a window will appear with a box showing the subjects and a `+` button to create a new one.
 
-### Create a Subject
+### Create a fos.service.Subject
 
 When you click the `+` button, a window will appear with three text fields to enter the subject id, name, and credits. Additionally, there will be a "Back" button to return to the subject menu and an "Add" button to confirm the creation of the subject.
 
@@ -69,7 +69,7 @@ After adding all the grades for your course, you can press the `Total` button to
 
 ### Minimum and Maximum Grade
 
-In the attributes of the Subject class, you will find the following variables:
+In the attributes of the fos.service.Subject class, you will find the following variables:
 
     // minimum score to approve
     public static final double passing_score = 3.0;
@@ -81,7 +81,7 @@ You can change them to the grading values used by your institution.
 
 ### Credit Limit
 
-In the attributes of the Management class, you will find the following variable: 
+In the attributes of the fos.service.Management class, you will find the following variable: 
 
     // maximum amount of credits
     public static final int max_credits = 21;

@@ -1,5 +1,11 @@
+package fos.view;
+
 import java.awt.*;
 import javax.swing.*;
+
+import fos.service.Subject;
+import fos.service.ValidationUtils;
+import fos.data.GradeFileHandler;
 
 public class GradeMenu extends JPanel
 {

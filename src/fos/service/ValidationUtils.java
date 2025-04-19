@@ -1,3 +1,5 @@
+package fos.service;
+
 public class ValidationUtils
 {
     // method to verify if a number is negative

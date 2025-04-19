@@ -1,5 +1,9 @@
-import java.io.*;
+package fos.service;
+
 import javax.swing.*;
+
+import fos.view.SubjectMenu;
+import fos.view.WindowComponent;
 
 public class DeleteSubject
 {
@@ -12,7 +16,7 @@ public class DeleteSubject
 
     // constructor
     public DeleteSubject(Subject subject,
-                        JPanel toDelete)
+                         JPanel toDelete)
     {
         this.subject = subject;
         this.toDelete = toDelete;

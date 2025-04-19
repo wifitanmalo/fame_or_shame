@@ -1,5 +1,10 @@
+package fos.view;
+
 import java.awt.*;
 import javax.swing.*;
+
+import fos.service.Subject;
+import fos.service.DeleteSubject;
 
 public class SubjectPanel extends JPanel
 {
