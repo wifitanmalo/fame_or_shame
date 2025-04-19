@@ -8,17 +8,17 @@ public class Subject
     private int credits;
 
     // performance attributes
-    private double total_score;
-    private double total_evaluated;
+    private double totalScore;
+    private double totalEvaluated;
 
     // minimum score to approve
-    public static final double passing_score = 3.0;
+    public static final double PASSING_SCORE = 3.0;
 
     // maximum score possible
-    public static final double max_score = 5.0;
+    public static final double MAX_SCORE = 5.0;
 
     // grades lists
-    private ArrayList<GradePanel> grades_list;
+    private ArrayList<GradePanel> gradesList;
 
     // constructor
     public Subject(int id,
@@ -28,86 +28,86 @@ public class Subject
         this.id = id;
         this.name = name;
         this.credits = credits;
-        this.total_score = 0.0;
-        this.total_evaluated = 0.0;
+        this.totalScore = 0.0;
+        this.totalEvaluated = 0.0;
     }
 
     // method to create a grade
-    public void create_grade(GradePanel grade)
+    public void createGrade(GradePanel grade)
     {
-        grades_list.add(grade);
+        gradesList.add(grade);
     }
 
     // method to delete a grade
-    public void delete_grade(GradePanel grade)
+    public void deleteGrade(GradePanel grade)
     {
-        grades_list.remove(grade);
+        gradesList.remove(grade);
     }
 
     // method to update a grade by its index
-    public void update_grade(GradePanel grade)
+    public void updateGrade(GradePanel grade)
     {
-        grades_list.set(get_grade_index(grade), grade);
+        gradesList.set(getGradeIndex(grade), grade);
     }
 
     // method to get the index of the GradePanel
-    public int get_grade_index(GradePanel grade)
+    public int getGradeIndex(GradePanel grade)
     {
-        return grades_list.indexOf(grade);
+        return gradesList.indexOf(grade);
     }
 
     // setters and getters
-    public void set_id(int id)
+    public void setId(int id)
     {
         this.id = id;
     }
-    public int get_id()
+    public int getId()
     {
         return id;
     }
 
-    public void set_name(String name)
+    public void setName(String name)
     {
         this.name = name;
     }
-    public String get_name()
+    public String getName()
     {
         return name;
     }
 
-    public void set_credits(int credits)
+    public void setCredits(int credits)
     {
         this.credits = credits;
     }
-    public int get_credits()
+    public int getCredits()
     {
         return credits;
     }
 
-    public void set_total_score(double total_score)
+    public void setTotalScore(double total_score)
     {
-        this.total_score = total_score;
+        this.totalScore = total_score;
     }
-    public double get_total_score()
+    public double getTotalScore()
     {
-        return total_score;
-    }
-
-    public void set_total_evaluated(double total_evaluated)
-    {
-        this.total_evaluated = total_evaluated;
-    }
-    public double get_total_evaluated()
-    {
-        return total_evaluated;
+        return totalScore;
     }
 
-    public void set_grades_list(ArrayList<GradePanel> grades_list)
+    public void setTotalEvaluated(double total_evaluated)
     {
-        this.grades_list = grades_list;
+        this.totalEvaluated = total_evaluated;
     }
-    public ArrayList<GradePanel> get_grades_list()
+    public double getTotalEvaluated()
     {
-        return grades_list;
+        return totalEvaluated;
+    }
+
+    public void setGradesList(ArrayList<GradePanel> grades_list)
+    {
+        this.gradesList = grades_list;
+    }
+    public ArrayList<GradePanel> getGradesList()
+    {
+        return gradesList;
     }
 }

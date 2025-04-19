@@ -1,36 +1,37 @@
 import java.awt.*;
-import java.io.*;
 import javax.swing.*;
-import java.util.ArrayList;
 
 public class GradeMenu extends JPanel
 {
+    // object to use the grades file
+    public static final GradeFileHandler fileHandler = new GradeFileHandler();
+
     // subject object
     private Subject subject;
 
     // panel where the grades are added
-    private static JPanel grade_box;
+    private static JPanel gradeBox;
 
-    // imported labels
-    private static JLabel score_text;
+    // imported label
+    private static JLabel scoreText;
 
     // constructor
     public GradeMenu(Subject subject)
     {
         this.subject = subject;
-        initialize_panel();
+        initializePanel();
     }
 
     // method to initialize the main panel
-    public void initialize_panel()
+    public void initializePanel()
     {
         setLayout(null);
-        setBackground(WindowComponent.default_frame_background);
-        setBounds(0, 0, Main.width, Main.height);
+        setBackground(WindowComponent.FRAME_BACKGROUND);
+        setBounds(0, 0, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
 
         // create the grade box
-        grade_box = new JPanel();
-        JScrollPane scroll_grade = WindowComponent.set_scroll_bar(grade_box,
+        gradeBox = new JPanel();
+        JScrollPane scroll_grade = WindowComponent.set_scroll_bar(gradeBox,
                                                                     155,
                                                                     60,
                                                                     400,
@@ -42,20 +43,20 @@ public class GradeMenu extends JPanel
                                                         WindowComponent.negative_y(scroll_grade, -50),
                                                         78,
                                                         50,
-                                                        WindowComponent.default_button_background);
+                                                        WindowComponent.BUTTON_BACKGROUND);
         WindowComponent.configure_text(back_button,
-                                        WindowComponent.default_font_foreground,
+                                        WindowComponent.FONT_FOREGROUND,
                                         1,
                                         16);
         WindowComponent.button_event(back_button,
                                     () ->
                                     {
-                                        Main.subject_menu.refresh_subjects();
-                                        WindowComponent.switch_panel(this, Main.subject_menu);
+                                        Main.subjectMenu.refreshSubjects();
+                                        WindowComponent.switch_panel(this, Main.subjectMenu);
                                     },
-                                    WindowComponent.default_button_background,
-                                    WindowComponent.default_entered_button_background,
-                                    WindowComponent.default_pressed_button_background);
+                                    WindowComponent.BUTTON_BACKGROUND,
+                                    WindowComponent.ENTERED_BUTTON_BACKGROUND,
+                                    WindowComponent.PRESSED_BUTTON_BACKGROUND);
 
         // button to calculate the total score/percentage
         JButton total_button = WindowComponent.set_button("Total",
@@ -63,24 +64,24 @@ public class GradeMenu extends JPanel
                                                             WindowComponent.positive_y(back_button, 20),
                                                             78,
                                                             50,
-                                                            WindowComponent.default_button_background);
+                                                            WindowComponent.BUTTON_BACKGROUND);
         WindowComponent.configure_text(total_button,
-                                        WindowComponent.default_font_foreground,
+                                        WindowComponent.FONT_FOREGROUND,
                                         1,
                                         14);
         WindowComponent.button_event(total_button,
                                     () ->
                                     {
-                                        if(grade_validation())
+                                        if(gradeValidation())
                                         {
-                                            set_text_score(subject.get_total_score());
-                                            Main.subject_menu.update_subject(subject,
-                                                                            subject.get_total_score(),
-                                                                            subject.get_total_evaluated());
-                                            WindowComponent.reload(Main.subject_menu);
+                                            setTextScore(subject.getTotalScore());
+                                            SubjectMenu.fileHandler.updateSubject(subject,
+                                                                            subject.getTotalScore(),
+                                                                            subject.getTotalEvaluated());
+                                            WindowComponent.reload(Main.subjectMenu);
                                         }
                                     },
-                                    WindowComponent.default_button_background,
+                                    WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#91BAD6"),
                                     Color.decode("#528AAE"));
 
@@ -90,19 +91,19 @@ public class GradeMenu extends JPanel
                                                         WindowComponent.positive_y(total_button, 20),
                                                         50,
                                                         50,
-                                                        WindowComponent.default_button_background);
+                                                        WindowComponent.BUTTON_BACKGROUND);
         WindowComponent.configure_text(add_button,
-                                        WindowComponent.default_font_foreground,
+                                        WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
         WindowComponent.button_event(add_button,
                                     () ->
                                     {
                                         GradePanel new_grade = new GradePanel(subject);
-                                        subject.create_grade(new_grade);
-                                        update_grade(subject);
+                                        subject.createGrade(new_grade);
+                                        fileHandler.updateGrade(subject);
                                     },
-                                    WindowComponent.default_button_background,
+                                    WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#C5EF48"),
                                     Color.decode("#9DD100"));
 
@@ -113,18 +114,18 @@ public class GradeMenu extends JPanel
                                                     scroll_grade.getWidth(),
                                                     26);
         WindowComponent.configure_text(name_text,
-                                        WindowComponent.default_pressed_button_background,
+                                        WindowComponent.PRESSED_BUTTON_BACKGROUND,
                                         3,
                                         WindowComponent.get_height(name_text));
 
         // text where the total score is shown
-        score_text = WindowComponent.set_text(String.valueOf(subject.get_total_score()),
+        scoreText = WindowComponent.set_text(String.valueOf(subject.getTotalScore()),
                                                 back_button.getX(),
                                                 WindowComponent.positive_y(add_button, 14),
                                                 80,
                                                 20);
-        WindowComponent.configure_text(score_text,
-                                        WindowComponent.default_pressed_button_background,
+        WindowComponent.configure_text(scoreText,
+                                        WindowComponent.PRESSED_BUTTON_BACKGROUND,
                                         3,
                                         WindowComponent.get_height(name_text));
 
@@ -134,25 +135,25 @@ public class GradeMenu extends JPanel
         add(back_button);
         add(total_button);
         add(add_button);
-        add(score_text);
+        add(scoreText);
 
         // load the saved grades
-        load_grades();
+        fileHandler.loadGrades();
     }
 
     // method to validate the grade
-    public boolean grade_validation()
+    public boolean gradeValidation()
     {
         // reboot the grade values
         double total_score = 0;
         double total_percentage = 0;
-        subject.set_total_score(0);
-        subject.set_total_evaluated(0);
+        subject.setTotalScore(0);
+        subject.setTotalEvaluated(0);
 
-        for (GradePanel grade : subject.get_grades_list())
+        for (GradePanel grade : subject.getGradesList())
         {
-            String scoreText = grade.get_score_text();
-            String percentageText = grade.get_percentage_text();
+            String scoreText = grade.getScoreText();
+            String percentageText = grade.getPercentageText();
 
             try
             {
@@ -167,10 +168,10 @@ public class GradeMenu extends JPanel
                                                 JOptionPane.ERROR_MESSAGE);
                     return false;
                 }
-                if(ValidationUtils.exceeds_limit(score, Subject.max_score))
+                if(ValidationUtils.exceedsLimit(score, Subject.MAX_SCORE))
                 {
                     JOptionPane.showMessageDialog(this,
-                                                "Score cannot be higher than " + Subject.max_score + ".",
+                                                "Score cannot be higher than " + Subject.MAX_SCORE + ".",
                                                 "Score limit",
                                                 JOptionPane.ERROR_MESSAGE);
                     return false;
@@ -180,7 +181,7 @@ public class GradeMenu extends JPanel
                 total_score += score * (percentage/100);
                 total_percentage += percentage;
 
-                if(ValidationUtils.exceeds_limit(total_percentage, 100))
+                if(ValidationUtils.exceedsLimit(total_percentage, 100))
                 {
                     JOptionPane.showMessageDialog(this,
                                                 "The total percentage cannot exceed 100%.",
@@ -198,177 +199,48 @@ public class GradeMenu extends JPanel
             }
         }
 
-        subject.set_total_score(total_score);
-        subject.set_total_evaluated(total_percentage);
+        subject.setTotalScore(total_score);
+        subject.setTotalEvaluated(total_percentage);
         return true;
     }
 
-    // method to load the grades from the grades file
-    public void load_grades()
-    {
-        try
-        {
-            String line;
-            ArrayList<String> all_lines = new ArrayList<>();
-            BufferedReader reader = new BufferedReader(new FileReader("grades.txt"));
-
-            // add on the list all non-empty lines
-            while ((line = reader.readLine()) != null)
-            {
-                all_lines.add(line);
-            }
-            reader.close();
-
-            // loop to add each grade in its respective list
-            for (Subject subject : SubjectMenu.manager.get_subjects_list())
-            {
-                subject.set_grades_list(new ArrayList<>());
-
-                // loop to get the lines that match the subject id
-                for (String grade : all_lines)
-                {
-                    String[] data = grade.split(",");
-                    int id = Integer.parseInt(data[0]);
-
-                    if (id == subject.get_id())
-                    {
-                        String score = data[1];
-                        String percentage = data[2];
-
-                        // create a new grade and set the score/percentage
-                        GradePanel new_grade = new GradePanel(subject);
-                        new_grade.set_score_text(score);
-                        new_grade.set_percentage_text(percentage);  // Assuming you have this method
-
-                        // add the new grade to the grades list
-                        subject.create_grade(new_grade);
-                    }
-                }
-            }
-        }
-        catch (IOException error)
-        {
-            WindowComponent.message_box(this,
-                                        "Error while reading the file",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    // method to create a grade in the file
-    public void create_grade(Subject subject)
-    {
-        try
-        {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("grades.txt", true));
-            for(GradePanel grade : subject.get_grades_list())
-            {
-                String data = grade.get_subject_id()
-                        + ","
-                        + grade.get_score_text()
-                        + ","
-                        + grade.get_percentage_text();
-                writer.write(data);
-                writer.newLine();
-            }
-            writer.close();
-        }
-        catch (IOException e)
-        {
-            WindowComponent.message_box(this,
-                                        "Error while writing the file",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    // method to delete a grade in the file
-    public void delete_grade(Subject subject)
-    {
-        // file names
-        File input = new File("grades.txt");
-        File temporal = new File("temporal.txt");
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(input));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(temporal)))
-        {
-            String line;
-            while ((line = reader.readLine()) != null)
-            {
-                // split the line in commas
-                String[] data = line.split(",");
-                int current_id = Integer.parseInt(data[0]);
-
-                // ignore the lines with the same id of the subject
-                if(current_id != subject.get_id())
-                {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
-        }
-        catch (IOException e)
-        {
-            WindowComponent.message_box(this,
-                                        "Error while reading the file",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-        }
-
-        // replace the original file with the temporal one
-        if (!input.delete() || !temporal.renameTo(input))
-        {
-            WindowComponent.message_box(this,
-                                        "Error while rewriting file.",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    // method to delete the grades in the file
-    public void update_grade(Subject subject)
-    {
-        delete_grade(subject);
-        create_grade(subject);
-    }
-
     // method to load the grades
-    public void refresh_grades(Subject current_subject)
+    public void refreshGrades(Subject current_subject)
     {
-        grade_box.removeAll();
+        gradeBox.removeAll();
         this.subject = current_subject;
-        for(GradePanel grade : subject.get_grades_list())
+        for(GradePanel grade : subject.getGradesList())
         {
-            grade_box.add(grade);
+            gradeBox.add(grade);
 
             // set the grade values in the text fields
-            grade.set_score_text(grade.get_score_text());
-            grade.set_percentage_text(grade.get_percentage_text());
+            grade.setScoreText(grade.getScoreText());
+            grade.setPercentageText(grade.getPercentageText());
 
             // reload the panel to show the changes
-            WindowComponent.reload(grade_box);
+            WindowComponent.reload(gradeBox);
         }
     }
 
     // method to change the text and color of the total score
-    public void set_text_score(double score)
+    public void setTextScore(double score)
     {
-        score = SubjectMenu.two_decimals(score);
-        score_text.setText(String.valueOf(score));
-        if(score >= Subject.passing_score)
+        score = SubjectMenu.twoDecimals(score);
+        scoreText.setText(String.valueOf(score));
+        if(score >= Subject.PASSING_SCORE)
         {
-            score_text.setForeground(Color.decode("#C5EF48"));
+            scoreText.setForeground(Color.decode("#C5EF48"));
         }
         else
         {
-            score_text.setForeground(Color.decode("#FF6865"));
+            scoreText.setForeground(Color.decode("#FF6865"));
         }
-        WindowComponent.reload(score_text);
+        WindowComponent.reload(scoreText);
     }
 
     // method to get the subject box
-    public static JPanel get_grade_box()
+    public static JPanel getGradeBox()
     {
-        return grade_box;
+        return gradeBox;
     }
 }

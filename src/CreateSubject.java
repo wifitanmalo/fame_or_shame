@@ -4,25 +4,25 @@ import javax.swing.*;
 public class CreateSubject extends JPanel
 {
     // text boxes
-    private JTextField id_text_box;
-    private JTextField name_text_box;
-    private JTextField credits_text_box;
+    private JTextField idTextBox;
+    private JTextField nameTextBox;
+    private JTextField creditsTextBox;
 
     // constructor
     public CreateSubject()
     {
-        initialize_panel();
+        initializePanel();
     }
 
     // method to initialize
-    private void initialize_panel()
+    private void initializePanel()
     {
         setLayout(null);
-        setBackground(WindowComponent.default_frame_background);
-        setBounds(0, 0, Main.width, Main.height);
+        setBackground(WindowComponent.FRAME_BACKGROUND);
+        setBounds(0, 0, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
 
         // create the panel with the text boxes
-        JPanel input_panel = WindowComponent.set_panel(WindowComponent.default_button_background,
+        JPanel input_panel = WindowComponent.set_panel(WindowComponent.BUTTON_BACKGROUND,
                                                         (this.getWidth()/2) - (300/2),
                                                         (this.getHeight()-340)/2,
                                                         300,
@@ -34,21 +34,21 @@ public class CreateSubject extends JPanel
                                                         161,
                                                         78,
                                                         50,
-                                                        WindowComponent.default_button_background);
+                                                        WindowComponent.BUTTON_BACKGROUND);
         WindowComponent.configure_text(back_button,
-                                        WindowComponent.default_font_foreground,
+                                        WindowComponent.FONT_FOREGROUND,
                                         1,
                                         16);
         WindowComponent.button_event(back_button,
                                     () ->
                                     {
-                                        Main.subject_menu.refresh_subjects();
-                                        WindowComponent.switch_panel(this, Main.subject_menu);
-                                        clear_boxes();
+                                        Main.subjectMenu.refreshSubjects();
+                                        WindowComponent.switch_panel(this, Main.subjectMenu);
+                                        clearBoxes();
                                     },
-                                    WindowComponent.default_button_background,
-                                    WindowComponent.default_entered_button_background,
-                                    WindowComponent.default_pressed_button_background);
+                                    WindowComponent.BUTTON_BACKGROUND,
+                                    WindowComponent.ENTERED_BUTTON_BACKGROUND,
+                                    WindowComponent.PRESSED_BUTTON_BACKGROUND);
 
         // create the add button
         JButton add_button = WindowComponent.set_button("Add",
@@ -56,14 +56,14 @@ public class CreateSubject extends JPanel
                                                         back_button.getY(),
                                                         78,
                                                         50,
-                                                        WindowComponent.default_button_background);
+                                                        WindowComponent.BUTTON_BACKGROUND);
         WindowComponent.configure_text(add_button,
-                                            WindowComponent.default_font_foreground,
+                                            WindowComponent.FONT_FOREGROUND,
                                             1,
                                             16);
         WindowComponent.button_event(add_button,
                                     this::add_validation,
-                                    WindowComponent.default_button_background,
+                                    WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#C5EF48"),
                                     Color.decode("#9DD100"));
 
@@ -74,59 +74,59 @@ public class CreateSubject extends JPanel
                                                     260,
                                                     22);
         WindowComponent.configure_text(id_title,
-                                        WindowComponent.default_font_foreground,
+                                        WindowComponent.FONT_FOREGROUND,
                                         1,
                                         WindowComponent.get_height(id_title));
 
         // id text box
-        id_text_box = WindowComponent.set_text_field(id_title.getX(),
+        idTextBox = WindowComponent.set_text_field(id_title.getX(),
                                                     WindowComponent.negative_y(id_title,20),
                                                     260,
                                                     30);
-        WindowComponent.configure_text(id_text_box,
-                WindowComponent.default_button_background,
+        WindowComponent.configure_text(idTextBox,
+                WindowComponent.BUTTON_BACKGROUND,
                 1,
                 18);
 
         // name title
         JLabel name_title = WindowComponent.set_text("Name",
                                                     (input_panel.getWidth()-260)/2,
-                                                    WindowComponent.negative_y(id_text_box,20),
+                                                    WindowComponent.negative_y(idTextBox,20),
                                                     260,
                                                     22);
         WindowComponent.configure_text(name_title,
-                                        WindowComponent.default_font_foreground,
+                                        WindowComponent.FONT_FOREGROUND,
                                         1,
                                         WindowComponent.get_height(name_title));
 
         // name text box
-        name_text_box = WindowComponent.set_text_field(id_title.getX(),
+        nameTextBox = WindowComponent.set_text_field(id_title.getX(),
                                                         WindowComponent.negative_y(name_title,20),
                                                         260,
                                                         30);
-        WindowComponent.configure_text(name_text_box,
-                                    WindowComponent.default_button_background,
+        WindowComponent.configure_text(nameTextBox,
+                                    WindowComponent.BUTTON_BACKGROUND,
                                     1,
                                     18);
 
         // credits title
         JLabel credits_title = WindowComponent.set_text("Credits",
                                                 (input_panel.getWidth()-260)/2,
-                                                WindowComponent.negative_y(name_text_box,20),
+                                                WindowComponent.negative_y(nameTextBox,20),
                                                 260,
                                                 22);
         WindowComponent.configure_text(credits_title,
-                                        WindowComponent.default_font_foreground,
+                                        WindowComponent.FONT_FOREGROUND,
                                         1,
                                         WindowComponent.get_height(credits_title));
 
         // credits text box
-        credits_text_box = WindowComponent.set_text_field(id_title.getX(),
+        creditsTextBox = WindowComponent.set_text_field(id_title.getX(),
                                                         WindowComponent.negative_y(credits_title,20),
                                                         260,
                                                         30);
-        WindowComponent.configure_text(credits_text_box,
-                                    WindowComponent.default_button_background,
+        WindowComponent.configure_text(creditsTextBox,
+                                    WindowComponent.BUTTON_BACKGROUND,
                                     1,
                                     18);
 
@@ -137,11 +137,11 @@ public class CreateSubject extends JPanel
 
         // add the components to the panel
         input_panel.add(id_title);
-        input_panel.add(id_text_box);
+        input_panel.add(idTextBox);
         input_panel.add(name_title);
-        input_panel.add(name_text_box);
+        input_panel.add(nameTextBox);
         input_panel.add(credits_title);
-        input_panel.add(credits_text_box);
+        input_panel.add(creditsTextBox);
     }
 
     // method to verify if subject data is valid
@@ -150,18 +150,18 @@ public class CreateSubject extends JPanel
         try
         {
             // get subject values from text boxes
-            int id = Integer.parseInt(id_text_box.getText().trim());
-            String name = name_text_box.getText().trim();
-            int credits = Integer.parseInt(credits_text_box.getText().trim());
+            int id = Integer.parseInt(idTextBox.getText().trim());
+            String name = nameTextBox.getText().trim();
+            int credits = Integer.parseInt(creditsTextBox.getText().trim());
 
-            if(SubjectMenu.manager.subject_exists(id))
+            if(SubjectMenu.manager.subjectExists(id))
             {
                 WindowComponent.message_box(this,
                                             "ID already exists.",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
-            else if(ValidationUtils.is_negative(id) || ValidationUtils.is_negative(credits))
+            else if(ValidationUtils.isNegative(id) || ValidationUtils.isNegative(credits))
             {
                 WindowComponent.message_box(this,
                                             "ID/Credits cannot be negative.",
@@ -175,18 +175,18 @@ public class CreateSubject extends JPanel
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
-            else if(ValidationUtils.exceeds_limit(name_text_box.getText().length(), 50))
+            else if(ValidationUtils.exceedsLimit(nameTextBox.getText().length(), 50))
             {
                 WindowComponent.message_box(this,
                                             "Name cannot be longer than 50 characters.",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
-            else if(ValidationUtils.exceeds_limit(Management.signed_credits + credits,
-                                                Management.max_credits))
+            else if(ValidationUtils.exceedsLimit(Management.signedCredits + credits,
+                                                Management.MAX_CREDITS))
             {
                 WindowComponent.message_box(this,
-                                            "Credits cannot be higher than " + Management.max_credits + ".",
+                                            "Credits cannot be higher than " + Management.MAX_CREDITS + ".",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
@@ -194,17 +194,17 @@ public class CreateSubject extends JPanel
             {
                 // create the subject on the subject list/file
                 Subject new_subject = new Subject(id, name, credits);
-                SubjectMenu.manager.create_subject(new_subject);
-                Main.subject_menu.create_subject(new_subject);
+                SubjectMenu.manager.createSubject(new_subject);
+                SubjectMenu.fileHandler.createSubject(new_subject);
 
                 // refresh the subjects on the subject box
-                Main.subject_menu.refresh_subjects();
+                Main.subjectMenu.refreshSubjects();
 
                 // reload the panel to show the new subject
-                WindowComponent.reload(Main.subject_menu);
+                WindowComponent.reload(Main.subjectMenu);
 
                 // switch to the subject menu
-                WindowComponent.switch_panel(this, Main.subject_menu);
+                WindowComponent.switch_panel(this, Main.subjectMenu);
             }
         }
         catch (NumberFormatException e)
@@ -214,14 +214,14 @@ public class CreateSubject extends JPanel
                                         "Input error",
                                         JOptionPane.ERROR_MESSAGE);
         }
-        clear_boxes();
+        clearBoxes();
     }
 
     // method to clear all the text boxes
-    public void clear_boxes()
+    public void clearBoxes()
     {
-        WindowComponent.clear_box(id_text_box);
-        WindowComponent.clear_box(name_text_box);
-        WindowComponent.clear_box(credits_text_box);
+        WindowComponent.clear_box(idTextBox);
+        WindowComponent.clear_box(nameTextBox);
+        WindowComponent.clear_box(creditsTextBox);
     }
 }

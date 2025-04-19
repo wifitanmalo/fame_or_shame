@@ -3,24 +3,24 @@ import javax.swing.*;
 public class Main extends JFrame
 {
     // window size values
-    public static final int width = 600, height = 400;
+    public static final int WINDOW_WIDTH=600, WINDOW_HEIGHT=400;
 
     // SubjectMenu object
-    public static SubjectMenu subject_menu;
+    public static SubjectMenu subjectMenu;
 
     // constructor
     public Main()
     {
-        initialize_window();
+        initializeWindow();
         WindowComponent.set_container(this.getContentPane());
-        subject_menu = new SubjectMenu();
+        subjectMenu = new SubjectMenu();
     }
 
     // method to run the main window
-    public void initialize_window()
+    public void initializeWindow()
     {
         setTitle("Fame or Shame");
-        setBounds(0, 0, width, height);
+        setBounds(0, 0, WINDOW_WIDTH, WINDOW_HEIGHT);
         setLocationRelativeTo(null);
         setResizable(false);
         setVisible(true);

@@ -6,14 +6,14 @@ import javax.swing.*;
 public class WindowComponent
 {
     // default system font
-    public static final String default_font = "Verdana";
+    public static final String DEFAULT_FONT = "Verdana";
 
-    // default colors values
-    public static final Color default_font_foreground = Color.decode("#FFFFFF");
-    public static final Color default_button_background = Color.decode("#3D3D3D");
-    public static final Color default_entered_button_background = Color.decode("#4D5156");
-    public static final Color default_pressed_button_background = Color.decode("#AAAAAA");
-    public static final Color default_frame_background = Color.decode("#1F1F1F");
+    // default color values
+    public static final Color FONT_FOREGROUND = Color.decode("#FFFFFF");
+    public static final Color BUTTON_BACKGROUND = Color.decode("#3D3D3D");
+    public static final Color ENTERED_BUTTON_BACKGROUND = Color.decode("#4D5156");
+    public static final Color PRESSED_BUTTON_BACKGROUND = Color.decode("#AAAAAA");
+    public static final Color FRAME_BACKGROUND = Color.decode("#1F1F1F");
 
     // container object
     public static Container current_container;
@@ -48,7 +48,7 @@ public class WindowComponent
                                              int height)
     {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
-        panel.setBackground(default_button_background);
+        panel.setBackground(BUTTON_BACKGROUND);
 
         JScrollPane scroll_panel = new JScrollPane(panel);
         scroll_panel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
@@ -76,7 +76,7 @@ public class WindowComponent
                                       int size)
     {
         container.setForeground(color);
-        container.setFont(new Font(WindowComponent.default_font, style, size));
+        container.setFont(new Font(WindowComponent.DEFAULT_FONT, style, size));
     }
 
     // method to add a text field

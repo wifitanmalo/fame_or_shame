@@ -3,40 +3,40 @@ import java.util.ArrayList;
 public class Management
 {
     // amount of signed credits
-    public static int signed_credits = 0;
+    public static int signedCredits = 0;
 
     // maximum amount of credits
-    public static final int max_credits = 21;
+    public static final int MAX_CREDITS = 21;
 
     // subjects list
-    private ArrayList<Subject> subjects_list;
+    private ArrayList<Subject> subjectsList;
 
     // constructor
     public Management()
     {
-        subjects_list = new ArrayList<>();
+        subjectsList = new ArrayList<>();
     }
 
     // method to create a subject
-    public void create_subject(Subject subject)
+    public void createSubject(Subject subject)
     {
-        subjects_list.add(subject);
-        signed_credits += subject.get_credits();
+        subjectsList.add(subject);
+        signedCredits += subject.getCredits();
     }
 
     // method to delete a subject
-    public void delete_subject(Subject subject)
+    public void deleteSubject(Subject subject)
     {
-        signed_credits -= subject.get_credits();
-        subjects_list.remove(subject);
+        signedCredits -= subject.getCredits();
+        subjectsList.remove(subject);
     }
 
     // method to verify if a subject already exists
-    public boolean subject_exists(int id)
+    public boolean subjectExists(int id)
     {
-        for (Subject subject : subjects_list)
+        for (Subject subject : subjectsList)
         {
-            if (id == subject.get_id())
+            if (id == subject.getId())
             {
                 return true;
             }
@@ -45,13 +45,13 @@ public class Management
     }
 
     // setters and getters
-    public void set_subjects_list(ArrayList<Subject> subjects_list)
+    public void setSubjectsList(ArrayList<Subject> subjects_list)
     {
-        this.subjects_list = subjects_list;
+        this.subjectsList = subjects_list;
     }
-    public ArrayList<Subject> get_subjects_list()
+    public ArrayList<Subject> getSubjectsList()
     {
-        return subjects_list;
+        return subjectsList;
     }
 }
 

@@ -1,13 +1,13 @@
 public class ValidationUtils
 {
     // method to verify if a number is negative
-    public static boolean is_negative(double number)
+    public static boolean isNegative(double number)
     {
         return number < 0;
     }
 
     // method to verify if a number exceeds the limit
-    public static boolean exceeds_limit(double number, double limit)
+    public static boolean exceedsLimit(double number, double limit)
     {
         return number > limit;
     }

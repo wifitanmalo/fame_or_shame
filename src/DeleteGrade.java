@@ -19,16 +19,16 @@ public class DeleteGrade
         this.subject = subject;
         this.grade = grade;
         this.grade_box = grade_panel;
-        delete_grade();
+        deleteGrade();
     }
 
-    public void delete_grade()
+    public void deleteGrade()
     {
-        if (subject.get_grades_list().contains(grade))
+        if (subject.getGradesList().contains(grade))
         {
             // delete the grade from the grades panel/list
             grade_box.remove(grade);
-            subject.delete_grade(grade);
+            subject.deleteGrade(grade);
 
             // reload the panel to show the changes
             WindowComponent.reload(grade_box);

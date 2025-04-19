@@ -5,93 +5,93 @@ import javax.swing.*;
 public class GradePanel extends JPanel
 {
     // panel where the grades are added
-    private final JPanel grade_box;
+    private final JPanel gradeBox;
 
     // subject object
     private final Subject subject;
 
     // subject id
-    private int subject_id;
+    private int subjectId;
 
     // text boxes
-    private JTextField score_box;
-    private JTextField percentage_box;
+    private JTextField scoreBox;
+    private JTextField percentageBox;
 
     // constructor
     public GradePanel(Subject subject)
     {
         this.subject = subject;
-        this.subject_id = subject.get_id();
-        this.grade_box = GradeMenu.get_grade_box();
-        grade_panel();
+        this.subjectId = subject.getId();
+        this.gradeBox = GradeMenu.getGradeBox();
+        gradePanel();
     }
 
     // method to create a grade
-    public void grade_panel()
+    public void gradePanel()
     {
         setPreferredSize(new Dimension(400, 80));
-        setBackground(WindowComponent.default_button_background);
+        setBackground(WindowComponent.BUTTON_BACKGROUND);
         setLayout(null);
 
         // text field where you enter the score
-        score_box = WindowComponent.set_text_field(94,
+        scoreBox = WindowComponent.set_text_field(94,
                                                     25,
                                                     80,
                                                     30);
-        WindowComponent.configure_text(score_box,
-                                        WindowComponent.default_button_background,
+        WindowComponent.configure_text(scoreBox,
+                                        WindowComponent.BUTTON_BACKGROUND,
                                         1,
                                         18);
-        score_box.addKeyListener(new KeyAdapter()
+        scoreBox.addKeyListener(new KeyAdapter()
         {
             @Override
             public void keyReleased(KeyEvent e)
             {
-                subject.update_grade(GradePanel.this);
-                SubjectPanel.grade_menu.update_grade(subject);
+                subject.updateGrade(GradePanel.this);
+                GradeMenu.fileHandler.updateGrade(subject);
                 super.keyReleased(e);
             }
         });
 
         // score text
         JLabel score_text = WindowComponent.set_text("Score:",
-                                                    WindowComponent.negative_x(score_box, 0),
-                                                    score_box.getY(),
+                                                    WindowComponent.negative_x(scoreBox, 0),
+                                                    scoreBox.getY(),
                                                     64,
                                                     30);
         WindowComponent.configure_text(score_text,
-                                        WindowComponent.default_font_foreground,
+                                        WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
 
         // text field where you enter the percentage
-        percentage_box = WindowComponent.set_text_field(WindowComponent.positive_x(score_box, 16),
-                                                        score_box.getY(),
-                                                        score_box.getWidth(),
-                                                        score_box.getHeight());
-        WindowComponent.configure_text(percentage_box,
-                                        WindowComponent.default_button_background,
+        percentageBox = WindowComponent.set_text_field(WindowComponent.positive_x(scoreBox, 16),
+                                                        scoreBox.getY(),
+                                                        scoreBox.getWidth(),
+                                                        scoreBox.getHeight());
+        WindowComponent.configure_text(percentageBox,
+                                        WindowComponent.BUTTON_BACKGROUND,
                                         1,
                                         18);
-        percentage_box.addKeyListener(new KeyAdapter()
+        percentageBox.addKeyListener(new KeyAdapter()
         {
             @Override
             public void keyReleased(KeyEvent e)
             {
-                subject.update_grade(GradePanel.this);
-                SubjectPanel.grade_menu.update_grade(subject);
+                subject.updateGrade(GradePanel.this);
+                GradeMenu.fileHandler.updateGrade(subject);
                 super.keyReleased(e);
             }
         });
 
         // percentage symbol
         JLabel percentage_symbol = WindowComponent.set_text("%",
-                                                            WindowComponent.positive_x(percentage_box, 14),
+                                                            WindowComponent.positive_x(percentageBox, 14),
                                                             score_text.getY(),
                                                             50,
                                                             30);
         WindowComponent.configure_text(percentage_symbol,
-                                            WindowComponent.default_font_foreground,
+                                            WindowComponent.FONT_FOREGROUND,
                                             1,
                                             18);
 
@@ -101,17 +101,17 @@ public class GradePanel extends JPanel
                                                             15,
                                                             50,
                                                             50,
-                                                            WindowComponent.default_frame_background);
+                                                            WindowComponent.FRAME_BACKGROUND);
         WindowComponent.configure_text(delete_button,
-                                        WindowComponent.default_font_foreground,
+                                        WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
         WindowComponent.button_event(delete_button,
                                     () ->
                                     {
-                                        new DeleteGrade(subject, this, grade_box);
-                                        subject.get_grades_list().remove(this);
-                                        SubjectPanel.grade_menu.update_grade(subject);
+                                        new DeleteGrade(subject, this, gradeBox);
+                                        subject.getGradesList().remove(this);
+                                        GradeMenu.fileHandler.updateGrade(subject);
                                     },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
@@ -119,43 +119,43 @@ public class GradePanel extends JPanel
 
         // add the components on the panel
         add(score_text);
-        add(score_box);
-        add(percentage_box);
+        add(scoreBox);
+        add(percentageBox);
         add(percentage_symbol);
         add(delete_button);
 
         // add the panel to the grade box
-        grade_box.add(this);
+        gradeBox.add(this);
 
         // reload the panel to show the changes
-        WindowComponent.reload(grade_box);
+        WindowComponent.reload(gradeBox);
     }
 
     // setters and getters
-    public void set_subject_id(int id)
+    public void setSubjectId(int id)
     {
-        this.subject_id = subject.get_id();
+        this.subjectId = subject.getId();
     }
-    public int get_subject_id()
+    public int getSubjectId()
     {
-        return subject_id;
-    }
-
-    public void set_score_text(String score)
-    {
-        score_box.setText(score);
-    }
-    public String get_score_text()
-    {
-        return score_box.getText().trim();
+        return subjectId;
     }
 
-    public void set_percentage_text(String percentage)
+    public void setScoreText(String score)
     {
-        percentage_box.setText(percentage);
+        scoreBox.setText(score);
     }
-    public String get_percentage_text()
+    public String getScoreText()
     {
-        return percentage_box.getText().trim();
+        return scoreBox.getText().trim();
+    }
+
+    public void setPercentageText(String percentage)
+    {
+        percentageBox.setText(percentage);
+    }
+    public String getPercentageText()
+    {
+        return percentageBox.getText().trim();
     }
 }
