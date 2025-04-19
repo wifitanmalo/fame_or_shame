@@ -1,56 +1,50 @@
 # Fame or Shame
 
--------------
+_Fame or Shame_ is an application developed with **Java** to manage your subject grades. You can create a subject with its respective data: id, name, and credits, where you can add your grades with the score obtained and its percentage to calculate your final grade for the course.
 
-_Fame or Shame_ es una aplicación desarrollada con **Java** para administrar las calificaciones de tus materias. En esta puedes crear una materia con sus respectivos datos: id, nombre y créditos, en la que puedes agregar tus calificaciones con el puntaje obtenido y su porcentaje para calcular en cuánto te quedó la materia.
+The name [_Fame or Shame_](https://gta.fandom.com/wiki/Fame_or_Shame) is owned by [_Rockstar Games_](https://www.rockstargames.com/), being a television show in the video game [_Grand Theft Auto V_](https://www.rockstargames.com/gta-v).
 
-El nombre [_Fame or Shame_](https://gta.fandom.com/wiki/Fame_or_Shame) es propiedad de la empresa [_Rockstar Games_](https://www.rockstargames.com/es/), siendo un programa de televisión presente en el videojuego [_Grand Theft Auto V_](https://www.rockstargames.com/es/gta-v).
-
-> [!IMPORTANT] Asegúrate de tener instalado lo siguiente:
+> [!IMPORTANT]
+> Make sure you have the following installed:
 >
-> Java Development Kit **(versión 8 o superior).**
-> - [Descargar JDK](https://www.oracle.com/java/technologies/javase-jdk8-downloads.html)
+> Java Development Kit **(version 8 or higher).**
+> - [Download JDK](https://www.oracle.com/java/technologies/javase-jdk8-downloads.html)
 > 
-> Un IDE compatible con Java, como _IntelliJ IDEA_ **(recomendado)** o _Eclipse._
-> - [Descargar IntelliJ IDEA](https://www.jetbrains.com/idea/download/)
-> - [Descargar Eclipse](https://www.eclipse.org/downloads/)
+>  An IDE compatible with Java, such as _IntelliJ IDEA_ **(recommended)** or _Eclipse_.
+>  - [Download IntelliJ IDEA](https://www.jetbrains.com/idea/download/)
+>  - [Download Eclipse](https://www.eclipse.org/downloads/)
 
-
-## Inicio de programa
-
--------------
-
-Al ejecutar el programa aparecerá una ventana con el cuadro donde serán mostradas las materias y un botón `+` para crear una nueva.
-
-## Crear una materia
+## Program start
 
 -------------
 
-Al pulsar el botón `+` se mostrará una ventana con tres campos de texto para ingresar el id, nombre y créditos de la materia. Además, habrá un botón "Back" para regresar al menú de las materias y un botón "Add" para confirmar la creación de la materia.
+When you run the program, a window will appear with a box showing the subjects and a `+` button to create a new one.
+
+### Create a Subject
+
+When you click the `+` button, a window will appear with three text fields to enter the subject id, name, and credits. Additionally, there will be a "Back" button to return to the subject menu and an "Add" button to confirm the creation of the subject.
 
 > [!CAUTION]
-> - El ID y los créditos deben ser **enteros positivos** no mayores a 9 dígitos.
-> - El ID debe ser **diferente** a los ya existentes.
-> - El nombre no puede estar **vacío.**
-> - El nombre no puede ser mayor a **50 carácteres.**
-> - El número de créditos no puede ser mayor al **límite** admitido por el programa.
+> - The ID and credits must be **positive integers** not exceeding 9 digits.
+> - The ID must be **different** from existing ones.
+> - The name cannot be **empty**.
+> - The name cannot exceed **50 characters**.
+> - The number of credits cannot exceed the program's **allowed limit**.
  
-Tras finalizar la creación de la materia, los datos se almacenarán en el archivo `subjects.txt` en el siguiente orden: `id, name, credits, total_score, total_evaluated`. Estos dos últimos valores serán predeterminadamente `0.0` cuando se crea una nueva materia.
-> _**Ejemplo de materia:**_
+After finalizing the subject creation, the data will be stored in the `subjects.txt` file in the following order: `id, name, credits, total_score, total_evaluated`. The last two values will be set to `0.0` when a new subject is created.
+> _**Example of a subject:**_
     
     111021,Univariate Calculus,3,0.0,0.0
 
-Finalmente se te redirigirá nuevamente al menú de las materias en donde ahora se mostrará la nueva materia agregada en el recuadro con dos botones: `+` para entrar al menú de calificaciones y `x` para eliminar la materia.
+You will then be redirected back to the subject menu, where the new subject will be displayed in the box with two buttons: `+` to enter the grades menu and `x` to delete the subject.
 
-## Crear una calificación
+### Create a grade
 
--------------
+When you click the `+` button on the subject, a window similiar to the previous one will appear, but with two new buttons: `Total` to calculate the total grades and a `Back` button to return to the subject menu. Above the `+` button, the calculated value of the subject will be shown, displayed in green `#C5EF48` if you passed and in red `#FF6865` if you failed.
 
-Al pulsar el botón `+` de la materia se mostrará una ventana similar a la de las materias, pero con dos nuevos botones: `Total` para calcular el total que suman las calificaciones y un botón `Back` para regresar al menú de las materias. Encima del botón `+` estará el valor calculado de la materia, mostrándose en verde `#C5EF48` si has aprobado y en rojo `#FF6865` si has reprobado.
+The usage is the same as the previous menu. Clicking the `+` button will add a new grade with two text fields for the score and percentage, as well as an `x` button to delete the grade. Each grade will be stored in the `grades.txt` file in the following order: `id,score,percentage`, and the file will be updated as you make changes to the text fields.
 
-El uso es igual al del menú anterior, al pulsar el botón `+` se añadirá una nueva calificación con dos campos de texto para el puntaje y el porcentaje respectivamente, además de un botón `x` para eliminar la calificación. Cada calificación será almacenada en el archivo `grades.txt` en el siguiente orden: `id,score,percentage` y a medida que realices un cambio en alguno de los dos campos de texto, el archivo se irá actualizando con las nuevas calificaciones.
-
-> _**Ejemplo de calificaciones:**_
+> _**Example of grades:**_
 
     111021,5,10
     111021,3.4,30
@@ -59,25 +53,23 @@ El uso es igual al del menú anterior, al pulsar el botón `+` se añadirá una 
     111021,5,10
     111021,0.5,20
 
-## Calcular la calificación total
+### Calculate Total Grade
 
--------------
-
-Ya habiendo agregado todas las calificaciones de tu materia, puedes pulsar el botón `Total` para calcular cuál fue el total que obtuviste y si lograste culminar exitosamente la materia.
+After adding all the grades for your course, you can press the `Total` button to calculate the total you obtained and whether you successfully passed the subject.
 
 > [!CAUTION]
-> - Las calificaciones y sus porcentajes deben ser **double positivos.**
-> - Las calificaciones no pueden ser mayores al **límite** admitido por el programa.
-> - Los porcentajes deben ser **mayores** a 0.
-> - La suma de los porcentajes no puede ser **mayor a 100%.**
+> - Grades and percentages must be **positive doubles**.
+> - Grades cannot exceed the program's **allowed limit**.
+> - Percentages must be higher than **0%.**
+> - The sum of percentages cannot exceed **100%**.
 
-## Configuración
+## Settings
 
 -------------
 
-### Calificación mínima y máxima
+### Minimum and Maximum Grade
 
-En los atributos de la clase Subject encontrarás las siguientes variables:
+In the attributes of the Subject class, you will find the following variables:
 
     // minimum score to approve
     public static final double passing_score = 3.0;
@@ -85,23 +77,23 @@ En los atributos de la clase Subject encontrarás las siguientes variables:
     // maximum score possible
     public static final double max_score = 5.0;
 
-Puedes cambiarlo por los valores para calificar que tiene tu institución.
+You can change them to the grading values used by your institution.
 
-### Límite de créditos
+### Credit Limit
 
-En los atributos de la clase Management encontrarás la siguiente variable: 
+In the attributes of the Management class, you will find the following variable: 
 
     // maximum amount of credits
     public static final int max_credits = 21;
 
-Puedes cambiarlo por el valor máximo de créditos que tiene tu institución.
+You can change it to the maximum credit limit used by your institution.
 
-## Comentario del autor
+## Author's Note
 
 -------------
 
-Espero que este programa les facilite la vida a la hora de calcular sus calificaciones sin verse obligados a tener que recordar cada calificación y porcentaje en el transcurso del curso. 
+I hope this program makes it easier for you to calculate your grades without having to remember each grade and percentage throughout the course.
 
-¡Muchos éxitos !
+Good luck in your signatures!
 
     By: Nicolás Chaparro
