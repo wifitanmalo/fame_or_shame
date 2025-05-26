@@ -16,6 +16,7 @@ import java.io.IOException;
 import fos.view.GradePanel;
 import fos.view.SubjectMenu;
 import fos.view.WindowComponent;
+import fos.service.Grade;
 import fos.service.Subject;
 import fos.service.ValidationUtils;
 
@@ -58,16 +59,16 @@ public class GradeFileHandler
 
                     if (id == subject.getId())
                     {
-                        String score = data[1];
-                        String percentage = data[2];
+                        double score = Double.parseDouble(data[1]);
+                        double percentage = Double.parseDouble(data[2]);
 
                         // create a new grade and set the score/percentage
-                        GradePanel new_grade = new GradePanel(subject);
-                        new_grade.setScoreText(score);
-                        new_grade.setPercentageText(percentage);  // Assuming you have this method
+                        Grade newGrade = new Grade(subject.getId(), score, percentage);
+                        newGrade.setScore(score);
+                        newGrade.setPercentage(percentage);  // Assuming you have this method
 
                         // add the new grade to the grades list
-                        subject.createGrade(new_grade);
+                        subject.createGrade(newGrade);
                     }
                 }
             }
@@ -87,13 +88,13 @@ public class GradeFileHandler
         try
         {
             BufferedWriter writer = new BufferedWriter(new FileWriter("grades.txt", true));
-            for(GradePanel grade : subject.getGradesList())
+            for(Grade grade : subject.getGradesList())
             {
-                String data = grade.getSubjectId()
+                String data = grade.getSubjectID()
                                 + ","
-                                + ValidationUtils.emptyText(grade.getScoreText())
+                                + ValidationUtils.emptyText(String.valueOf(grade.getScore()))
                                 + ","
-                                + ValidationUtils.emptyText(grade.getPercentageText());
+                                + ValidationUtils.emptyText(String.valueOf(grade.getPercentage()));
                 writer.write(data);
                 writer.newLine();
             }

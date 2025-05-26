@@ -2,8 +2,6 @@ package fos.service;
 
 import java.util.ArrayList;
 
-import fos.view.GradePanel;
-
 public class Subject
 {
     // attributes
@@ -22,7 +20,7 @@ public class Subject
     public static final double MAX_SCORE = 5.0;
 
     // grades lists
-    private ArrayList<GradePanel> gradesList;
+    private ArrayList<Grade> gradesList;
 
     // constructor
     public Subject(int id,
@@ -37,25 +35,25 @@ public class Subject
     }
 
     // method to create a grade
-    public void createGrade(GradePanel grade)
+    public void createGrade(Grade grade)
     {
         gradesList.add(grade);
     }
 
     // method to delete a grade
-    public void deleteGrade(GradePanel grade)
+    public void deleteGrade(Grade grade)
     {
         gradesList.remove(grade);
     }
 
     // method to update a grade by its index
-    public void updateGrade(GradePanel grade)
+    public void updateGrade(Grade grade)
     {
         gradesList.set(getGradeIndex(grade), grade);
     }
 
     // method to get the index of the fos.view.GradePanel
-    public int getGradeIndex(GradePanel grade)
+    public int getGradeIndex(Grade grade)
     {
         return gradesList.indexOf(grade);
     }
@@ -106,11 +104,11 @@ public class Subject
         return totalEvaluated;
     }
 
-    public void setGradesList(ArrayList<GradePanel> grades_list)
+    public void setGradesList(ArrayList<Grade> grades_list)
     {
         this.gradesList = grades_list;
     }
-    public ArrayList<GradePanel> getGradesList()
+    public ArrayList<Grade> getGradesList()
     {
         return gradesList;
     }

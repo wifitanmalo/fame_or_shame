@@ -6,11 +6,11 @@ import java.awt.Color;
 // swing imports
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 // package imports
+import fos.service.Grade;
 import fos.service.Subject;
 import fos.service.ValidationUtils;
 import fos.data.GradeFileHandler;
@@ -86,7 +86,7 @@ public class GradeMenu extends JPanel
         WindowComponent.button_event(totalButton,
                                     () ->
                                     {
-                                        if(gradeValidation())
+                                        if(ValidationUtils.gradeValidation(subject, this))
                                         {
                                             setTextScore(subject.getTotalScore());
                                             SubjectMenu.fileHandler.updateSubject(subject,
@@ -113,9 +113,12 @@ public class GradeMenu extends JPanel
         WindowComponent.button_event(addButton,
                                     () ->
                                     {
-                                        GradePanel new_grade = new GradePanel(subject);
-                                        subject.createGrade(new_grade);
+                                        Grade newGrade = new Grade(subject.getId(), 0,0);
+                                        subject.createGrade(newGrade);
                                         fileHandler.updateGrade(subject);
+
+                                        SubjectPanel.gradeMenu.refreshGrades(this.subject);
+                                        WindowComponent.reload(gradeBox);
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#C5EF48"),
@@ -155,81 +158,17 @@ public class GradeMenu extends JPanel
         fileHandler.loadGrades();
     }
 
-    // method to validate the grade
-    public boolean gradeValidation()
-    {
-        // reboot the grade values
-        double totalScore = 0;
-        double totalPercentage = 0;
-        subject.setTotalScore(0);
-        subject.setTotalEvaluated(0);
-
-        for (GradePanel grade : subject.getGradesList())
-        {
-            String scoreText = grade.getScoreText();
-            String percentageText = grade.getPercentageText();
-
-            try
-            {
-                double score = Double.parseDouble(scoreText);
-                double percentage = Double.parseDouble(percentageText);
-
-                if(score<0 || percentage<=0)
-                {
-                    JOptionPane.showMessageDialog(this,
-                                                "Score and percentage must be POSITIVE numbers.",
-                                                "Input Error",
-                                                JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-                if(ValidationUtils.exceedsLimit(score, Subject.MAX_SCORE))
-                {
-                    JOptionPane.showMessageDialog(this,
-                                                "Score cannot be higher than " + Subject.MAX_SCORE + ".",
-                                                "Score limit",
-                                                JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-
-                // get the current values
-                totalScore += score * (percentage/100);
-                totalPercentage += percentage;
-
-                if(ValidationUtils.exceedsLimit(totalPercentage, 100))
-                {
-                    JOptionPane.showMessageDialog(this,
-                                                "The total percentage cannot exceed 100%.",
-                                                "Percentage limit",
-                                                JOptionPane.ERROR_MESSAGE);
-                    return false;
-                }
-            }
-            catch (NumberFormatException e)
-            {
-                JOptionPane.showMessageDialog(this,
-                                            "Please enter valid numbers for score and percentage.",
-                                            "Input Error", JOptionPane.ERROR_MESSAGE);
-                return false;
-            }
-        }
-
-        subject.setTotalScore(totalScore);
-        subject.setTotalEvaluated(totalPercentage);
-        return true;
-    }
-
     // method to load the grades
-    public void refreshGrades(Subject current_subject)
+    public void refreshGrades(Subject currentSubject)
     {
         gradeBox.removeAll();
-        this.subject = current_subject;
-        for(GradePanel grade : subject.getGradesList())
+        this.subject = currentSubject;
+        for(Grade grade : subject.getGradesList())
         {
-            gradeBox.add(grade);
-
             // set the grade values in the text fields
-            grade.setScoreText(grade.getScoreText());
-            grade.setPercentageText(grade.getPercentageText());
+            GradePanel currentPanel = new GradePanel(subject, grade);
+            currentPanel.setScoreText(String.valueOf(grade.getScore()));
+            currentPanel.setPercentageText(String.valueOf(grade.getPercentage()));
 
             // reload the panel to show the changes
             WindowComponent.reload(gradeBox);

@@ -11,6 +11,7 @@ import javax.swing.JTextField;
 import fos.data.SubjectFileHandler;
 import fos.view.Main;
 import fos.view.SubjectMenu;
+import fos.view.SubjectPanel;
 import fos.view.WindowComponent;
 
 public class ValidationUtils
@@ -132,5 +133,66 @@ public class ValidationUtils
                     "Input error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    // method to validate the grade
+    public static boolean gradeValidation(Subject subject,
+                                          Container container)
+    {
+        // reboot the grade values
+        double totalScore = 0;
+        double totalPercentage = 0;
+        subject.setTotalScore(0);
+        subject.setTotalEvaluated(0);
+
+        for (Grade grade : subject.getGradesList())
+        {
+            try
+            {
+                double score = grade.getScore();
+                double percentage = grade.getPercentage();
+
+                if(score<0 || percentage<=0)
+                {
+                    JOptionPane.showMessageDialog(container,
+                            "Score and percentage must be POSITIVE numbers.",
+                            "Input Error",
+                            JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+                if(ValidationUtils.exceedsLimit(score, Subject.MAX_SCORE))
+                {
+                    JOptionPane.showMessageDialog(container,
+                            "Score cannot be higher than " + Subject.MAX_SCORE + ".",
+                            "Score limit",
+                            JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+
+                // get the current values
+                totalScore += score * (percentage/100);
+                totalPercentage += percentage;
+
+                if(ValidationUtils.exceedsLimit(totalPercentage, 100))
+                {
+                    JOptionPane.showMessageDialog(container,
+                            "The total percentage cannot exceed 100%.",
+                            "Percentage limit",
+                            JOptionPane.ERROR_MESSAGE);
+                    return false;
+                }
+            }
+            catch (NumberFormatException e)
+            {
+                JOptionPane.showMessageDialog(container,
+                        "Please enter valid numbers for score and percentage.",
+                        "Input Error", JOptionPane.ERROR_MESSAGE);
+                return false;
+            }
+        }
+
+        subject.setTotalScore(totalScore);
+        subject.setTotalEvaluated(totalPercentage);
+        return true;
     }
 }

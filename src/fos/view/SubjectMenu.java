@@ -12,6 +12,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 // package imports
+import fos.service.Subject;
 import fos.service.ValidationUtils;
 import fos.data.SubjectFileHandler;
 
@@ -115,7 +116,7 @@ public class SubjectMenu extends JPanel
     public void refreshSubjects()
     {
         subjectBox.removeAll();
-        for(fos.service.Subject subject : fileHandler.getSubjectsList())
+        for(Subject subject : fileHandler.getSubjectsList())
         {
             // create the panel in the subject box
             SubjectPanel currentPanel = new SubjectPanel(subject);

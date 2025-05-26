@@ -12,13 +12,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+// package imports
+import fos.service.Grade;
+import fos.service.Subject;
+
 public class GradePanel extends JPanel
 {
     // panel where the grades are added
     private final JPanel gradeBox;
 
-    // subject object
-    private final fos.service.Subject subject;
+    // subject and grade objects
+    private final Subject subject;
+    private final Grade grade;
 
     // subject id
     private int subjectId;
@@ -28,9 +33,10 @@ public class GradePanel extends JPanel
     private JTextField percentageBox;
 
     // constructor
-    public GradePanel(fos.service.Subject subject)
+    public GradePanel(Subject subject, Grade grade)
     {
         this.subject = subject;
+        this.grade = grade;
         this.subjectId = subject.getId();
         this.gradeBox = GradeMenu.getGradeBox();
         gradePanel();
@@ -57,7 +63,15 @@ public class GradePanel extends JPanel
             @Override
             public void keyReleased(KeyEvent e)
             {
-                subject.updateGrade(GradePanel.this);
+                try
+                {
+                    double newScore = Double.parseDouble(scoreBox.getText().trim());
+                    grade.setScore(newScore);
+                }
+                catch (NumberFormatException ex) {
+                    grade.setScore(0);
+                }
+                subject.updateGrade(grade);
                 GradeMenu.fileHandler.updateGrade(subject);
                 super.keyReleased(e);
             }
@@ -88,7 +102,16 @@ public class GradePanel extends JPanel
             @Override
             public void keyReleased(KeyEvent e)
             {
-                subject.updateGrade(GradePanel.this);
+                // Update grade object
+                try
+                {
+                    double newPercentage = Double.parseDouble(percentageBox.getText().trim());
+                    grade.setPercentage(newPercentage);
+                }
+                catch (NumberFormatException ex) {
+                    grade.setPercentage(0);
+                }
+                subject.updateGrade(grade);
                 GradeMenu.fileHandler.updateGrade(subject);
                 super.keyReleased(e);
             }
@@ -119,16 +142,16 @@ public class GradePanel extends JPanel
         WindowComponent.button_event(delete_button,
                                     () ->
                                     {
-                                        if (subject.getGradesList().contains(this))
+                                        if (subject.getGradesList().contains(grade))
                                         {
                                             // delete the grade from the grades panel/list
                                             gradeBox.remove(this);
-                                            subject.deleteGrade(this);
+                                            subject.deleteGrade(grade);
 
                                             // reload the panel to show the changes
                                             WindowComponent.reload(gradeBox);
                                         }
-                                        subject.getGradesList().remove(this);
+                                        subject.getGradesList().remove(grade);
                                         GradeMenu.fileHandler.updateGrade(subject);
                                     },
                                     delete_button.getBackground(),
