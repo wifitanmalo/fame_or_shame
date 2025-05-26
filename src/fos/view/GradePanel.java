@@ -1,10 +1,16 @@
 package fos.view;
 
-import java.awt.*;
-import java.awt.event.*;
-import javax.swing.*;
+// awt imports
+import java.awt.Color;
+import java.awt.Dimension;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 
-import fos.service.DeleteGrade;
+// swing imports
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 public class GradePanel extends JPanel
 {
@@ -113,7 +119,15 @@ public class GradePanel extends JPanel
         WindowComponent.button_event(delete_button,
                                     () ->
                                     {
-                                        new DeleteGrade(subject, this, gradeBox);
+                                        if (subject.getGradesList().contains(this))
+                                        {
+                                            // delete the grade from the grades panel/list
+                                            gradeBox.remove(this);
+                                            subject.deleteGrade(this);
+
+                                            // reload the panel to show the changes
+                                            WindowComponent.reload(gradeBox);
+                                        }
                                         subject.getGradesList().remove(this);
                                         GradeMenu.fileHandler.updateGrade(subject);
                                     },

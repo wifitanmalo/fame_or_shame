@@ -1,9 +1,21 @@
 package fos.view;
 
-import java.awt.*;
+// awt imports
+import java.awt.Color;
+import java.awt.Container;
+import java.awt.Cursor;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.*;
+import java.awt.Font;
+
+// swing imports
+import javax.swing.BoxLayout;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
 
 public class WindowComponent
 {

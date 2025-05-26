@@ -1,10 +1,18 @@
 package fos.data;
 
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
+import java.awt.Container;
+import javax.swing.JOptionPane;
 import java.util.ArrayList;
 
+// input/output imports
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+// package imports
 import fos.view.GradePanel;
 import fos.view.SubjectMenu;
 import fos.view.WindowComponent;
@@ -18,7 +26,7 @@ public class GradeFileHandler
     // constructor
     public GradeFileHandler()
     {
-        this.container = WindowComponent.get_container();;
+        this.container = WindowComponent.get_container();
     }
 
     // method to load the grades from the grades file
@@ -38,7 +46,7 @@ public class GradeFileHandler
             reader.close();
 
             // loop to add each grade in its respective list
-            for (Subject subject : SubjectMenu.manager.getSubjectsList())
+            for (Subject subject : SubjectMenu.fileHandler.getSubjectsList())
             {
                 subject.setGradesList(new ArrayList<>());
 

@@ -1,25 +1,40 @@
 package fos.data;
 
+import java.awt.Container;
+import javax.swing.JOptionPane;
+import java.util.ArrayList;
+
+// input/output imports
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
+// package imports
 import fos.view.Main;
-import fos.view.SubjectMenu;
 import fos.view.WindowComponent;
 import fos.service.Subject;
-import fos.service.Management;
-
-import javax.swing.*;
-import java.awt.*;
-import java.io.*;
 
 public class SubjectFileHandler
 {
     private final Container container;
-    private final Management manager;
+
+    // amount of signed credits
+    public static int SIGNED_CREDITS = 0;
+
+    // maximum amount of credits
+    public static final int MAX_CREDITS = 21;
+
+    // subjects list
+    private ArrayList<Subject> subjectsList;
 
     // constructor
     public SubjectFileHandler()
     {
-        this.container = WindowComponent.get_container();;
-        this.manager = SubjectMenu.manager;
+        this.container = WindowComponent.get_container();
+        subjectsList = new ArrayList<>();
     }
 
     // method to load the grades from the subjects file
@@ -28,6 +43,8 @@ public class SubjectFileHandler
         try
         {
             String line;
+            subjectsList.clear();
+            SIGNED_CREDITS = 0;
             BufferedReader read = new BufferedReader(new FileReader("subjects.txt"));
             while ((line = read.readLine()) != null)
             {
@@ -45,8 +62,9 @@ public class SubjectFileHandler
                 subject.setTotalScore(score);
                 subject.setTotalEvaluated(evaluated);
 
-                // create the subject in the subject panel/list
-                manager.createSubject(subject);
+                // increase the signed credits
+                SIGNED_CREDITS += credits;
+                subjectsList.add(subject);
             }
             read.close();
         }
@@ -141,7 +159,6 @@ public class SubjectFileHandler
         try (BufferedReader reader = new BufferedReader(new FileReader(file));
              BufferedWriter writer = new BufferedWriter(new FileWriter(temporal)))
         {
-
             String line;
             String grade_data = subject.getId()
                     + "," + subject.getName()
@@ -174,5 +191,15 @@ public class SubjectFileHandler
                     "File error",
                     JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+    // setters and getters
+    public void setSubjectsList(ArrayList<Subject> subjects_list)
+    {
+        this.subjectsList = subjects_list;
+    }
+    public ArrayList<Subject> getSubjectsList()
+    {
+        return subjectsList;
     }
 }

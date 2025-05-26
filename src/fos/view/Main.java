@@ -1,6 +1,8 @@
 package fos.view;
 
-import javax.swing.*;
+// swing imports
+import javax.swing.JFrame;
+import javax.swing.SwingUtilities;
 
 public class Main extends JFrame
 {

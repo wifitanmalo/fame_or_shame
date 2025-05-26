@@ -1,8 +1,8 @@
 package fos.service;
 
-import fos.view.GradePanel;
-
 import java.util.ArrayList;
+
+import fos.view.GradePanel;
 
 public class Subject
 {

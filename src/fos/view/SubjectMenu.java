@@ -1,10 +1,17 @@
 package fos.view;
 
-import java.awt.*;
-import javax.swing.*;
+// awt imports
+import java.awt.Color;
+import java.awt.Container;
 
-import fos.service.CreateSubject;
-import fos.service.Management;
+// swing imports
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+
+// package imports
 import fos.service.ValidationUtils;
 import fos.data.SubjectFileHandler;
 
@@ -14,7 +21,6 @@ public class SubjectMenu extends JPanel
     private final Container container;
 
     // static objects
-    public static final Management manager = new Management();
     public static final SubjectFileHandler fileHandler = new SubjectFileHandler();
 
     // subject panels
@@ -70,7 +76,7 @@ public class SubjectMenu extends JPanel
         WindowComponent.button_event(add_button,
                                     () ->
                                     {
-                                        if(ValidationUtils.equals(Management.signedCredits, Management.MAX_CREDITS))
+                                        if(ValidationUtils.equals(SubjectFileHandler.SIGNED_CREDITS, SubjectFileHandler.MAX_CREDITS))
                                         {
                                             WindowComponent.message_box(this,
                                                                         "You have already reached the credit limit.",
@@ -105,16 +111,16 @@ public class SubjectMenu extends JPanel
         WindowComponent.reload(this);
     }
 
-    // method to refresh the grades on the subject box
+    // method to refresh the subjects on the subject box
     public void refreshSubjects()
     {
         subjectBox.removeAll();
-        for(fos.service.Subject subject : manager.getSubjectsList())
+        for(fos.service.Subject subject : fileHandler.getSubjectsList())
         {
             // create the panel in the subject box
-            SubjectPanel current_panel = new SubjectPanel(subject);
-            current_panel.set_score_label(subject.getTotalScore());
-            current_panel.set_evaluated_label(subject.getTotalEvaluated());
+            SubjectPanel currentPanel = new SubjectPanel(subject);
+            currentPanel.set_score_label(subject.getTotalScore());
+            currentPanel.set_evaluated_label(subject.getTotalEvaluated());
         }
         // reload the panel to show the changes
         WindowComponent.reload(subjectBox);
