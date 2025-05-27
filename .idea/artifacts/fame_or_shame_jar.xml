@@ -1,0 +1,8 @@
+<component name="ArtifactManager">
+  <artifact type="jar" build-on-make="true" name="fame_or_shame:jar">
+    <output-path>$PROJECT_DIR$/out/artifacts/fame_or_shame_jar</output-path>
+    <root id="archive" name="fame_or_shame.jar">
+      <element id="module-output" name="fame_or_shame" />
+    </root>
+  </artifact>
+</component>

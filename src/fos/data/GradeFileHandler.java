@@ -1,19 +1,20 @@
 package fos.data;
 
 import java.awt.Container;
+import java.net.URISyntaxException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import javax.swing.JOptionPane;
 import java.util.ArrayList;
 
 // input/output imports
 import java.io.BufferedReader;
 import java.io.BufferedWriter;
-import java.io.File;
-import java.io.FileReader;
-import java.io.FileWriter;
 import java.io.IOException;
 
 // package imports
-import fos.view.GradePanel;
 import fos.view.SubjectMenu;
 import fos.view.WindowComponent;
 import fos.service.Grade;
@@ -23,112 +24,112 @@ import fos.service.ValidationUtils;
 public class GradeFileHandler
 {
     private final Container container;
+    private final Path gradesFile;
 
     // constructor
     public GradeFileHandler()
     {
         this.container = WindowComponent.get_container();
+        this.gradesFile = findFile();
+        ValidationUtils.fileExists(gradesFile, container);
     }
 
-    // method to load the grades from the grades file
+    // method to find the path of the grades.txt file
+    private Path findFile()
+    {
+        try
+        {
+            Path jarDir = Paths.get(
+                    getClass()
+                            .getProtectionDomain()
+                            .getCodeSource()
+                            .getLocation()
+                            .toURI()
+            ).getParent();
+            return jarDir.resolve("grades.txt");
+        }
+        catch (URISyntaxException e)
+        {
+            throw new RuntimeException("Unable to resolve data file location", e);
+        }
+    }
+
+    // method to load the grades from the grades.txt file
     public void loadGrades()
     {
-        try
+        ValidationUtils.fileExists(gradesFile, container);
+        ArrayList<String> allLines = new ArrayList<>();
+        try (BufferedReader reader = Files.newBufferedReader(gradesFile))
         {
             String line;
-            ArrayList<String> all_lines = new ArrayList<>();
-            BufferedReader reader = new BufferedReader(new FileReader("grades.txt"));
-
-            // add on the list all non-empty lines
             while ((line = reader.readLine()) != null)
             {
-                all_lines.add(line);
+                if (!line.isBlank()) allLines.add(line);
             }
-            reader.close();
-
-            // loop to add each grade in its respective list
-            for (Subject subject : SubjectMenu.fileHandler.getSubjectsList())
-            {
-                subject.setGradesList(new ArrayList<>());
-
-                // loop to get the lines that match the subject id
-                for (String grade : all_lines)
-                {
-                    String[] data = grade.split(",");
-                    int id = Integer.parseInt(data[0]);
-
-                    if (id == subject.getId())
-                    {
-                        double score = Double.parseDouble(data[1]);
-                        double percentage = Double.parseDouble(data[2]);
-
-                        // create a new grade and set the score/percentage
-                        Grade newGrade = new Grade(subject.getId(), score, percentage);
-                        newGrade.setScore(score);
-                        newGrade.setPercentage(percentage);  // Assuming you have this method
-
-                        // add the new grade to the grades list
-                        subject.createGrade(newGrade);
-                    }
-                }
-            }
-        }
-        catch (IOException error)
-        {
-            WindowComponent.message_box(container,
-                    "Error while reading the file",
-                    "File error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    // method to create a grade in the file
-    public void createGrade(Subject subject)
-    {
-        try
-        {
-            BufferedWriter writer = new BufferedWriter(new FileWriter("grades.txt", true));
-            for(Grade grade : subject.getGradesList())
-            {
-                String data = grade.getSubjectID()
-                                + ","
-                                + ValidationUtils.emptyText(String.valueOf(grade.getScore()))
-                                + ","
-                                + ValidationUtils.emptyText(String.valueOf(grade.getPercentage()));
-                writer.write(data);
-                writer.newLine();
-            }
-            writer.close();
         }
         catch (IOException e)
         {
             WindowComponent.message_box(container,
-                    "Error while writing the file",
-                    "File error",
-                    JOptionPane.ERROR_MESSAGE);
+                                        "Error while reading grades.txt",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+            return;
+        }
+
+        for (Subject subject : SubjectMenu.fileHandler.getSubjectsList())
+        {
+            subject.setGradesList(new ArrayList<>());
+            for (String gradeLine : allLines)
+            {
+                String[] data = gradeLine.split(",");
+                int id = Integer.parseInt(data[0]);
+                if (id == subject.getId())
+                {
+                    double score = Double.parseDouble(data[1]);
+                    double percentage = Double.parseDouble(data[2]);
+                    Grade grade = new Grade(id, score, percentage);
+                    subject.createGrade(grade);
+                }
+            }
         }
     }
 
-    // method to delete a grade in the file
+    // method to create a new grade in the grades.txt file
+    public void createGrade(Subject subject)
+    {
+        ValidationUtils.fileExists(gradesFile, container);
+        try (BufferedWriter writer = Files.newBufferedWriter(gradesFile, StandardOpenOption.APPEND))
+        {
+            for (Grade grade : subject.getGradesList())
+            {
+                String data = grade.getSubjectID() + "," + grade.getScore() + "," + grade.getPercentage();
+                writer.write(data);
+                writer.newLine();
+            }
+        }
+        catch (IOException e)
+        {
+            WindowComponent.message_box(container,
+                                        "Error while writing grades.txt",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to delete a grade in the grades.txt file
     public void deleteGrade(Subject subject)
     {
-        // file names
-        File input = new File("grades.txt");
-        File temporal = new File("temporal.txt");
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(input));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(temporal)))
+        ValidationUtils.fileExists(gradesFile, container);
+        Path tempFile = gradesFile.resolveSibling("grades_temp.txt");
+        try (BufferedReader reader = Files.newBufferedReader(gradesFile);
+             BufferedWriter writer = Files.newBufferedWriter(tempFile))
         {
             String line;
-            while ((line = reader.readLine()) != null)
-            {
-                // split the line in commas
+            while ((line = reader.readLine()) != null) {
+                if (line.isBlank()) continue;
                 String[] data = line.split(",");
-                int current_id = Integer.parseInt(data[0]);
-
-                // ignore the lines with the same id of the subject
-                if(current_id != subject.getId())
-                {
+                int id = Integer.parseInt(data[0]);
+                if (id != subject.getId()) {
                     writer.write(line);
                     writer.newLine();
                 }
@@ -137,25 +138,35 @@ public class GradeFileHandler
         catch (IOException e)
         {
             WindowComponent.message_box(container,
-                    "Error while reading the file",
-                    "File error",
-                    JOptionPane.ERROR_MESSAGE);
+                                        "Error while deleting the file",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+            return;
         }
-
-        // replace the original file with the temporal one
-        if (!input.delete() || !temporal.renameTo(input))
-        {
-            WindowComponent.message_box(container,
-                    "Error while rewriting file.",
-                    "File error",
-                    JOptionPane.ERROR_MESSAGE);
-        }
+        replaceFile(tempFile, gradesFile);
     }
 
-    // method to delete the grades in the file
+    // method to update all the grades of a subject
     public void updateGrade(Subject subject)
     {
         deleteGrade(subject);
         createGrade(subject);
+    }
+
+    // method to replace the original file for the temporal one
+    private void replaceFile(Path temporalFile, Path originalFile)
+    {
+        try
+        {
+            Files.delete(originalFile);
+            Files.move(temporalFile, originalFile);
+        }
+        catch (IOException e)
+        {
+            WindowComponent.message_box(container,
+                                        "Error replacing grade.txt",
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
     }
 }

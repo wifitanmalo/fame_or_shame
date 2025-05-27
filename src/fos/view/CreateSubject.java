@@ -75,7 +75,7 @@ public class CreateSubject extends JPanel
         WindowComponent.button_event(addButton,
                                     () ->
                                     {
-                                        ValidationUtils.addValidation(this, idTextBox, nameTextBox, creditsTextBox);
+                                        ValidationUtils.subjectValidation(this, idTextBox, nameTextBox, creditsTextBox);
                                         clearBoxes();
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,

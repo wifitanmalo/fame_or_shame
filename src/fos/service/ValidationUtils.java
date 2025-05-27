@@ -2,6 +2,9 @@ package fos.service;
 
 // awt import
 import java.awt.Container;
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
 
 // swing imports
 import javax.swing.JOptionPane;
@@ -11,7 +14,6 @@ import javax.swing.JTextField;
 import fos.data.SubjectFileHandler;
 import fos.view.Main;
 import fos.view.SubjectMenu;
-import fos.view.SubjectPanel;
 import fos.view.WindowComponent;
 
 public class ValidationUtils
@@ -60,11 +62,29 @@ public class ValidationUtils
         return false;
     }
 
+    public static void fileExists(Path file, Container container)
+    {
+        try
+        {
+            if (Files.notExists(file))
+            {
+                Files.createFile(file);
+            }
+        }
+        catch (IOException e)
+        {
+            WindowComponent.message_box(container,
+                                        "Error creating data file: " + file.getFileName(),
+                                        "File error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
     // method to verify if subject data is valid
-    public static void addValidation(Container container,
-                                JTextField idTextBox,
-                                JTextField nameTextBox,
-                                JTextField creditsTextBox)
+    public static void subjectValidation(Container container,
+                                         JTextField idTextBox,
+                                         JTextField nameTextBox,
+                                         JTextField creditsTextBox)
     {
         try
         {
