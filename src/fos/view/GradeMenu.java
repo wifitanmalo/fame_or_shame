@@ -53,7 +53,7 @@ public class GradeMenu extends JPanel
 
         // button to back to the subject menu
         JButton backButton = WindowComponent.set_button("Back",
-                                                        50,
+                                                        40,
                                                         WindowComponent.negative_y(scrollGrade, -50),
                                                         78,
                                                         50,
@@ -74,7 +74,7 @@ public class GradeMenu extends JPanel
 
         // button to calculate the total score/percentage
         JButton totalButton = WindowComponent.set_button("Total",
-                                                            50,
+                                                            backButton.getX(),
                                                             WindowComponent.positive_y(backButton, 20),
                                                             78,
                                                             50,
@@ -101,7 +101,7 @@ public class GradeMenu extends JPanel
 
         // button to create a grade
         JButton addButton = WindowComponent.set_button("+",
-                                                        backButton.getX(),
+                                                        backButton.getX() - 16,
                                                         WindowComponent.positive_y(totalButton, 20),
                                                         50,
                                                         50,
@@ -124,6 +124,26 @@ public class GradeMenu extends JPanel
                                     Color.decode("#C5EF48"),
                                     Color.decode("#9DD100"));
 
+        // button to create a grade
+        JButton subButton = WindowComponent.set_button("|",
+                                                        WindowComponent.positive_x(addButton, 8),
+                                                        addButton.getY(),
+                                                        50,
+                                                        50,
+                                                        WindowComponent.BUTTON_BACKGROUND);
+        WindowComponent.configure_text(subButton,
+                                        WindowComponent.FONT_FOREGROUND,
+                                        1,
+                                        18);
+        WindowComponent.button_event(subButton,
+                                    () ->
+                                    {
+                                       System.out.println("Add a sub grade");
+                                    },
+                                    WindowComponent.BUTTON_BACKGROUND,
+                                    Color.decode("#C5EF48"),
+                                    Color.decode("#9DD100"));
+
         // subject name text settings
         JLabel nameText = WindowComponent.set_text("Grades",
                                                     scrollGrade.getX(),
@@ -137,10 +157,10 @@ public class GradeMenu extends JPanel
 
         // text where the total score is shown
         scoreText = WindowComponent.set_text(String.valueOf(subject.getTotalScore()),
-                                                backButton.getX(),
-                                                WindowComponent.positive_y(addButton, 14),
-                                                80,
-                                                20);
+                                            backButton.getX() + 20,
+                                            WindowComponent.positive_y(addButton, 4),
+                                            80,
+                                            20);
         WindowComponent.configure_text(scoreText,
                                         WindowComponent.PRESSED_BUTTON_BACKGROUND,
                                         3,
@@ -152,6 +172,7 @@ public class GradeMenu extends JPanel
         add(backButton);
         add(totalButton);
         add(addButton);
+        add(subButton);
         add(scoreText);
 
         // load the saved grades
