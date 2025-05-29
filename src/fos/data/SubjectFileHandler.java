@@ -1,206 +1,171 @@
 package fos.data;
 
+// awt import
 import java.awt.Container;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import java.util.ArrayList;
+
+// sql imports
+import java.sql.*;
+
+// swing imports
 import javax.swing.JOptionPane;
 
-// input/output imports
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
-
 // package imports
+import fos.view.SubjectMenu;
+import fos.view.SubjectPanel;
 import fos.view.WindowComponent;
 import fos.service.Subject;
 import fos.service.ValidationUtils;
 
 public class SubjectFileHandler
 {
-    private final Container container;
+    // credit constants
     public static int SIGNED_CREDITS = 0;
     public static final int MAX_CREDITS = 21;
-    private ArrayList<Subject> subjectsList;
-    private final Path subjectsFile;
 
+    // constructor
     public SubjectFileHandler()
     {
-        this.container = WindowComponent.get_container();
-        this.subjectsList = new ArrayList<>();
-        this.subjectsFile = findFile();
-        ValidationUtils.fileExists(subjectsFile, container);
+
     }
 
-    // method to find the path of the subjects.txt file
-    private Path findFile()
+    // method to get the total score of a subject
+    public double getTotalScore(int subjectId, Container container)
     {
-        try
-        {
-            Path jarDir = Paths.get(
-                    getClass()
-                            .getProtectionDomain()
-                            .getCodeSource()
-                            .getLocation()
-                            .toURI()
-            ).getParent();
-            return jarDir.resolve("subjects.txt");
-        }
-        catch (URISyntaxException e)
-        {
-            throw new RuntimeException("Unable to resolve data file location", e);
-        }
-    }
+        double totalScore = 0.0;
+        String query = "SELECT totalScore FROM Subject WHERE id = ?";
 
-    // method to load the subjects from the subjects.txt file
-    public void loadSubjects()
-    {
-        ValidationUtils.fileExists(subjectsFile, container);
-        subjectsList.clear();
-        SIGNED_CREDITS = 0;
-
-        try (BufferedReader reader = Files.newBufferedReader(subjectsFile))
+        try (Connection conn = ValidationUtils.connectDB();
+             PreparedStatement get = conn.prepareStatement(query))
         {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) continue;
-                String[] data = line.split(",");
-                int id = Integer.parseInt(data[0]);
-                String name = data[1];
-                int credits = Integer.parseInt(data[2]);
-                double score = Double.parseDouble(data[3]);
-                double evaluated = Double.parseDouble(data[4]);
-
-                Subject subject = new Subject(id, name, credits);
-                subject.setTotalScore(score);
-                subject.setTotalEvaluated(evaluated);
-
-                SIGNED_CREDITS += credits;
-                subjectsList.add(subject);
-            }
-        }
-        catch (IOException e)
-        {
-            WindowComponent.message_box(container,
-                                        "Error while reading subjects.txt",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    // method to create a subject in the subjects.txt file
-    public void createSubject(Subject subject)
-    {
-        ValidationUtils.fileExists(subjectsFile, container);
-        try (BufferedWriter writer = Files.newBufferedWriter(subjectsFile, StandardOpenOption.APPEND))
-        {
-            String data = String.join(",",
-                                    String.valueOf(subject.getId()),
-                                    subject.getName(),
-                                    String.valueOf(subject.getCredits()),
-                                    "0.0",
-                                    "0.0");
-            writer.write(data);
-            writer.newLine();
-        }
-        catch (IOException e)
-        {
-            WindowComponent.message_box(container,
-                                        "Error while writing subjects.txt",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    // method to update a subject in the subjects.txt file
-    public void updateSubject(Subject subject, double newScore, double newEvaluated)
-    {
-        ValidationUtils.fileExists(subjectsFile, container);
-        Path tempFile = subjectsFile.resolveSibling("subjects_temp.txt");
-        try (BufferedReader reader = Files.newBufferedReader(subjectsFile);
-             BufferedWriter writer = Files.newBufferedWriter(tempFile))
-        {
-            String line;
-            while ((line = reader.readLine()) != null)
+            get.setInt(1, subjectId);
+            try (ResultSet rs = get.executeQuery())
             {
-                if (line.isBlank()) continue;
-                String[] data = line.split(",");
-                int currentId = Integer.parseInt(data[0].trim());
-                if (currentId == subject.getId())
+                if (rs.next())
                 {
-                    data[3] = String.valueOf(newScore);
-                    data[4] = String.valueOf(newEvaluated);
-                    line = String.join(",", data);
+                    totalScore = rs.getDouble("totalScore");
                 }
-                writer.write(line);
-                writer.newLine();
             }
-        } catch (IOException e)
+
+        }
+        catch (SQLException e)
         {
             WindowComponent.message_box(container,
-                                        "Error while updating subject",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-            return;
+                                    "Error while getting the score.",
+                                    "Data error",
+                                    JOptionPane.ERROR_MESSAGE);
         }
-        replaceFile(tempFile, subjectsFile);
+        return totalScore;
     }
 
-    // method to delete a subject in the subjects.txt file
-    public void deleteSubject(Subject subject)
+
+    // method to load the subjects from the database
+    public void loadSubjects(Container container)
     {
-        ValidationUtils.fileExists(subjectsFile, container);
-        Path tempFile = subjectsFile.resolveSibling("subjects_temp.txt");
-        try (BufferedReader reader = Files.newBufferedReader(subjectsFile);
-             BufferedWriter writer = Files.newBufferedWriter(tempFile))
+        String query = "SELECT * FROM Subject";
+
+        try (Connection conn = ValidationUtils.connectDB();
+             Statement stmt = conn.createStatement();
+             ResultSet rs = stmt.executeQuery(query))
         {
-            String line;
-            while ((line = reader.readLine()) != null)
+            SubjectMenu.subjectBox.removeAll();
+            while (rs.next())
             {
-                if (line.isBlank()) continue;
-                String[] data = line.split(",");
-                int id = Integer.parseInt(data[0]);
-                if (id != subject.getId()) {
-                    writer.write(line);
-                    writer.newLine();
-                }
+                int id = rs.getInt("id");
+                String name = rs.getString("name");
+                int credits = rs.getInt("credits");
+                double totalScore = rs.getDouble("totalScore");
+                double totalEvaluated = rs.getDouble("totalEvaluated");
+
+                // create the subject with the information
+                Subject subject = new Subject(id,name,credits);
+                subject.setTotalScore(totalScore);
+                subject.setTotalEvaluated(totalEvaluated);
+
+                // create the subject panel of the subject
+                SubjectPanel currentPanel = new SubjectPanel(subject);
+                currentPanel.set_score_label(subject.getTotalScore());
+                currentPanel.set_evaluated_label(subject.getTotalEvaluated());
             }
+            // reload the panel to show the changes
+            WindowComponent.reload(SubjectMenu.subjectBox);
         }
-        catch (IOException e)
+        catch (SQLException e)
+        {
+            WindowComponent.message_box(container,
+                                    "Error while reading the databaset",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to create a subject in the database
+    public void createSubject(Subject subject, Container container)
+    {
+        String query = "INSERT INTO Subject(id, name, credits, totalScore, totalEvaluated) VALUES(?, ?, ?, ?, ?)";
+
+        try (Connection conn = ValidationUtils.connectDB();
+             java.sql.PreparedStatement create = conn.prepareStatement(query)) {
+
+            create.setInt(1, subject.getId());
+            create.setString(2, subject.getName());
+            create.setInt(3, subject.getCredits());
+            create.setDouble(4, subject.getTotalScore());
+            create.setDouble(5, subject.getTotalEvaluated());
+
+            create.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            WindowComponent.message_box(container,
+                                        "Error while creating the subject.",
+                                        "Database error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to update a subject in the database
+    public void updateSubject(int id, Container container)
+    {
+        String query = "UPDATE Subject " +
+                "SET totalScore = (SELECT IFNULL(SUM(score * (percentage / 100.0)), 0) FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL), " +
+                "    totalEvaluated = (SELECT IFNULL(SUM(percentage), 0) FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL) " +
+                "WHERE id = ?;";
+
+        try (Connection conn = ValidationUtils.connectDB();
+             java.sql.PreparedStatement up = conn.prepareStatement(query))
+        {
+            up.setInt(1, id); // totalScore
+            up.setInt(2, id); // totalEvaluated
+            up.setInt(3, id); // subjectID
+
+            up.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            WindowComponent.message_box(container,
+                    "Error while updating the subject.",
+                    "Data error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to delete a subject in the database
+    public void deleteSubject(int id, Container container)
+    {
+        String query = "DELETE FROM Subject WHERE id = ?";
+
+        try (Connection conn = ValidationUtils.connectDB();
+             java.sql.PreparedStatement del = conn.prepareStatement(query))
+        {
+            del.setInt(1, id);
+            del.executeUpdate();
+        }
+        catch (SQLException e)
         {
             WindowComponent.message_box(container,
                                         "Error while deleting subject",
                                         "File error",
                                         JOptionPane.ERROR_MESSAGE);
-            return;
         }
-        replaceFile(tempFile, subjectsFile);
-    }
-
-    // method to replace the original file for the temporal one
-    private void replaceFile(Path temporalFile, Path originalFile)
-    {
-        try
-        {
-            Files.delete(originalFile);
-            Files.move(temporalFile, originalFile);
-        }
-        catch (IOException e)
-        {
-            WindowComponent.message_box(container,
-                                        "Error replacing subjects file",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-    public void setSubjectsList(ArrayList<Subject> subjectsList) {
-        this.subjectsList = subjectsList;
-    }
-    public ArrayList<Subject> getSubjectsList() {
-        return subjectsList;
     }
 }

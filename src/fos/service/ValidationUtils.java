@@ -2,9 +2,12 @@ package fos.service;
 
 // awt import
 import java.awt.Container;
-import java.io.IOException;
-import java.nio.file.Files;
-import java.nio.file.Path;
+
+// sql imports
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 
 // swing imports
 import javax.swing.JOptionPane;
@@ -36,47 +39,52 @@ public class ValidationUtils
         return current_number == number;
     }
 
-    // method to verify if a text is empty
-    public static String emptyText(String text)
+    /* method to verify if the database is connected
+    public static Connection connectDB()
     {
-        if (text.isEmpty())
+        Connection conn = null;
+        try
         {
-            return "0";
+            String url = "jdbc:sqlite:database/fos.db";
+            conn = DriverManager.getConnection(url);
+            System.out.println("Conexión establecida con SQLite");
         }
-        else
+        catch (SQLException e)
         {
-            return text;
+            System.out.println("Error de conexión: " + e.getMessage());
+        }
+        return conn;
+    }
+
+     */
+    public static Connection connectDB() throws SQLException
+    {
+        String DB_URL = "jdbc:sqlite:database/fos.db";
+        try {
+            Class.forName("org.sqlite.JDBC"); // Carga el driver
+            return DriverManager.getConnection(DB_URL);
+        } catch (ClassNotFoundException e) {
+            throw new SQLException("El driver SQLite JDBC no se ha encontrado", e);
         }
     }
 
     // method to verify if a subject already exists
     public static boolean subjectExists(int id)
     {
-        for (Subject subject : SubjectMenu.fileHandler.getSubjectsList())
-        {
-            if (id == subject.getId())
-            {
-                return true;
-            }
-        }
-        return false;
-    }
+        String query = "SELECT 1 FROM Subject WHERE id = ? LIMIT 1";
 
-    public static void fileExists(Path file, Container container)
-    {
-        try
-        {
-            if (Files.notExists(file))
-            {
-                Files.createFile(file);
-            }
+        try (Connection conn = connectDB();
+             java.sql.PreparedStatement exists = conn.prepareStatement(query)) {
+
+            exists.setInt(1, id);
+            ResultSet rs = exists.executeQuery();
+            return rs.next();
+
         }
-        catch (IOException e)
+        catch (SQLException e)
         {
-            WindowComponent.message_box(container,
-                                        "Error creating data file: " + file.getFileName(),
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
+            System.out.println("Error al verificar existencia del ID: " + e.getMessage());
+            return false;
         }
     }
 
@@ -131,16 +139,12 @@ public class ValidationUtils
             }
             else
             {
-                // create the subject on the subject list/file
+                // insert the subject on the database
                 Subject newSubject = new Subject(id, name, credits);
-                SubjectMenu.fileHandler.createSubject(newSubject);
-                SubjectMenu.fileHandler.getSubjectsList().add(newSubject);
+                SubjectMenu.fileHandler.createSubject(newSubject, container);
 
                 // refresh the subjects on the subject box
-                Main.subjectMenu.refreshSubjects();
-
-                // reload the panel to show the new subject
-                WindowComponent.reload(Main.subjectMenu);
+                SubjectMenu.fileHandler.loadSubjects(SubjectMenu.subjectBox);
 
                 // switch to the subject menu
                 WindowComponent.switch_panel(container, Main.subjectMenu);

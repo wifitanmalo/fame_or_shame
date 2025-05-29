@@ -53,7 +53,7 @@ public class CreateSubject extends JPanel
         WindowComponent.button_event(backButton,
                                     () ->
                                     {
-                                        Main.subjectMenu.refreshSubjects();
+                                        SubjectMenu.fileHandler.loadSubjects(this);
                                         WindowComponent.switch_panel(this, Main.subjectMenu);
                                         clearBoxes();
                                     },

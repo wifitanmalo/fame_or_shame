@@ -1,6 +1,5 @@
 package fos.view;
 
-// swing imports
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 

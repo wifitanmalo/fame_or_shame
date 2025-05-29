@@ -1,44 +1,48 @@
 package fos.service;
 
-import java.util.ArrayList;
-
 public class Grade
 {
+    // attributes
+    private int id;
     private int subjectID;
+    private String name;
     private double score;
     private double percentage;
 
-    // list of sub grades
-    private ArrayList<Grade> subGradesList;
-
     // constructor
-    public Grade(int subjectID,
+    public Grade(int id,
+                int subjectID,
+                String name,
                 double score,
                 double percentage)
     {
+        this.id = id;
         this.subjectID = subjectID;
+        this.name = name;
         this.score = score;
         this.percentage = percentage;
-        this.subGradesList = new ArrayList<>();
-    }
-
-    // method to calculate the sum of the sub grades
-    public void calculateScore()
-    {
-        this.score = 0;
-        for(Grade grade : subGradesList)
-        {
-            this.score += grade.getScore();
-        }
-        this.score /= subGradesList.size();
     }
 
     // getters and setters
+    public void setID(int id) {
+        this.id = id;
+    }
+    public int getID() {
+        return id;
+    }
+
     public void setSubjectID(int id) {
         this.subjectID = id;
     }
     public int getSubjectID() {
         return subjectID;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+    public String getName() {
+        return name;
     }
 
     public void setScore(double score) {
@@ -53,12 +57,5 @@ public class Grade
     }
     public double getPercentage() {
         return percentage;
-    }
-
-    public void setSubGradesList(ArrayList<Grade> subGradesList) {
-        this.subGradesList = subGradesList;
-    }
-    public ArrayList<Grade> getSubGradesList() {
-        return subGradesList;
     }
 }

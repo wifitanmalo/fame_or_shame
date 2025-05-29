@@ -19,9 +19,8 @@ public class SubjectPanel extends JPanel
     // subject object
     private final Subject subject;
 
-    // subject panels
-    private final JPanel subjectBox;
-    public static GradeMenu gradeMenu;
+    // object of the grade menu
+    private GradeMenu gradeMenu;
 
     // performance labels
     private JLabel totalScore;
@@ -31,7 +30,6 @@ public class SubjectPanel extends JPanel
     public SubjectPanel(Subject subject)
     {
         this.subject = subject;
-        this.subjectBox = SubjectMenu.getSubjectBox();
         subject_panel();
     }
 
@@ -99,18 +97,14 @@ public class SubjectPanel extends JPanel
                                                                                 "You want to delete this subject?",
                                                                                 "Delete subject",
                                                                                 JOptionPane.YES_NO_OPTION);
-                                        if(choice == JOptionPane.YES_OPTION && SubjectMenu.fileHandler.getSubjectsList().contains(subject))
+                                        if(choice == JOptionPane.YES_OPTION)
                                         {
-                                            // remove the subject from the box/list/file
-                                            subjectBox.remove(this);
-                                            SubjectFileHandler.SIGNED_CREDITS -= subject.getCredits();
-                                            SubjectMenu.fileHandler.getSubjectsList().remove(subject);
-                                            SubjectMenu.fileHandler.deleteSubject(subject);
-
-                                            // reload the subject box to show the changes
-                                            WindowComponent.reload(subjectBox);
+                                            // remove the subject from the database
+                                            SubjectMenu.fileHandler.deleteSubject(subject.getId(), this);
+                                            // reload the subjects to show the changes
+                                            SubjectMenu.fileHandler.loadSubjects(SubjectMenu.subjectBox);
                                         }
-                                        GradeMenu.fileHandler.deleteGrade(this.subject);
+                                        GradeMenu.fileHandler.deleteAll(subject.getId(), this);
                                     },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
@@ -130,7 +124,7 @@ public class SubjectPanel extends JPanel
         WindowComponent.button_event(grade_button,
                                     () ->
                                     {
-                                        gradeMenu.refreshGrades(this.subject);
+                                        GradeMenu.fileHandler.loadGrades(subject, gradeMenu.getGradeBox(), this);
                                         gradeMenu.setTextScore(subject.getTotalScore());
                                         WindowComponent.switch_panel(Main.subjectMenu, gradeMenu);
                                     },
@@ -146,10 +140,10 @@ public class SubjectPanel extends JPanel
         add(grade_button);
 
         // add the subject on the subject box
-        subjectBox.add(this);
+        SubjectMenu.subjectBox.add(this);
 
         // reload the panel to show the changes
-        WindowComponent.reload(subjectBox);
+        WindowComponent.reload(SubjectMenu.subjectBox);
     }
 
     // method to set the subject name size based in its length

@@ -33,12 +33,12 @@ public class GradePanel extends JPanel
     private JTextField percentageBox;
 
     // constructor
-    public GradePanel(Subject subject, Grade grade)
+    public GradePanel(Subject subject, Grade grade, JPanel gradeBox)
     {
         this.subject = subject;
         this.grade = grade;
         this.subjectId = subject.getId();
-        this.gradeBox = GradeMenu.getGradeBox();
+        this.gradeBox = gradeBox;
         gradePanel();
     }
 
@@ -66,16 +66,26 @@ public class GradePanel extends JPanel
                 try
                 {
                     double newScore = Double.parseDouble(scoreBox.getText().trim());
-                    grade.setScore(newScore);
+                    GradeMenu.fileHandler.updateScore(grade, newScore, gradeBox);
                 }
-                catch (NumberFormatException ex) {
-                    grade.setScore(0);
+                catch (NumberFormatException ex)
+                {
+                    GradeMenu.fileHandler.updateScore(grade, 0.0, gradeBox);
                 }
-                subject.updateGrade(grade);
-                GradeMenu.fileHandler.updateGrade(subject);
                 super.keyReleased(e);
             }
         });
+
+        // name of the grade
+        JLabel gradeName = WindowComponent.set_text(grade.getName(),
+                                                    scoreBox.getX(),
+                                                    scoreBox.getY() - 26,
+                                                    176,
+                                                    30);
+        WindowComponent.configure_text(gradeName,
+                                        Color.lightGray,
+                                        1,
+                                        12);
 
         // score text
         JLabel score_text = WindowComponent.set_text("Score:",
@@ -106,13 +116,12 @@ public class GradePanel extends JPanel
                 try
                 {
                     double newPercentage = Double.parseDouble(percentageBox.getText().trim());
-                    grade.setPercentage(newPercentage);
+                    GradeMenu.fileHandler.updatePercentage(grade, newPercentage, gradeBox);
                 }
-                catch (NumberFormatException ex) {
-                    grade.setPercentage(0);
+                catch (NumberFormatException ex)
+                {
+                    GradeMenu.fileHandler.updatePercentage(grade, 0.0, gradeBox);
                 }
-                subject.updateGrade(grade);
-                GradeMenu.fileHandler.updateGrade(subject);
                 super.keyReleased(e);
             }
         });
@@ -142,23 +151,17 @@ public class GradePanel extends JPanel
         WindowComponent.button_event(delete_button,
                                     () ->
                                     {
-                                        if (subject.getGradesList().contains(grade))
-                                        {
-                                            // delete the grade from the grades panel/list
-                                            gradeBox.remove(this);
-                                            subject.deleteGrade(grade);
-
-                                            // reload the panel to show the changes
-                                            WindowComponent.reload(gradeBox);
-                                        }
-                                        subject.getGradesList().remove(grade);
-                                        GradeMenu.fileHandler.updateGrade(subject);
+                                        // delete the current grade in the database
+                                        GradeMenu.fileHandler.deleteGrade(grade, this);
+                                        // load the saved grades in the database
+                                        GradeMenu.fileHandler.loadGrades(subject, gradeBox, this);
                                     },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
 
         // add the components on the panel
+        add(gradeName);
         add(score_text);
         add(scoreBox);
         add(percentageBox);

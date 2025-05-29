@@ -12,7 +12,6 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 // package imports
-import fos.service.Subject;
 import fos.service.ValidationUtils;
 import fos.data.SubjectFileHandler;
 
@@ -25,7 +24,7 @@ public class SubjectMenu extends JPanel
     public static final SubjectFileHandler fileHandler = new SubjectFileHandler();
 
     // subject panels
-    private static final JPanel subjectBox = new JPanel();
+    public static final JPanel subjectBox = new JPanel();
     private final CreateSubject createSubject;
 
     // constructor
@@ -102,40 +101,16 @@ public class SubjectMenu extends JPanel
         container.add(this);
         container.add(createSubject);
 
-        // load the saved subjects
-        fileHandler.loadSubjects();
-
-        // create the panels of the subjects in the subject box
-        refreshSubjects();
+        // load the panels of the subjects in the subject box
+        fileHandler.loadSubjects(subjectBox);
 
         // reload the panel to show the changes
         WindowComponent.reload(this);
-    }
-
-    // method to refresh the subjects on the subject box
-    public void refreshSubjects()
-    {
-        subjectBox.removeAll();
-        for(Subject subject : fileHandler.getSubjectsList())
-        {
-            // create the panel in the subject box
-            SubjectPanel currentPanel = new SubjectPanel(subject);
-            currentPanel.set_score_label(subject.getTotalScore());
-            currentPanel.set_evaluated_label(subject.getTotalEvaluated());
-        }
-        // reload the panel to show the changes
-        WindowComponent.reload(subjectBox);
     }
 
     // method to cut the first two decimals of a number
     public static double twoDecimals(double number)
     {
         return (int)(number * 100) / 100.0;
-    }
-
-    // method to get the subject box
-    public static JPanel getSubjectBox()
-    {
-        return subjectBox;
     }
 }

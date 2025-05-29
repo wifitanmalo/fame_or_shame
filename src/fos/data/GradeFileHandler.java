@@ -1,21 +1,17 @@
 package fos.data;
 
+// awt import
 import java.awt.Container;
-import java.net.URISyntaxException;
-import java.nio.file.Files;
-import java.nio.file.Path;
-import java.nio.file.Paths;
-import java.nio.file.StandardOpenOption;
-import javax.swing.JOptionPane;
-import java.util.ArrayList;
 
-// input/output imports
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
-import java.io.IOException;
+// sql imports
+import java.sql.*;
+
+// swing imports
+import javax.swing.JPanel;
+import javax.swing.JOptionPane;
 
 // package imports
-import fos.view.SubjectMenu;
+import fos.view.GradePanel;
 import fos.view.WindowComponent;
 import fos.service.Grade;
 import fos.service.Subject;
@@ -23,150 +19,158 @@ import fos.service.ValidationUtils;
 
 public class GradeFileHandler
 {
-    private final Container container;
-    private final Path gradesFile;
-
     // constructor
     public GradeFileHandler()
     {
-        this.container = WindowComponent.get_container();
-        this.gradesFile = findFile();
-        ValidationUtils.fileExists(gradesFile, container);
+
     }
 
-    // method to find the path of the grades.txt file
-    private Path findFile()
-    {
-        try
-        {
-            Path jarDir = Paths.get(
-                    getClass()
-                            .getProtectionDomain()
-                            .getCodeSource()
-                            .getLocation()
-                            .toURI()
-            ).getParent();
-            return jarDir.resolve("grades.txt");
-        }
-        catch (URISyntaxException e)
-        {
-            throw new RuntimeException("Unable to resolve data file location", e);
-        }
-    }
+    // method to load the grades from the database
+    public void loadGrades(Subject subject, JPanel gradeBox, Container container) {
+        String query = "SELECT * FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL";
 
-    // method to load the grades from the grades.txt file
-    public void loadGrades()
-    {
-        ValidationUtils.fileExists(gradesFile, container);
-        ArrayList<String> allLines = new ArrayList<>();
-        try (BufferedReader reader = Files.newBufferedReader(gradesFile))
-        {
-            String line;
-            while ((line = reader.readLine()) != null)
+        try (Connection conn = ValidationUtils.connectDB();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setInt(1, subject.getId());
+
+            ResultSet rs = stmt.executeQuery();
+            gradeBox.removeAll();
+
+            while (rs.next())
             {
-                if (!line.isBlank()) allLines.add(line);
+                int id = rs.getInt("id");
+                int idSubject = rs.getInt("idSubject");
+                String name = rs.getString("name");
+                double score = rs.getDouble("score");
+                double percentage = rs.getDouble("percentage");
+
+                // Construir objeto Grade con toda la información
+                Grade newGrade = new Grade(id, idSubject, name, score, percentage);
+
+                // Crear y agregar panel visual
+                GradePanel newPanel = new GradePanel(subject, newGrade, gradeBox);
+                newPanel.setScoreText(String.valueOf(score));
+                newPanel.setPercentageText(String.valueOf(percentage));
             }
+
+            WindowComponent.reload(gradeBox);
+
         }
-        catch (IOException e)
+        catch (SQLException e)
         {
             WindowComponent.message_box(container,
-                                        "Error while reading grades.txt",
-                                        "File error",
+                                        "Error while reading the database.",
+                                        "Data error",
                                         JOptionPane.ERROR_MESSAGE);
-            return;
-        }
-
-        for (Subject subject : SubjectMenu.fileHandler.getSubjectsList())
-        {
-            subject.setGradesList(new ArrayList<>());
-            for (String gradeLine : allLines)
-            {
-                String[] data = gradeLine.split(",");
-                int id = Integer.parseInt(data[0]);
-                if (id == subject.getId())
-                {
-                    double score = Double.parseDouble(data[1]);
-                    double percentage = Double.parseDouble(data[2]);
-                    Grade grade = new Grade(id, score, percentage);
-                    subject.createGrade(grade);
-                }
-            }
         }
     }
 
     // method to create a new grade in the grades.txt file
-    public void createGrade(Subject subject)
-    {
-        ValidationUtils.fileExists(gradesFile, container);
-        try (BufferedWriter writer = Files.newBufferedWriter(gradesFile, StandardOpenOption.APPEND))
+    public void createGrade(int idSubject, String name, Container container) {
+        String query = "INSERT INTO Grade(idSubject, name) VALUES(?, ?)";
+
+        try (Connection conn = ValidationUtils.connectDB();
+             PreparedStatement create = conn.prepareStatement(query))
         {
-            for (Grade grade : subject.getGradesList())
-            {
-                String data = grade.getSubjectID() + "," + grade.getScore() + "," + grade.getPercentage();
-                writer.write(data);
-                writer.newLine();
-            }
+            create.setInt(1, idSubject);
+            create.setString(2, name);
+            create.executeUpdate();
         }
-        catch (IOException e)
+        catch (SQLException e)
         {
             WindowComponent.message_box(container,
-                                        "Error while writing grades.txt",
-                                        "File error",
+                                        "Error while creating the grade.",
+                                        "Database error",
                                         JOptionPane.ERROR_MESSAGE);
         }
     }
 
-    // method to delete a grade in the grades.txt file
-    public void deleteGrade(Subject subject)
+    // method to delete a grade in the database
+    public void deleteGrade(Grade grade, Container container)
     {
-        ValidationUtils.fileExists(gradesFile, container);
-        Path tempFile = gradesFile.resolveSibling("grades_temp.txt");
-        try (BufferedReader reader = Files.newBufferedReader(gradesFile);
-             BufferedWriter writer = Files.newBufferedWriter(tempFile))
+        String query = "DELETE FROM Grade WHERE id = ? AND idSubject = ?";
+
+        try (Connection conn = ValidationUtils.connectDB();
+             PreparedStatement del = conn.prepareStatement(query))
         {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                if (line.isBlank()) continue;
-                String[] data = line.split(",");
-                int id = Integer.parseInt(data[0]);
-                if (id != subject.getId()) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-            }
+            del.setInt(1, grade.getID());
+            del.setInt(2, grade.getSubjectID());
+            del.executeUpdate();
         }
-        catch (IOException e)
+        catch (SQLException e)
         {
             WindowComponent.message_box(container,
-                                        "Error while deleting the file",
-                                        "File error",
-                                        JOptionPane.ERROR_MESSAGE);
-            return;
+                                    "Error while deleting grade",
+                                    "File error",
+                                    JOptionPane.ERROR_MESSAGE);
         }
-        replaceFile(tempFile, gradesFile);
     }
 
-    // method to update all the grades of a subject
-    public void updateGrade(Subject subject)
+    // method to delete all grades of a subject
+    public void deleteAll(int idSubject, Container container)
     {
-        deleteGrade(subject);
-        createGrade(subject);
-    }
+        String query = "DELETE FROM Grade WHERE idSubject = ?";
 
-    // method to replace the original file for the temporal one
-    private void replaceFile(Path temporalFile, Path originalFile)
-    {
-        try
+        try (Connection conn = ValidationUtils.connectDB();
+             PreparedStatement del = conn.prepareStatement(query))
         {
-            Files.delete(originalFile);
-            Files.move(temporalFile, originalFile);
+            del.setInt(1, idSubject);
+            del.executeUpdate();
+
         }
-        catch (IOException e)
+        catch (SQLException e)
         {
             WindowComponent.message_box(container,
-                                        "Error replacing grade.txt",
-                                        "File error",
+                                        "Error while deleting the grades.",
+                                        "Database error",
                                         JOptionPane.ERROR_MESSAGE);
         }
     }
+
+    // method to update the score of a grade
+    public void updateScore(Grade grade, double newScore, Container container) {
+        String query = "UPDATE Grade SET score = ? WHERE id = ? AND idSubject = ?";
+
+        try (Connection conn = ValidationUtils.connectDB();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setDouble(1, newScore);
+            stmt.setInt(2, grade.getID());
+            stmt.setInt(3, grade.getSubjectID());
+
+            stmt.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            WindowComponent.message_box(container,
+                                    "Error while updating the grade score.",
+                                    "Data error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to update the percentage of a grade
+    public void updatePercentage(Grade grade, double newPercentage, Container container)
+    {
+        String query = "UPDATE Grade SET percentage = ? WHERE id = ? AND idSubject = ?";
+
+        try (Connection conn = ValidationUtils.connectDB();
+             PreparedStatement stmt = conn.prepareStatement(query)) {
+
+            stmt.setDouble(1, newPercentage);
+            stmt.setInt(2, grade.getID());
+            stmt.setInt(3, grade.getSubjectID());
+
+            stmt.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            WindowComponent.message_box(container,
+                                        "Error while updating the grade percentage.",
+                                        "Data error",
+                                        JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
 }

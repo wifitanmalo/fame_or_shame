@@ -1,3 +1,4 @@
 Manifest-Version: 1.0
 Main-Class: fos.view.Main
+Class-Path: database/sqlite-jdbc-3.49.1.0.jar
 

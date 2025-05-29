@@ -10,9 +10,7 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 // package imports
-import fos.service.Grade;
 import fos.service.Subject;
-import fos.service.ValidationUtils;
 import fos.data.GradeFileHandler;
 
 public class GradeMenu extends JPanel
@@ -21,13 +19,13 @@ public class GradeMenu extends JPanel
     public static final GradeFileHandler fileHandler = new GradeFileHandler();
 
     // subject object
-    private Subject subject;
+    private final Subject subject;
 
     // panel where the grades are added
-    private static JPanel gradeBox;
+    private JPanel gradeBox;
 
     // imported label
-    private static JLabel scoreText;
+    private JLabel scoreText;
 
     // constructor
     public GradeMenu(Subject subject)
@@ -65,7 +63,7 @@ public class GradeMenu extends JPanel
         WindowComponent.button_event(backButton,
                                     () ->
                                     {
-                                        Main.subjectMenu.refreshSubjects();
+                                        SubjectMenu.fileHandler.loadSubjects(SubjectMenu.subjectBox);
                                         WindowComponent.switch_panel(this, Main.subjectMenu);
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
@@ -86,14 +84,10 @@ public class GradeMenu extends JPanel
         WindowComponent.button_event(totalButton,
                                     () ->
                                     {
-                                        if(ValidationUtils.gradeValidation(subject, this))
-                                        {
-                                            setTextScore(subject.getTotalScore());
-                                            SubjectMenu.fileHandler.updateSubject(subject,
-                                                                            subject.getTotalScore(),
-                                                                            subject.getTotalEvaluated());
-                                            WindowComponent.reload(Main.subjectMenu);
-                                        }
+                                        // calculate the subject score/percentage in the database
+                                        SubjectMenu.fileHandler.updateSubject(subject.getId(), this);
+                                        // update the score text of the menu
+                                        setTextScore(SubjectMenu.fileHandler.getTotalScore(subject.getId(), this));
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#91BAD6"),
@@ -113,12 +107,10 @@ public class GradeMenu extends JPanel
         WindowComponent.button_event(addButton,
                                     () ->
                                     {
-                                        Grade newGrade = new Grade(subject.getId(), 0,0);
-                                        subject.createGrade(newGrade);
-                                        fileHandler.updateGrade(subject);
-
-                                        SubjectPanel.gradeMenu.refreshGrades(this.subject);
-                                        WindowComponent.reload(gradeBox);
+                                        // create a new grade in the database
+                                        fileHandler.createGrade(this.subject.getId(), "null", this);
+                                        // load the saved grades in the database
+                                        fileHandler.loadGrades(subject, gradeBox, this);
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#C5EF48"),
@@ -175,25 +167,8 @@ public class GradeMenu extends JPanel
         add(subButton);
         add(scoreText);
 
-        // load the saved grades
-        fileHandler.loadGrades();
-    }
-
-    // method to load the grades
-    public void refreshGrades(Subject currentSubject)
-    {
-        gradeBox.removeAll();
-        this.subject = currentSubject;
-        for(Grade grade : subject.getGradesList())
-        {
-            // set the grade values in the text fields
-            GradePanel currentPanel = new GradePanel(subject, grade);
-            currentPanel.setScoreText(String.valueOf(grade.getScore()));
-            currentPanel.setPercentageText(String.valueOf(grade.getPercentage()));
-
-            // reload the panel to show the changes
-            WindowComponent.reload(gradeBox);
-        }
+        // load the saved grades in the database
+        fileHandler.loadGrades(subject, gradeBox, this);
     }
 
     // method to change the text and color of the total score
@@ -213,7 +188,7 @@ public class GradeMenu extends JPanel
     }
 
     // method to get the subject box
-    public static JPanel getGradeBox()
+    public JPanel getGradeBox()
     {
         return gradeBox;
     }
