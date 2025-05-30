@@ -7,10 +7,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 // swing imports
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JTextField;
+import javax.swing.*;
 
 // package imports
 import fos.service.Grade;
@@ -18,19 +15,18 @@ import fos.service.Subject;
 
 public class GradePanel extends JPanel
 {
-    // panel where the grades are added
+    // panel where the grades are shown
     private final JPanel gradeBox;
 
-    // subject and grade objects
+    // subject/grade objects
     private final Subject subject;
     private final Grade grade;
 
     // subject id
     private int subjectId;
 
-    // text boxes
-    private JTextField scoreBox;
-    private JTextField percentageBox;
+    // scoer/percentage text boxes
+    private JTextField scoreBox, percentageBox;
 
     // constructor
     public GradePanel(Subject subject, Grade grade, JPanel gradeBox)
@@ -42,19 +38,19 @@ public class GradePanel extends JPanel
         gradePanel();
     }
 
-    // method to create a grade
+    // method to initialize a grade panel
     public void gradePanel()
     {
         setPreferredSize(new Dimension(400, 80));
         setBackground(WindowComponent.BUTTON_BACKGROUND);
         setLayout(null);
 
-        // text field where you enter the score
-        scoreBox = WindowComponent.set_text_field(94,
+        // create the text box of the grade score
+        scoreBox = WindowComponent.setTextField(94,
                                                     25,
                                                     80,
                                                     30);
-        WindowComponent.configure_text(scoreBox,
+        WindowComponent.configureText(scoreBox,
                                         WindowComponent.BUTTON_BACKGROUND,
                                         1,
                                         18);
@@ -66,44 +62,50 @@ public class GradePanel extends JPanel
                 try
                 {
                     double newScore = Double.parseDouble(scoreBox.getText().trim());
-                    GradeMenu.fileHandler.updateScore(grade, newScore, gradeBox);
+                    GradeMenu.dataHandler.updateScore(grade, newScore, gradeBox);
                 }
                 catch (NumberFormatException ex)
                 {
-                    GradeMenu.fileHandler.updateScore(grade, 0.0, gradeBox);
+                    WindowComponent.messageBox(gradeBox,
+                                            "Invalid score.",
+                                            "Input error",
+                                            JOptionPane.ERROR_MESSAGE);
+                    // sets the failed score to the default value
+                    scoreBox.setText("0.0");
+                    GradeMenu.dataHandler.updateScore(grade, 0.0, gradeBox);
                 }
                 super.keyReleased(e);
             }
         });
 
         // name of the grade
-        JLabel gradeName = WindowComponent.set_text(grade.getName(),
+        JLabel gradeName = WindowComponent.setText(grade.getName(),
                                                     scoreBox.getX(),
                                                     scoreBox.getY() - 26,
                                                     176,
                                                     30);
-        WindowComponent.configure_text(gradeName,
+        WindowComponent.configureText(gradeName,
                                         Color.lightGray,
                                         1,
                                         12);
 
-        // score text
-        JLabel score_text = WindowComponent.set_text("Score:",
-                                                    WindowComponent.negative_x(scoreBox, 0),
+        // title of the score text box
+        JLabel score_text = WindowComponent.setText("Score:",
+                                                    WindowComponent.xNegative(scoreBox, 0),
                                                     scoreBox.getY(),
                                                     64,
                                                     30);
-        WindowComponent.configure_text(score_text,
+        WindowComponent.configureText(score_text,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
 
-        // text field where you enter the percentage
-        percentageBox = WindowComponent.set_text_field(WindowComponent.positive_x(scoreBox, 16),
+        // create the text box of the grade percentage
+        percentageBox = WindowComponent.setTextField(WindowComponent.xPositive(scoreBox, 16),
                                                         scoreBox.getY(),
                                                         scoreBox.getWidth(),
                                                         scoreBox.getHeight());
-        WindowComponent.configure_text(percentageBox,
+        WindowComponent.configureText(percentageBox,
                                         WindowComponent.BUTTON_BACKGROUND,
                                         1,
                                         18);
@@ -116,51 +118,57 @@ public class GradePanel extends JPanel
                 try
                 {
                     double newPercentage = Double.parseDouble(percentageBox.getText().trim());
-                    GradeMenu.fileHandler.updatePercentage(grade, newPercentage, gradeBox);
+                    GradeMenu.dataHandler.updatePercentage(grade, newPercentage, gradeBox);
                 }
                 catch (NumberFormatException ex)
                 {
-                    GradeMenu.fileHandler.updatePercentage(grade, 0.0, gradeBox);
+                    WindowComponent.messageBox(gradeBox,
+                                            "Invalid percentage.",
+                                            "Input error",
+                                            JOptionPane.ERROR_MESSAGE);
+                    // sets the failed percentage to the default value
+                    percentageBox.setText("0.0");
+                    GradeMenu.dataHandler.updatePercentage(grade, 0.0, gradeBox);
                 }
                 super.keyReleased(e);
             }
         });
 
-        // percentage symbol
-        JLabel percentage_symbol = WindowComponent.set_text("%",
-                                                            WindowComponent.positive_x(percentageBox, 14),
+        // percentage symbol of the percentage text box
+        JLabel percentage_symbol = WindowComponent.setText("%",
+                                                            WindowComponent.xPositive(percentageBox, 14),
                                                             score_text.getY(),
                                                             50,
                                                             30);
-        WindowComponent.configure_text(percentage_symbol,
+        WindowComponent.configureText(percentage_symbol,
                                             WindowComponent.FONT_FOREGROUND,
                                             1,
                                             18);
 
-        // button to delete a grade
-        JButton delete_button = WindowComponent.set_button("x",
+        // create the button to delete a grade
+        JButton delete_button = WindowComponent.setButton("x",
                                                             320,
                                                             15,
                                                             50,
                                                             50,
                                                             WindowComponent.FRAME_BACKGROUND);
-        WindowComponent.configure_text(delete_button,
+        WindowComponent.configureText(delete_button,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
-        WindowComponent.button_event(delete_button,
+        WindowComponent.buttonEvent(delete_button,
                                     () ->
                                     {
                                         // delete the current grade in the database
-                                        GradeMenu.fileHandler.deleteGrade(grade, this);
+                                        GradeMenu.dataHandler.deleteGrade(grade, this);
                                         // load the saved grades in the database
-                                        GradeMenu.fileHandler.loadGrades(subject, gradeBox, this);
+                                        GradeMenu.dataHandler.loadGrades(subject, gradeBox, this);
                                     },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
 
-        // add the components on the panel
+        // add the components to the panel
         add(gradeName);
         add(score_text);
         add(scoreBox);

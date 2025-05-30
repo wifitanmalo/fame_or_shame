@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 // package imports
-import fos.data.SubjectFileHandler;
 import fos.service.Subject;
 
 public class SubjectPanel extends JPanel
@@ -22,19 +21,18 @@ public class SubjectPanel extends JPanel
     // object of the grade menu
     private GradeMenu gradeMenu;
 
-    // performance labels
-    private JLabel totalScore;
-    private JLabel totalEvaluated;
+    // performance values texts
+    private JLabel totalScore, totalEvaluated;
 
     // constructor
     public SubjectPanel(Subject subject)
     {
         this.subject = subject;
-        subject_panel();
+        subjectPanel();
     }
 
     // method to add a subject
-    public void subject_panel()
+    public void subjectPanel()
     {
         setPreferredSize(new Dimension(400, 80));
         setBackground(WindowComponent.BUTTON_BACKGROUND);
@@ -43,54 +41,54 @@ public class SubjectPanel extends JPanel
         // create the grade menu panel
         gradeMenu = new GradeMenu(subject);
         gradeMenu.setVisible(false);
-        WindowComponent.get_container().add(gradeMenu);
+        WindowComponent.getContainer().add(gradeMenu);
 
         // name of the subject
-        JLabel subject_name = WindowComponent.set_text(subject.getId() + " " + subject.getName(),
+        JLabel subject_name = WindowComponent.setText(subject.getId() + " " + subject.getName(),
                                                         10,
                                                         10,
                                                         241,
                                                         18);
 
-        WindowComponent.configure_text(subject_name,
+        WindowComponent.configureText(subject_name,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         subject_name_size(subject_name));
 
         // text of the total score
-        totalScore = WindowComponent.set_text(("Total score: 0.0"),
+        totalScore = WindowComponent.setText(("Total score: 0.0"),
                                                 10,
-                                                WindowComponent.negative_y(subject_name, 2),
+                                                WindowComponent.yNegative(subject_name, 2),
                                                 350,
                                                 16);
-        WindowComponent.configure_text(totalScore,
+        WindowComponent.configureText(totalScore,
                                             Color.lightGray,
                                             3,
-                                            WindowComponent.get_height(totalScore));
+                                            WindowComponent.getHeight(totalScore));
 
         // text of the total percentage evaluated
-        totalEvaluated = WindowComponent.set_text(("Total evaluated: 0.0%"),
+        totalEvaluated = WindowComponent.setText(("Total evaluated: 0.0%"),
                                                     10,
-                                                    WindowComponent.negative_y(totalScore, 2),
+                                                    WindowComponent.yNegative(totalScore, 2),
                                                     350,
                                                     16);
-        WindowComponent.configure_text(totalEvaluated,
+        WindowComponent.configureText(totalEvaluated,
                                         Color.lightGray,
                                         3,
-                                        WindowComponent.get_height(totalEvaluated));
+                                        WindowComponent.getHeight(totalEvaluated));
 
-        // button to delete a subject
-        JButton delete_button = WindowComponent.set_button("x",
+        // create the button to delete the subject
+        JButton delete_button = WindowComponent.setButton("x",
                                                             320,
                                                             15,
                                                             50,
                                                             50,
                                                             WindowComponent.FRAME_BACKGROUND);
-        WindowComponent.configure_text(delete_button,
+        WindowComponent.configureText(delete_button,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
-        WindowComponent.button_event(delete_button,
+        WindowComponent.buttonEvent(delete_button,
                                     () ->
                                     {
                                         int choice = JOptionPane.showConfirmDialog(this,
@@ -100,33 +98,36 @@ public class SubjectPanel extends JPanel
                                         if(choice == JOptionPane.YES_OPTION)
                                         {
                                             // remove the subject from the database
-                                            SubjectMenu.fileHandler.deleteSubject(subject.getId(), this);
+                                            SubjectMenu.dataHandler.deleteSubject(subject.getId(), this);
                                             // reload the subjects to show the changes
-                                            SubjectMenu.fileHandler.loadSubjects(SubjectMenu.subjectBox);
+                                            SubjectMenu.dataHandler.loadSubjects(SubjectMenu.subjectBox);
                                         }
-                                        GradeMenu.fileHandler.deleteAll(subject.getId(), this);
+                                        GradeMenu.dataHandler.deleteAll(subject.getId(), this);
                                     },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
 
         // button to enter on the grades menu
-        JButton grade_button = WindowComponent.set_button("+",
+        JButton grade_button = WindowComponent.setButton("+",
                                                             (delete_button.getX()-60),
                                                             delete_button.getY(),
                                                             50,
                                                             50,
                                                             WindowComponent.FRAME_BACKGROUND);
-        WindowComponent.configure_text(grade_button,
+        WindowComponent.configureText(grade_button,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
-        WindowComponent.button_event(grade_button,
+        WindowComponent.buttonEvent(grade_button,
                                     () ->
                                     {
-                                        GradeMenu.fileHandler.loadGrades(subject, gradeMenu.getGradeBox(), this);
+                                        // load the panels of the grades in the grades box
+                                        GradeMenu.dataHandler.loadGrades(subject, gradeMenu.getGradeBox(), this);
+                                        // update the subject score on the grade menu
                                         gradeMenu.setTextScore(subject.getTotalScore());
-                                        WindowComponent.switch_panel(Main.subjectMenu, gradeMenu);
+                                        // switch to the grade menu
+                                        WindowComponent.switchPanel(Main.subjectMenu, gradeMenu);
                                     },
                                     grade_button.getBackground(),
                                     Color.decode("#C5EF48"),
@@ -157,7 +158,7 @@ public class SubjectPanel extends JPanel
         {
             return 8;
         }
-        return WindowComponent.get_height(subject_name);
+        return WindowComponent.getHeight(subject_name);
     }
 
     // setters and getters

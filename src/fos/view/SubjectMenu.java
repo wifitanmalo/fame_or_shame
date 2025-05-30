@@ -13,18 +13,20 @@ import javax.swing.JScrollPane;
 
 // package imports
 import fos.service.ValidationUtils;
-import fos.data.SubjectFileHandler;
+import fos.data.SubjectDataHandler;
 
 public class SubjectMenu extends JPanel
 {
     // container object
     private final Container container;
 
-    // static objects
-    public static final SubjectFileHandler fileHandler = new SubjectFileHandler();
+    // object to use the subject data
+    public static final SubjectDataHandler dataHandler = new SubjectDataHandler();
 
-    // subject panels
+    // panel where the subjects are shown
     public static final JPanel subjectBox = new JPanel();
+
+    // object of the create subject menu
     private final CreateSubject createSubject;
 
     // constructor
@@ -32,12 +34,12 @@ public class SubjectMenu extends JPanel
     {
         this.createSubject = new CreateSubject();
         createSubject.setVisible(false);
-        this.container = WindowComponent.get_container();
-        initialize_panel();
+        this.container = WindowComponent.getContainer();
+        initializePanel();
     }
 
     // method to initialize the main panel
-    public void initialize_panel()
+    public void initializePanel()
     {
         // create the main panel
         setLayout(null);
@@ -45,47 +47,47 @@ public class SubjectMenu extends JPanel
         setBounds(0, 0, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
 
         // add a vertical scroll bar on the subject box
-        JScrollPane scroll_subject = WindowComponent.set_scroll_bar(subjectBox,
+        JScrollPane scroll_subject = WindowComponent.setScrollBar(subjectBox,
                                                                     155,
                                                                     60,
                                                                     400,
                                                                     270);
 
-        // subjects title
-        JLabel subjects_title = WindowComponent.set_text("Subjects",
+        // title of the subjects box
+        JLabel subjects_title = WindowComponent.setText("Subjects",
                                                         scroll_subject.getX(),
                                                         scroll_subject.getY()-32,
                                                         260,
                                                         26);
-        WindowComponent.configure_text(subjects_title,
+        WindowComponent.configureText(subjects_title,
                                         WindowComponent.PRESSED_BUTTON_BACKGROUND,
                                         3,
-                                        WindowComponent.get_height(subjects_title));
+                                        WindowComponent.getHeight(subjects_title));
 
-        // button to create a subject
-        JButton add_button = WindowComponent.set_button("+",
+        // create the button to create a new subject
+        JButton add_button = WindowComponent.setButton("+",
                                                         50,
                                                         scroll_subject.getY() + ((scroll_subject.getHeight()-50)/2),
                                                         50,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
-        WindowComponent.configure_text(add_button,
+        WindowComponent.configureText(add_button,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
-        WindowComponent.button_event(add_button,
+        WindowComponent.buttonEvent(add_button,
                                     () ->
                                     {
-                                        if(ValidationUtils.equals(SubjectFileHandler.SIGNED_CREDITS, SubjectFileHandler.MAX_CREDITS))
+                                        if(ValidationUtils.equals(SubjectDataHandler.SIGNED_CREDITS, SubjectDataHandler.MAX_CREDITS))
                                         {
-                                            WindowComponent.message_box(this,
+                                            WindowComponent.messageBox(this,
                                                                         "You have already reached the credit limit.",
                                                                         "Number limit",
                                                                         JOptionPane.ERROR_MESSAGE);
                                         }
                                         else
                                         {
-                                            WindowComponent.switch_panel(this, createSubject);
+                                            WindowComponent.switchPanel(this, createSubject);
                                         }
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
@@ -102,7 +104,7 @@ public class SubjectMenu extends JPanel
         container.add(createSubject);
 
         // load the panels of the subjects in the subject box
-        fileHandler.loadSubjects(subjectBox);
+        dataHandler.loadSubjects(subjectBox);
 
         // reload the panel to show the changes
         WindowComponent.reload(this);

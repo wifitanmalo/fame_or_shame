@@ -23,7 +23,7 @@ public class Grade
         this.percentage = percentage;
     }
 
-    // getters and setters
+    // setters and getters
     public void setID(int id) {
         this.id = id;
     }

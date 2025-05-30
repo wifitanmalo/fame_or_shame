@@ -30,14 +30,14 @@ public class WindowComponent
     public static final Color FRAME_BACKGROUND = Color.decode("#1F1F1F");
 
     // container object
-    public static Container current_container;
+    public static Container currentContainer;
 
     // method to add a panel
-    public static JPanel set_panel(Color color,
-                                    int x,
-                                    int y,
-                                    int width,
-                                    int height)
+    public static JPanel setPanel(Color color,
+                                  int x,
+                                  int y,
+                                  int width,
+                                  int height)
     {
         JPanel panel = new JPanel();
         panel.setLayout(null);
@@ -46,77 +46,77 @@ public class WindowComponent
         return panel;
     }
 
-    // method to switch the panel
-    public static void switch_panel(Container previous_panel,
-                                    Container next_panel)
+    // method to switch to another panel
+    public static void switchPanel(Container previous_panel,
+                                   Container next_panel)
     {
         previous_panel.setVisible(false);
         next_panel.setVisible(true);
     }
 
-    // method to add a scroll panel
-    public static JScrollPane set_scroll_bar(JPanel panel,
-                                             int x,
-                                             int y,
-                                             int width,
-                                             int height)
+    // method to add a scroll bar to a panel
+    public static JScrollPane setScrollBar(JPanel panel,
+                                           int x,
+                                           int y,
+                                           int width,
+                                           int height)
     {
         panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
         panel.setBackground(BUTTON_BACKGROUND);
 
-        JScrollPane scroll_panel = new JScrollPane(panel);
-        scroll_panel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
-        scroll_panel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
-        scroll_panel.setBounds(x, y, width, height);
-        return scroll_panel;
+        JScrollPane scrollPanel = new JScrollPane(panel);
+        scrollPanel.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+        scrollPanel.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_NEVER);
+        scrollPanel.setBounds(x, y, width, height);
+        return scrollPanel;
     }
 
     // method to add a label
-    public static JLabel set_text(String text,
-                                   int x,
-                                   int y,
-                                   int width,
-                                   int height)
+    public static JLabel setText(String text,
+                                 int x,
+                                 int y,
+                                 int width,
+                                 int height)
     {
         JLabel label = new JLabel(text);
         label.setBounds(x, y, width, height);
         return label;
     }
 
-    // method to configure a container
-    public static void configure_text(Container container,
-                                      Color color,
-                                      int style,
-                                      int size)
+    // method to configure the text settings of a container
+    public static void configureText(Container container,
+                                     Color color,
+                                     int style,
+                                     int size)
     {
         container.setForeground(color);
         container.setFont(new Font(WindowComponent.DEFAULT_FONT, style, size));
     }
 
     // method to add a text field
-    public static JTextField set_text_field(int x,
-                                            int y,
-                                            int width,
-                                            int height)
+    public static JTextField setTextField(int x,
+                                          int y,
+                                          int width,
+                                          int height)
     {
-        JTextField text_box = new JTextField();
-        text_box.setBounds(x, y, width, height);
-        return text_box;
+        JTextField textBox = new JTextField();
+        textBox.setBounds(x, y, width, height);
+        return textBox;
     }
 
     // method to clear the text boxes
-    public static void clear_box(JTextField text_box)
+    public static void clearBox(JTextField textBox)
     {
-        text_box.setText("");
+        textBox.setText("");
     }
 
     // method to add a button
-    public static JButton set_button(String text,
-                                      int x,
-                                      int y,
-                                      int width,
-                                      int height,
-                                      Color color)
+    public static JButton setButton(String text,
+                                    int x,
+                                    int y,
+                                    int width,
+                                    int height,
+                                    Color color)
     {
         JButton button = new JButton(text);
         button.setFocusPainted(false);
@@ -129,11 +129,11 @@ public class WindowComponent
     }
 
     // method to set a button event
-    public static void button_event(JButton button,
-                                    Runnable function,
-                                    Color idle_color,
-                                    Color enter_color,
-                                    Color pressed_color)
+    public static void buttonEvent(JButton button,
+                                   Runnable function,
+                                   Color idleColor,
+                                   Color enterColor,
+                                   Color pressedColor)
     {
         button.addActionListener(e -> function.run());
 
@@ -142,36 +142,36 @@ public class WindowComponent
             @Override
             public void mouseEntered(MouseEvent e)
             {
-                button.setBackground(enter_color);
+                button.setBackground(enterColor);
                 button.setCursor(new Cursor(Cursor.HAND_CURSOR));
             }
 
             @Override
             public void mouseExited(MouseEvent e)
             {
-                button.setBackground(idle_color);
+                button.setBackground(idleColor);
                 button.setCursor(new Cursor(Cursor.DEFAULT_CURSOR));
             }
 
             @Override
             public void mousePressed(MouseEvent e)
             {
-                button.setBackground(pressed_color);
+                button.setBackground(pressedColor);
             }
 
             @Override
             public void mouseReleased(MouseEvent e)
             {
-                button.setBackground(idle_color);
+                button.setBackground(idleColor);
             }
         });
     }
 
-    // method to show a message
-    public static void message_box(Container container,
-                                    String message,
-                                    String title,
-                                    int option)
+    // method to show a message box
+    public static void messageBox(Container container,
+                                  String message,
+                                  String title,
+                                  int option)
     {
         JOptionPane.showMessageDialog(container,
                                     message,
@@ -179,7 +179,7 @@ public class WindowComponent
                                     option);
     }
 
-    // method to reload the window items
+    // method to reload the window components
     public static void reload(Container container)
     {
         container.revalidate();
@@ -187,37 +187,37 @@ public class WindowComponent
     }
 
     // methods to move a container in x
-    public static int positive_x(Container container, int distance)
+    public static int xPositive(Container container, int distance)
     {
         return (container.getX()+container.getWidth()) + distance;
     }
-    public static int negative_x(Container container, int distance)
+    public static int xNegative(Container container, int distance)
     {
         return (container.getX()-container.getWidth()) - distance;
     }
 
     // methods to move a container in y
-    public static int positive_y(Container container, int distance)
+    public static int yPositive(Container container, int distance)
     {
         return (container.getY()-container.getHeight()) - distance;
     }
-    public static int negative_y(Container container, int distance)
+    public static int yNegative(Container container, int distance)
     {
         return (container.getY()+container.getHeight()) + distance;
     }
 
     // setters and getters
-    public static void set_container(Container container)
+    public static void setContainer(Container container)
     {
-        current_container = container;
+        currentContainer = container;
     }
-    public static Container get_container()
+    public static Container getContainer()
     {
-        return current_container;
+        return currentContainer;
     }
 
     // method to get the label height
-    public static int get_height(Container container)
+    public static int getHeight(Container container)
     {
         return container.getHeight()-6;
     }

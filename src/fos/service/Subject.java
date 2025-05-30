@@ -1,7 +1,5 @@
 package fos.service;
 
-import java.util.ArrayList;
-
 public class Subject
 {
     // attributes
@@ -13,14 +11,8 @@ public class Subject
     private double totalScore;
     private double totalEvaluated;
 
-    // minimum score to approve
-    public static final double PASSING_SCORE = 3.0;
-
-    // maximum score possible
-    public static final double MAX_SCORE = 5.0;
-
-    // grades lists
-    private ArrayList<Grade> gradesList;
+    // score constants
+    public static final double PASSING_SCORE = 3.0, MAX_SCORE = 5.0;
 
     // constructor
     public Subject(int id,
@@ -32,30 +24,6 @@ public class Subject
         this.credits = credits;
         this.totalScore = 0.0;
         this.totalEvaluated = 0.0;
-    }
-
-    // method to create a grade
-    public void createGrade(Grade grade)
-    {
-        gradesList.add(grade);
-    }
-
-    // method to delete a grade
-    public void deleteGrade(Grade grade)
-    {
-        gradesList.remove(grade);
-    }
-
-    // method to update a grade by its index
-    public void updateGrade(Grade grade)
-    {
-        gradesList.set(getGradeIndex(grade), grade);
-    }
-
-    // method to get the index of the fos.view.GradePanel
-    public int getGradeIndex(Grade grade)
-    {
-        return gradesList.indexOf(grade);
     }
 
     // setters and getters
@@ -102,14 +70,5 @@ public class Subject
     public double getTotalEvaluated()
     {
         return totalEvaluated;
-    }
-
-    public void setGradesList(ArrayList<Grade> grades_list)
-    {
-        this.gradesList = grades_list;
-    }
-    public ArrayList<Grade> getGradesList()
-    {
-        return gradesList;
     }
 }

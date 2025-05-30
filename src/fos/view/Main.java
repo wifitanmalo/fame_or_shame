@@ -1,5 +1,6 @@
 package fos.view;
 
+// swing imports
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
@@ -8,14 +9,14 @@ public class Main extends JFrame
     // window size values
     public static final int WINDOW_WIDTH=600, WINDOW_HEIGHT=400;
 
-    // fos.view.SubjectMenu object
+    // subject menu object
     public static SubjectMenu subjectMenu;
 
     // constructor
     public Main()
     {
         initializeWindow();
-        WindowComponent.set_container(this.getContentPane());
+        WindowComponent.setContainer(this.getContentPane());
         subjectMenu = new SubjectMenu();
     }
 
