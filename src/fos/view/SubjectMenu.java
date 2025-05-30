@@ -80,7 +80,7 @@ public class SubjectMenu extends JPanel
                                     {
                                         if(ValidationUtils.equals(SubjectDataHandler.SIGNED_CREDITS, SubjectDataHandler.MAX_CREDITS))
                                         {
-                                            WindowComponent.messageBox(this,
+                                            WindowComponent.messageBox(subjectBox,
                                                                         "You have already reached the credit limit.",
                                                                         "Number limit",
                                                                         JOptionPane.ERROR_MESSAGE);

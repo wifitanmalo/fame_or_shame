@@ -15,9 +15,7 @@ import fos.service.ValidationUtils;
 public class CreateSubject extends JPanel
 {
     // text boxes
-    private JTextField idTextBox;
-    private JTextField nameTextBox;
-    private JTextField creditsTextBox;
+    private JTextField idTextBox, nameTextBox, creditsTextBox;
 
     // constructor
     public CreateSubject()
@@ -53,8 +51,11 @@ public class CreateSubject extends JPanel
         WindowComponent.buttonEvent(backButton,
                                     () ->
                                     {
+                                        // refresh the subjects on the subject box
                                         SubjectMenu.dataHandler.loadSubjects(this);
+                                        // switch to the subject menu
                                         WindowComponent.switchPanel(this, Main.subjectMenu);
+                                        // clear all the text fields
                                         clearBoxes();
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
@@ -69,13 +70,15 @@ public class CreateSubject extends JPanel
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
         WindowComponent.configureText(addButton,
-                                            WindowComponent.FONT_FOREGROUND,
-                                            1,
-                                            16);
+                                        WindowComponent.FONT_FOREGROUND,
+                                        1,
+                                        16);
         WindowComponent.buttonEvent(addButton,
                                     () ->
                                     {
+                                        // verify if the subject has valid information
                                         ValidationUtils.subjectValidation(this, idTextBox, nameTextBox, creditsTextBox);
+                                        // clear all the text fields
                                         clearBoxes();
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
@@ -99,9 +102,9 @@ public class CreateSubject extends JPanel
                                                     260,
                                                     30);
         WindowComponent.configureText(idTextBox,
-                WindowComponent.BUTTON_BACKGROUND,
-                1,
-                18);
+                                        WindowComponent.BUTTON_BACKGROUND,
+                                        1,
+                                        18);
 
         // title of the name text box
         JLabel nameTitle = WindowComponent.setText("Name",
@@ -116,9 +119,9 @@ public class CreateSubject extends JPanel
 
         // create the text box of the subject name
         nameTextBox = WindowComponent.setTextField(idTitle.getX(),
-                                                        WindowComponent.yNegative(nameTitle,20),
-                                                        260,
-                                                        30);
+                                                    WindowComponent.yNegative(nameTitle,20),
+                                                    260,
+                                                    30);
         WindowComponent.configureText(nameTextBox,
                                     WindowComponent.BUTTON_BACKGROUND,
                                     1,
@@ -126,10 +129,10 @@ public class CreateSubject extends JPanel
 
         // title of the credits text box
         JLabel creditsTitle = WindowComponent.setText("Credits",
-                                                (inputPanel.getWidth()-260)/2,
-                                                WindowComponent.yNegative(nameTextBox,20),
-                                                260,
-                                                22);
+                                                    (inputPanel.getWidth()-260)/2,
+                                                    WindowComponent.yNegative(nameTextBox,20),
+                                                    260,
+                                                    22);
         WindowComponent.configureText(creditsTitle,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,

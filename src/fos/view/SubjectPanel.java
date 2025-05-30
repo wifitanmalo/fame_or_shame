@@ -91,7 +91,7 @@ public class SubjectPanel extends JPanel
         WindowComponent.buttonEvent(delete_button,
                                     () ->
                                     {
-                                        int choice = JOptionPane.showConfirmDialog(this,
+                                        int choice = JOptionPane.showConfirmDialog(SubjectMenu.subjectBox,
                                                                                 "You want to delete this subject?",
                                                                                 "Delete subject",
                                                                                 JOptionPane.YES_NO_OPTION);

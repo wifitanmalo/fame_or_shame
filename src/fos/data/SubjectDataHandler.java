@@ -23,8 +23,7 @@ import fos.service.ValidationUtils;
 public class SubjectDataHandler
 {
     // credits constants
-    public static int SIGNED_CREDITS = 0;
-    public static final int MAX_CREDITS = 21;
+    public static int SIGNED_CREDITS = 0, MAX_CREDITS = 21;
 
     // constructor
     public SubjectDataHandler()

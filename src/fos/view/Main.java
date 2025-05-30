@@ -7,7 +7,7 @@ import javax.swing.SwingUtilities;
 public class Main extends JFrame
 {
     // window size values
-    public static final int WINDOW_WIDTH=600, WINDOW_HEIGHT=400;
+    public static final int WINDOW_WIDTH = 600, WINDOW_HEIGHT = 400;
 
     // subject menu object
     public static SubjectMenu subjectMenu;

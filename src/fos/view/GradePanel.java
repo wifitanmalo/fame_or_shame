@@ -27,7 +27,7 @@ public class GradePanel extends JPanel
     // subject id
     private int subjectId;
 
-    // scoer/percentage text boxes
+    // score/percentage text boxes
     private JTextField scoreBox, percentageBox;
 
     // constructor

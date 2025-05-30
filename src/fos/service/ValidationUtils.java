@@ -161,13 +161,11 @@ public class ValidationUtils
             }
             else
             {
-                // insert the subject on the database
+                // create the subject and inserts it in the database
                 Subject newSubject = new Subject(id, name, credits);
                 SubjectMenu.dataHandler.createSubject(newSubject, container);
-
                 // refresh the subjects on the subject box
                 SubjectMenu.dataHandler.loadSubjects(SubjectMenu.subjectBox);
-
                 // switch to the subject menu
                 WindowComponent.switchPanel(container, Main.subjectMenu);
             }

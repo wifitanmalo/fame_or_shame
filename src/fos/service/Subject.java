@@ -8,8 +8,7 @@ public class Subject
     private int credits;
 
     // performance attributes
-    private double totalScore;
-    private double totalEvaluated;
+    private double totalScore, totalEvaluated;
 
     // score constants
     public static final double PASSING_SCORE = 3.0, MAX_SCORE = 5.0;

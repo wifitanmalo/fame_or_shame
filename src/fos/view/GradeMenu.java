@@ -31,6 +31,7 @@ public class GradeMenu extends JPanel
 
     // panel where the grades are shown
     private JPanel gradeBox;
+    private JScrollPane scrollGrade;
 
     // text of the subject score
     private JLabel scoreText;
@@ -51,11 +52,11 @@ public class GradeMenu extends JPanel
 
         // create the grade box
         gradeBox = new JPanel();
-        JScrollPane scrollGrade = WindowComponent.setScrollBar(gradeBox,
-                                                                    155,
-                                                                    60,
-                                                                    400,
-                                                                    270);
+        scrollGrade = WindowComponent.setScrollBar(gradeBox,
+                                                    155,
+                                                    60,
+                                                    400,
+                                                    270);
 
         // button to back to the subject menu
         JButton backButton = WindowComponent.setButton("Back",
@@ -71,7 +72,9 @@ public class GradeMenu extends JPanel
         WindowComponent.buttonEvent(backButton,
                                     () ->
                                     {
+                                        // refresh the subjects in the subject box
                                         SubjectMenu.dataHandler.loadSubjects(SubjectMenu.subjectBox);
+                                        // switch to the subject menu
                                         WindowComponent.switchPanel(this, Main.subjectMenu);
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
@@ -80,11 +83,11 @@ public class GradeMenu extends JPanel
 
         // button to calculate the total score/percentage
         JButton totalButton = WindowComponent.setButton("Total",
-                                                            backButton.getX(),
-                                                            WindowComponent.yPositive(backButton, 20),
-                                                            78,
-                                                            50,
-                                                            WindowComponent.BUTTON_BACKGROUND);
+                                                        backButton.getX(),
+                                                        WindowComponent.yPositive(backButton, 20),
+                                                        78,
+                                                        50,
+                                                        WindowComponent.BUTTON_BACKGROUND);
         WindowComponent.configureText(totalButton,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
@@ -115,7 +118,8 @@ public class GradeMenu extends JPanel
         WindowComponent.buttonEvent(addButton,
                                     () ->
                                     {
-                                        nameDialogBox(this, "Name: ", "Grade name");
+                                        // show the box to set the grade name
+                                        nameDialogBox(scrollGrade, "Name: ", "Grade name");
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#C5EF48"),
@@ -135,7 +139,7 @@ public class GradeMenu extends JPanel
         WindowComponent.buttonEvent(subButton,
                                     () ->
                                     {
-                                       System.out.println("Add a sub grade");
+                                       System.out.println("add a sub grade");
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#C5EF48"),
@@ -206,7 +210,7 @@ public class GradeMenu extends JPanel
             {
                 // clear the name text field
                 nameField.setText("");
-                WindowComponent.messageBox(this,
+                WindowComponent.messageBox(scrollGrade,
                                         "Name cannot be longer than 30 characters.",
                                         "Input error",
                                         JOptionPane.ERROR_MESSAGE);
