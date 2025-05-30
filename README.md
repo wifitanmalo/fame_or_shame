@@ -18,6 +18,9 @@ video game [_Grand Theft Auto V_](https://www.rockstargames.com/gta-v).
 > If you want to work with the source code, use a Java-compatible IDE such as:
 > - [IntelliJ IDEA](https://www.jetbrains.com/idea/download/)
 > - [Eclipse](https://www.eclipse.org/downloads/)
+> 
+>  `If you are going to run the project with the Main class, copy the \database
+> folder to the root of the project. When you finish, you can delete it.`
 
 ## Program start
 
@@ -40,12 +43,12 @@ return to the subject menu and an "Add" button to confirm the creation of the su
 > - The name cannot exceed **50 characters**.
 > - The number of credits cannot exceed the program's **allowed limit**.
  
-After finalizing the subject creation, the data will be stored in the `subjects.txt`
-file in the following order: `id, name, credits, total_score, total_evaluated`. The
+After finalizing the subject creation, the data will be stored in the `Subject` table
+of `fos.db` in the following order: `id, name, credits, totalScore, totalEvaluated`. The
 last two values will be set to `0.0` when a new subject is created.
 > _**Example of a subject:**_
     
-    111021,Univariate Calculus,3,0.0,0.0
+    111021, Univariate Calculus, 3, 0.0, 0.0
 
 You will then be redirected back to the subject menu, where the new subject will be
 displayed in the box with two buttons: `+` to enter the grades menu and `x` to delete
@@ -53,26 +56,28 @@ the subject.
 
 ### Create a grade
 
-When you click the `+` button on the subject, a window similiar to the previous one
+When you click the `+` button on the subject, a similar window to the previous one
 will appear, but with two new buttons: `Total` to calculate the total grades and a
 `Back` button to return to the subject menu. Above the `+` button, the calculated
 value of the subject will be shown, displayed in green `#C5EF48` if you passed and
 in red `#FF6865` if you failed.
 
-The usage is the same as the previous menu. Clicking the `+` button will add a new
-grade with two text fields for the score and percentage, as well as an `x` button
-to delete the grade. Each grade will be stored in the `grades.txt` file in the
-following order: `id,score,percentage`, and the file will be updated as you make
-changes to the text fields.
+The operation will be similar to the previous menu, but with a small change: the click
+the `+` button now will show a window with a text field where you can set a name for the 
+grade **(no more than 30 characters).** When you press `OK`, a new grade is added with
+two text fields for the score and percentage, as well as an `x` button to delete the grade.
+Each grade will be stored in the `Grade` table of `fos.db` in the following order:
+`id,idSubject,name,score,percentage,idSuperGrade`, and the database will be updated as you
+make changes to the text fields.
 
 > _**Example of grades:**_
 
-    111021,5,10
-    111021,3.4,30
-    111021,4.2,10
-    111021,1.4,20
-    111021,5,10
-    111021,0.5,20
+    1, 111021, workshop I, 5.0, 10.0, NULL
+    2, 111021, exam I, 3.4, 30.0, NULL
+    3, 111021, workshop II, 4.2, 10.0, NULL
+    4, 111021, exam II, 1.4, 20.0, NULL
+    5, 111021, workshop III, 5.0, 10.0, NULL
+    6, 111021, final exam, 0.5, 20.0, NULL
 
 ### Calculate Total Grade
 
@@ -94,10 +99,7 @@ calculate the total you obtained and whether you successfully passed the subject
 In the attributes of the Subject class, you will find the following variables:
 
     // minimum score to approve
-    public static final double passing_score = 3.0;
-
-    // maximum score possible
-    public static final double max_score = 5.0;
+    public static final double PASSING_SCORE = 3.0, double MAX-SCORE = 5.0;
 
 You can change them to the grading values used by your institution.
 
@@ -106,7 +108,7 @@ You can change them to the grading values used by your institution.
 In the attributes of the SubjectFileHandler class, you will find the following variable: 
 
     // maximum amount of credits
-    public static final int max_credits = 21;
+    public static final int MAX_CREDITS = 21;
 
 You can change it to the maximum credit limit used by your institution.
 

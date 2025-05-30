@@ -109,27 +109,6 @@ public class GradeDataHandler
         }
     }
 
-    // method to delete all grades of a subject
-    public void deleteAll(int idSubject, Container container)
-    {
-        String query = "DELETE FROM Grade WHERE idSubject = ?";
-        try (Connection isConnected = ValidationUtils.connectDB();
-             PreparedStatement toDelete = isConnected.prepareStatement(query))
-        {
-            // subject ID
-            toDelete.setInt(1, idSubject);
-            // run the query
-            toDelete.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            WindowComponent.messageBox(container,
-                                        "Error while deleting the grades.",
-                                        "Database error",
-                                        JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
     // method to update the score of a grade
     public void updateScore(Grade grade, double newScore, Container container)
     {

@@ -102,7 +102,6 @@ public class SubjectPanel extends JPanel
                                             // reload the subjects to show the changes
                                             SubjectMenu.dataHandler.loadSubjects(SubjectMenu.subjectBox);
                                         }
-                                        GradeMenu.dataHandler.deleteAll(subject.getId(), this);
                                     },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),

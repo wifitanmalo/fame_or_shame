@@ -10,8 +10,10 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 // package imports
+import fos.data.SubjectDataHandler;
 import fos.service.Grade;
 import fos.service.Subject;
+import fos.service.ValidationUtils;
 
 public class GradePanel extends JPanel
 {
@@ -62,17 +64,34 @@ public class GradePanel extends JPanel
                 try
                 {
                     double newScore = Double.parseDouble(scoreBox.getText().trim());
-                    GradeMenu.dataHandler.updateScore(grade, newScore, gradeBox);
+                    if (ValidationUtils.isNegative(newScore))
+                    {
+                        WindowComponent.messageBox(gradeBox,
+                                                "Score cannot be negative.",
+                                                "Input error",
+                                                JOptionPane.ERROR_MESSAGE);
+                        throw new NumberFormatException("----- negative number -----");
+                    }
+                    else if (ValidationUtils.exceedsLimit(newScore, Subject.MAX_SCORE))
+                    {
+                        WindowComponent.messageBox(gradeBox,
+                                                "Score cannot be higher than " + Subject.MAX_SCORE+ ".",
+                                                "Input error",
+                                                JOptionPane.ERROR_MESSAGE);
+                        throw new NumberFormatException("----- limit error -----");
+                    }
+                    else
+                    {
+                        // set the new score to the grade
+                        GradeMenu.dataHandler.updateScore(grade, newScore, gradeBox);
+                    }
                 }
                 catch (NumberFormatException ex)
                 {
-                    WindowComponent.messageBox(gradeBox,
-                                            "Invalid score.",
-                                            "Input error",
-                                            JOptionPane.ERROR_MESSAGE);
-                    // sets the failed score to the default value
-                    scoreBox.setText("0.0");
+                    // set the failed score to the default value
                     GradeMenu.dataHandler.updateScore(grade, 0.0, gradeBox);
+                    // reload the grades to show the changes
+                    GradeMenu.dataHandler.loadGrades(subject, gradeBox, gradeBox);
                 }
                 super.keyReleased(e);
             }
@@ -114,24 +133,42 @@ public class GradePanel extends JPanel
             @Override
             public void keyReleased(KeyEvent e)
             {
-                // Update grade object
                 try
                 {
                     double newPercentage = Double.parseDouble(percentageBox.getText().trim());
-                    GradeMenu.dataHandler.updatePercentage(grade, newPercentage, gradeBox);
+                    if (ValidationUtils.isNegative(newPercentage))
+                    {
+                        WindowComponent.messageBox(gradeBox,
+                                                "Percentage cannot be negative.",
+                                                "Input error",
+                                                JOptionPane.ERROR_MESSAGE);
+                        throw new NumberFormatException("----- negative number -----");
+                    }
+                    else if (ValidationUtils.exceedsLimit(newPercentage,100.0))
+                    {
+                        WindowComponent.messageBox(gradeBox,
+                                                "Percentage cannot be higher than 100%.",
+                                                "Limit error",
+                                                JOptionPane.ERROR_MESSAGE);
+                        throw new NumberFormatException("----- limit error -----");
+                    }
+                    else
+                    {
+                        // set the new percentage to the grade
+                        GradeMenu.dataHandler.updatePercentage(grade, newPercentage, gradeBox);
+                    }
                 }
                 catch (NumberFormatException ex)
                 {
-                    WindowComponent.messageBox(gradeBox,
-                                            "Invalid percentage.",
-                                            "Input error",
-                                            JOptionPane.ERROR_MESSAGE);
                     // sets the failed percentage to the default value
-                    percentageBox.setText("0.0");
                     GradeMenu.dataHandler.updatePercentage(grade, 0.0, gradeBox);
+                    // reload the subjects to show the changes
+                    GradeMenu.dataHandler.loadGrades(subject, gradeBox, gradeBox);
                 }
                 super.keyReleased(e);
             }
+        });
+        percentageBox.addKeyListener(new KeyAdapter() {
         });
 
         // percentage symbol of the percentage text box
