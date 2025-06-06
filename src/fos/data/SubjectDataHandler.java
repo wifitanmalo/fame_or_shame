@@ -51,6 +51,7 @@ public class SubjectDataHandler
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             WindowComponent.messageBox(container,
                                     "Error while getting the score.",
                                     "Data error",
@@ -59,8 +60,33 @@ public class SubjectDataHandler
         return totalScore;
     }
 
+    // method to get the sum of the total percentage
+    public double getTotalPercentage(int id, Container container)
+    {
+        String query = "SELECT IFNULL(SUM(percentage), 0) FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL;";
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement state = isConnected.prepareStatement(query))
+        {
+            state.setInt(1, id);
+            ResultSet percentage = state.executeQuery();
+            if (percentage.next())
+            {
+                return percentage.getDouble(1);
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(container,
+                    "Error while getting the total percentage.",
+                    "Data error",
+                    JOptionPane.ERROR_MESSAGE);
+        }
+        return 0.0;
+    }
+
     // method to load the subjects from the database
-    public void loadSubjects(Container container)
+    public void loadSubjects()
     {
         String query = "SELECT * FROM Subject";
         try (Connection isConnected = ValidationUtils.connectDB();
@@ -97,7 +123,8 @@ public class SubjectDataHandler
         }
         catch (SQLException e)
         {
-            WindowComponent.messageBox(container,
+            e.printStackTrace();
+            WindowComponent.messageBox(SubjectMenu.subjectBox,
                                     "Error while reading the database.",
                                     "Database error",
                                     JOptionPane.ERROR_MESSAGE);
@@ -105,7 +132,7 @@ public class SubjectDataHandler
     }
 
     // method to create a subject in the database
-    public void createSubject(Subject subject, Container container)
+    public void createSubject(Subject subject)
     {
         String query = "INSERT INTO Subject(id, name, credits, totalScore, totalEvaluated) VALUES(?, ?, ?, ?, ?)";
         try (Connection isConnected = ValidationUtils.connectDB();
@@ -123,35 +150,12 @@ public class SubjectDataHandler
         }
         catch (SQLException e)
         {
-            WindowComponent.messageBox(container,
+            e.printStackTrace();
+            WindowComponent.messageBox(SubjectMenu.subjectBox,
                                         "Error while creating the subject.",
                                         "Database error",
                                         JOptionPane.ERROR_MESSAGE);
         }
-    }
-
-    // method to get the sum of the total percentage
-    public double getTotalPercentage(int id, Container container)
-    {
-        String query = "SELECT IFNULL(SUM(percentage), 0) FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL;";
-        try (Connection isConnected = ValidationUtils.connectDB();
-             PreparedStatement state = isConnected.prepareStatement(query))
-        {
-            state.setInt(1, id);
-            ResultSet percentage = state.executeQuery();
-            if (percentage.next())
-            {
-                return percentage.getDouble(1);
-            }
-        }
-        catch (SQLException e)
-        {
-            WindowComponent.messageBox(container,
-                                    "Error while getting the total percentage.",
-                                    "Data error",
-                                    JOptionPane.ERROR_MESSAGE);
-        }
-        return 0.0;
     }
 
     // method to update the total score/evaluated of a subject in the database
@@ -183,6 +187,7 @@ public class SubjectDataHandler
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             WindowComponent.messageBox(container,
                                         "Error while updating the subject.",
                                         "Data error",
@@ -191,7 +196,7 @@ public class SubjectDataHandler
     }
 
     // method to delete a subject in the database
-    public void deleteSubject(int id, Container container)
+    public void deleteSubject(int id)
     {
         String query = "DELETE FROM Subject WHERE id = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
@@ -204,7 +209,8 @@ public class SubjectDataHandler
         }
         catch (SQLException e)
         {
-            WindowComponent.messageBox(container,
+            e.printStackTrace();
+            WindowComponent.messageBox(SubjectMenu.subjectBox,
                                         "Error while deleting subject.",
                                         "Data error",
                                         JOptionPane.ERROR_MESSAGE);

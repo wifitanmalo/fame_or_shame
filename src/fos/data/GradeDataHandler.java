@@ -29,7 +29,7 @@ public class GradeDataHandler
     }
 
     // method to load the grades from the database
-    public void loadGrades(Subject subject, JPanel gradeBox, Container container)
+    public void loadGrades(Subject subject, JPanel gradeBox)
     {
         String query = "SELECT * FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL";
 
@@ -58,11 +58,11 @@ public class GradeDataHandler
             }
             // reload the panel to show the changes
             WindowComponent.reload(gradeBox);
-
         }
         catch (SQLException e)
         {
-            WindowComponent.messageBox(container,
+            e.printStackTrace();
+            WindowComponent.messageBox(gradeBox,
                                         "Error while reading the database.",
                                         "Data error",
                                         JOptionPane.ERROR_MESSAGE);
@@ -82,6 +82,7 @@ public class GradeDataHandler
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             WindowComponent.messageBox(container,
                                         "Error while creating the grade.",
                                         "Data error",
@@ -102,6 +103,7 @@ public class GradeDataHandler
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             WindowComponent.messageBox(container,
                                         "Error while deleting grade.",
                                         "Data error",
@@ -125,6 +127,7 @@ public class GradeDataHandler
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             WindowComponent.messageBox(container,
                                         "Error while updating the grade score.",
                                         "Data error",
@@ -148,6 +151,7 @@ public class GradeDataHandler
         }
         catch (SQLException e)
         {
+            e.printStackTrace();
             WindowComponent.messageBox(container,
                                         "Error while updating the grade percentage.",
                                         "Data error",

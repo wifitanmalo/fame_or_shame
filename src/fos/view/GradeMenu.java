@@ -20,6 +20,7 @@ import javax.swing.SwingUtilities;
 // package imports
 import fos.service.Subject;
 import fos.data.GradeDataHandler;
+import fos.service.ValidationUtils;
 
 public class GradeMenu extends JPanel
 {
@@ -73,7 +74,7 @@ public class GradeMenu extends JPanel
                                     () ->
                                     {
                                         // refresh the subjects in the subject box
-                                        SubjectMenu.dataHandler.loadSubjects(SubjectMenu.subjectBox);
+                                        SubjectMenu.dataHandler.loadSubjects();
                                         // switch to the subject menu
                                         WindowComponent.switchPanel(this, Main.subjectMenu);
                                     },
@@ -96,9 +97,14 @@ public class GradeMenu extends JPanel
                                     () ->
                                     {
                                         // calculate the subject score/percentage in the database
-                                        SubjectMenu.dataHandler.updateSubject(subject.getId(), this);
+                                        SubjectMenu.dataHandler.updateSubject(subject.getId(), gradeBox);
+                                        // get the current values of the subject
+                                        double score = SubjectMenu.dataHandler.getTotalScore(subject.getId(), gradeBox);
+                                        double percentage = SubjectMenu.dataHandler.getTotalPercentage(subject.getId(), gradeBox);
                                         // update the score text of the menu
-                                        setTextScore(SubjectMenu.dataHandler.getTotalScore(subject.getId(), this));
+                                        setTextScore(score);
+                                        // displays a message box with the remaining score to pass
+                                        ValidationUtils.riskThreshold(score, percentage, scrollGrade);
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#91BAD6"),
@@ -177,7 +183,7 @@ public class GradeMenu extends JPanel
         add(scoreText);
 
         // load the saved grades in the database
-        dataHandler.loadGrades(subject, gradeBox, this);
+        dataHandler.loadGrades(subject, gradeBox);
     }
 
     // method to show the box where the grade name is set
@@ -202,7 +208,7 @@ public class GradeMenu extends JPanel
                 // create a new grade in the database
                 dataHandler.createGrade(this.subject.getId(), nameField.getText(), this);
                 // load the saved grades in the database
-                dataHandler.loadGrades(subject, gradeBox, this);
+                dataHandler.loadGrades(subject, gradeBox);
                 // close the current box
                 dialog.dispose();
             }

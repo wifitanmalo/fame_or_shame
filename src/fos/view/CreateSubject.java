@@ -52,7 +52,7 @@ public class CreateSubject extends JPanel
                                     () ->
                                     {
                                         // refresh the subjects on the subject box
-                                        SubjectMenu.dataHandler.loadSubjects(this);
+                                        SubjectMenu.dataHandler.loadSubjects();
                                         // switch to the subject menu
                                         WindowComponent.switchPanel(this, Main.subjectMenu);
                                         // clear all the text fields

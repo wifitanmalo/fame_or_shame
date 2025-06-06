@@ -98,9 +98,9 @@ public class SubjectPanel extends JPanel
                                         if(choice == JOptionPane.YES_OPTION)
                                         {
                                             // remove the subject from the database
-                                            SubjectMenu.dataHandler.deleteSubject(subject.getId(), this);
+                                            SubjectMenu.dataHandler.deleteSubject(subject.getId());
                                             // reload the subjects to show the changes
-                                            SubjectMenu.dataHandler.loadSubjects(SubjectMenu.subjectBox);
+                                            SubjectMenu.dataHandler.loadSubjects();
                                         }
                                     },
                                     delete_button.getBackground(),
@@ -122,7 +122,7 @@ public class SubjectPanel extends JPanel
                                     () ->
                                     {
                                         // load the panels of the grades in the grades box
-                                        GradeMenu.dataHandler.loadGrades(subject, gradeMenu.getGradeBox(), this);
+                                        GradeMenu.dataHandler.loadGrades(subject, gradeMenu.getGradeBox());
                                         // update the subject score on the grade menu
                                         gradeMenu.setTextScore(subject.getTotalScore());
                                         // switch to the grade menu

@@ -10,7 +10,6 @@ import java.awt.event.KeyEvent;
 import javax.swing.*;
 
 // package imports
-import fos.data.SubjectDataHandler;
 import fos.service.Grade;
 import fos.service.Subject;
 import fos.service.ValidationUtils;
@@ -88,10 +87,11 @@ public class GradePanel extends JPanel
                 }
                 catch (NumberFormatException ex)
                 {
+                    ex.getStackTrace();
                     // set the failed score to the default value
                     GradeMenu.dataHandler.updateScore(grade, 0.0, gradeBox);
                     // reload the grades to show the changes
-                    GradeMenu.dataHandler.loadGrades(subject, gradeBox, gradeBox);
+                    GradeMenu.dataHandler.loadGrades(subject, gradeBox);
                 }
                 super.keyReleased(e);
             }
@@ -160,10 +160,11 @@ public class GradePanel extends JPanel
                 }
                 catch (NumberFormatException ex)
                 {
+                    ex.getStackTrace();
                     // sets the failed percentage to the default value
                     GradeMenu.dataHandler.updatePercentage(grade, 0.0, gradeBox);
                     // reload the subjects to show the changes
-                    GradeMenu.dataHandler.loadGrades(subject, gradeBox, gradeBox);
+                    GradeMenu.dataHandler.loadGrades(subject, gradeBox);
                 }
                 super.keyReleased(e);
             }
@@ -199,7 +200,7 @@ public class GradePanel extends JPanel
                                         // delete the current grade in the database
                                         GradeMenu.dataHandler.deleteGrade(grade, this);
                                         // load the saved grades in the database
-                                        GradeMenu.dataHandler.loadGrades(subject, gradeBox, this);
+                                        GradeMenu.dataHandler.loadGrades(subject, gradeBox);
                                     },
                                     delete_button.getBackground(),
                                     Color.decode("#FF4F4B"),

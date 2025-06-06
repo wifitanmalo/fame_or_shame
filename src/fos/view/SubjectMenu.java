@@ -104,7 +104,7 @@ public class SubjectMenu extends JPanel
         container.add(createSubject);
 
         // load the panels of the subjects in the subject box
-        dataHandler.loadSubjects(subjectBox);
+        dataHandler.loadSubjects();
 
         // reload the panel to show the changes
         WindowComponent.reload(this);
