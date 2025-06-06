@@ -1,7 +1,7 @@
 package fos.service;
 
 // awt import
-import java.awt.Container;
+import java.awt.*;
 
 // sql imports
 import java.sql.Connection;
@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import fos.data.SubjectDataHandler;
 import fos.view.Main;
 import fos.view.SubjectMenu;
+import fos.view.SubjectPanel;
 import fos.view.WindowComponent;
 
 public class ValidationUtils
@@ -211,17 +212,18 @@ public class ValidationUtils
         if (currentScore >= Subject.PASSING_SCORE) // the subject has been passed
         {
             WindowComponent.messageBox(gradeBox,
-                                    "You pass the subject!",
-                                    "Now you can rest",
-                                    JOptionPane.INFORMATION_MESSAGE
+                                        "You pass the subject!",
+                                        "Now you can rest",
+                                        JOptionPane.INFORMATION_MESSAGE
             );
         }
         else if (remainingGrade > Subject.MAX_SCORE) // the subject has been lost
         {
+
             WindowComponent.messageBox(gradeBox,
-                                        "You lost the subject.",
-                                        "End of the line",
-                                        JOptionPane.WARNING_MESSAGE);
+                                    "You lost the subject.",
+                                    "End of the line",
+                                    JOptionPane.WARNING_MESSAGE);
         }
         else
         {

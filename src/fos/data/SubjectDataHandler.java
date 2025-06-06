@@ -112,11 +112,14 @@ public class SubjectDataHandler
 
                 // create the subject panel
                 SubjectPanel currentPanel = new SubjectPanel(subject);
-                currentPanel.set_score_label(subject.getTotalScore());
-                currentPanel.set_evaluated_label(subject.getTotalEvaluated());
+                currentPanel.setScoreLabel(subject.getTotalScore());
+                currentPanel.setEvaluatedLabel(subject.getTotalEvaluated());
 
                 // add the subject credits to the signed constant
                 SIGNED_CREDITS += credits;
+
+                // set the component colors of the panel
+                currentPanel.performanceColor(totalScore, totalEvaluated);
             }
             // reload the panel to show the changes
             WindowComponent.reload(SubjectMenu.subjectBox);

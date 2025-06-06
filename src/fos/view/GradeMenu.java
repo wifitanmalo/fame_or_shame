@@ -27,7 +27,7 @@ public class GradeMenu extends JPanel
     // object to use the grades data
     public static final GradeDataHandler dataHandler = new GradeDataHandler();
 
-    // subject object
+    // subject/panel object
     private final Subject subject;
 
     // panel where the grades are shown
@@ -102,7 +102,7 @@ public class GradeMenu extends JPanel
                                         double score = SubjectMenu.dataHandler.getTotalScore(subject.getId(), gradeBox);
                                         double percentage = SubjectMenu.dataHandler.getTotalPercentage(subject.getId(), gradeBox);
                                         // update the score text of the menu
-                                        setTextScore(score);
+                                        setTextScore(score, percentage);
                                         // displays a message box with the remaining score to pass
                                         ValidationUtils.riskThreshold(score, percentage, scrollGrade);
                                     },
@@ -229,17 +229,21 @@ public class GradeMenu extends JPanel
     }
 
     // method to change the color/value of the total score
-    public void setTextScore(double score)
+    public void setTextScore(double score, double percentage)
     {
         score = SubjectMenu.twoDecimals(score);
         scoreText.setText(String.valueOf(score));
-        if(score >= Subject.PASSING_SCORE)
+        if (score >= Subject.PASSING_SCORE)
         {
             scoreText.setForeground(Color.decode("#C5EF48")); // green, you pass!
         }
-        else
+        else if (ValidationUtils.getRemainingScore(score, percentage) > Subject.MAX_SCORE)
         {
             scoreText.setForeground(Color.decode("#FF6865")); // red, you lose...
+        }
+        else
+        {
+            scoreText.setForeground(WindowComponent.PRESSED_BUTTON_BACKGROUND); // gray, you still have a chance
         }
         // reload the panel to show the changes
         WindowComponent.reload(scoreText);
