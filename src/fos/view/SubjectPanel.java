@@ -11,6 +11,7 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 // package imports
+import fos.service.Grade;
 import fos.service.Subject;
 import fos.service.ValidationUtils;
 
@@ -179,6 +180,8 @@ public class SubjectPanel extends JPanel
                                         {
                                             // remove the subject from the database
                                             SubjectMenu.dataHandler.deleteSubject(subject.getId());
+                                            // remove all the grades of the subject from the database
+                                            GradeMenu.dataHandler.deleteAll(subject.getId());
                                             // reload the subjects to show the changes
                                             SubjectMenu.dataHandler.loadSubjects();
                                         }

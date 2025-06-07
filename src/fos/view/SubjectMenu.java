@@ -47,35 +47,35 @@ public class SubjectMenu extends JPanel
         setBounds(0, 0, Main.WINDOW_WIDTH, Main.WINDOW_HEIGHT);
 
         // add a vertical scroll bar on the subject box
-        JScrollPane scroll_subject = WindowComponent.setScrollBar(subjectBox,
+        JScrollPane scrollSubject = WindowComponent.setScrollBar(subjectBox,
                                                                     155,
                                                                     60,
                                                                     400,
                                                                     270);
 
         // title of the subjects box
-        JLabel subjects_title = WindowComponent.setText("Subjects",
-                                                        scroll_subject.getX(),
-                                                        scroll_subject.getY()-32,
+        JLabel subjectsTitle = WindowComponent.setText("Subjects",
+                                                        scrollSubject.getX(),
+                                                        scrollSubject.getY()-32,
                                                         260,
                                                         26);
-        WindowComponent.configureText(subjects_title,
+        WindowComponent.configureText(subjectsTitle,
                                         WindowComponent.PRESSED_BUTTON_BACKGROUND,
                                         3,
-                                        WindowComponent.getHeight(subjects_title));
+                                        WindowComponent.getHeight(subjectsTitle));
 
         // create the button to create a new subject
-        JButton add_button = WindowComponent.setButton("+",
+        JButton addButton = WindowComponent.setButton("+",
                                                         50,
-                                                        scroll_subject.getY() + ((scroll_subject.getHeight()-50)/2),
+                                                        scrollSubject.getY() + ((scrollSubject.getHeight()-50)/2),
                                                         50,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
-        WindowComponent.configureText(add_button,
+        WindowComponent.configureText(addButton,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
-        WindowComponent.buttonEvent(add_button,
+        WindowComponent.buttonEvent(addButton,
                                     () ->
                                     {
                                         if(ValidationUtils.equals(SubjectDataHandler.SIGNED_CREDITS, SubjectDataHandler.MAX_CREDITS))
@@ -95,9 +95,9 @@ public class SubjectMenu extends JPanel
                                     Color.decode("#9DD100"));
 
         // add the components to the panel
-        add(add_button);
-        add(subjects_title);
-        add(scroll_subject);
+        add(addButton);
+        add(subjectsTitle);
+        add(scrollSubject);
 
         // add the panels to the container
         container.add(this);

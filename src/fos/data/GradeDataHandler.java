@@ -15,6 +15,7 @@ import javax.swing.JOptionPane;
 
 // package imports
 import fos.view.GradePanel;
+import fos.view.SubjectMenu;
 import fos.view.WindowComponent;
 import fos.service.Grade;
 import fos.service.Subject;
@@ -108,6 +109,26 @@ public class GradeDataHandler
                                         "Error while deleting grade.",
                                         "Data error",
                                         JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+    // method to delete all grades of a subject in the database
+    public void deleteAll(int idSubject)
+    {
+        String query = "DELETE FROM Grade WHERE idSubject = ?";
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement toDelete = isConnected.prepareStatement(query))
+        {
+            toDelete.setInt(1, idSubject);
+            toDelete.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(SubjectMenu.subjectBox,
+                                    "Error while deleting the grades.",
+                                    "Data error",
+                                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
