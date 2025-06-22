@@ -23,15 +23,23 @@ public class GradePanel extends JPanel
     // panel where the grades are shown
     private final JPanel gradeBox;
 
+
     // subject/grade objects
     private final Subject subject;
     private final Grade grade;
 
+
     // subject id
     private int subjectId;
 
+
     // score/percentage text boxes
     private JTextField scoreBox, percentageBox;
+
+
+    // text of the grade value
+    private JLabel gradeValue;
+
 
     // constructor
     public GradePanel(Subject subject, Grade grade, JPanel gradeBox)
@@ -43,6 +51,7 @@ public class GradePanel extends JPanel
         gradePanel();
     }
 
+
     // method to initialize a grade panel
     public void gradePanel()
     {
@@ -51,7 +60,7 @@ public class GradePanel extends JPanel
         setLayout(null);
 
         // create the text box of the grade score
-        scoreBox = WindowComponent.setTextField(94,
+        scoreBox = WindowComponent.setTextField(400/4,
                                                 25,
                                                 80,
                                                 30);
@@ -97,6 +106,8 @@ public class GradePanel extends JPanel
                     // reload the grades to show the changes
                     GradeMenu.dataHandler.loadGrades(subject, gradeBox);
                 }
+                // set the value of the grade in the text
+                setValueText(String.format("%.2f", GradeMenu.dataHandler.getValue(grade.getID(), gradeBox)));
                 super.keyReleased(e);
             }
         });
@@ -112,16 +123,27 @@ public class GradePanel extends JPanel
                                         1,
                                         12);
 
-        // title of the score text box
-        JLabel scoreText = WindowComponent.setText("Score:",
-                                                    WindowComponent.xNegative(scoreBox, 0),
-                                                    scoreBox.getY(),
+        // title of the grade value text box
+        JLabel valueTitle = WindowComponent.setText("Value:",
+                                                    scoreBox.getX() / 4,
+                                                    gradeName.getY() + 8,
                                                     64,
                                                     30);
-        WindowComponent.configureText(scoreText,
-                                        WindowComponent.FONT_FOREGROUND,
-                                        1,
-                                        18);
+        WindowComponent.configureText(valueTitle,
+                                    Color.LIGHT_GRAY,
+                                    1,
+                                    12);
+
+        // percentage symbol of the percentage text box
+        gradeValue = WindowComponent.setText("0.0",
+                                            valueTitle.getX(),
+                                            scoreBox.getY(),
+                                            50,
+                                            30);
+        WindowComponent.configureText(gradeValue,
+                                    Color.LIGHT_GRAY,
+                                    1,
+                                    18);
 
         // create the text box of the grade percentage
         percentageBox = WindowComponent.setTextField(WindowComponent.xPositive(scoreBox, 16),
@@ -170,22 +192,13 @@ public class GradePanel extends JPanel
                     // reload the subjects to show the changes
                     GradeMenu.dataHandler.loadGrades(subject, gradeBox);
                 }
+                // set the value of the grade in the text
+                setValueText(String.format("%.2f", GradeMenu.dataHandler.getValue(grade.getID(), gradeBox)));
                 super.keyReleased(e);
             }
         });
         percentageBox.addKeyListener(new KeyAdapter() {
         });
-
-        // percentage symbol of the percentage text box
-        JLabel percentage_symbol = WindowComponent.setText("%",
-                                                            WindowComponent.xPositive(percentageBox, 14),
-                                                            scoreText.getY(),
-                                                            50,
-                                                            30);
-        WindowComponent.configureText(percentage_symbol,
-                                            WindowComponent.FONT_FOREGROUND,
-                                            1,
-                                            18);
 
         // create the button to delete a grade
         JButton delete_button = WindowComponent.setButton("x",
@@ -212,10 +225,10 @@ public class GradePanel extends JPanel
 
         // add the components to the panel
         add(gradeName);
-        add(scoreText);
+        add(valueTitle);
+        add(gradeValue);
         add(scoreBox);
         add(percentageBox);
-        add(percentage_symbol);
         add(delete_button);
 
         // add the panel to the grade box
@@ -224,6 +237,7 @@ public class GradePanel extends JPanel
         // reload the panel to show the changes
         WindowComponent.reload(gradeBox);
     }
+
 
     // setters and getters
     public void setSubjectId(int id)
@@ -251,5 +265,14 @@ public class GradePanel extends JPanel
     public String getPercentageText()
     {
         return percentageBox.getText().trim();
+    }
+
+    public void setValueText(String value)
+    {
+        gradeValue.setText(value);
+    }
+    public JLabel getValueText()
+    {
+        return gradeValue;
     }
 }

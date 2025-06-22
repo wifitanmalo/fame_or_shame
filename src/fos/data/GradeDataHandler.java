@@ -21,6 +21,7 @@ import fos.service.Grade;
 import fos.service.Subject;
 import fos.service.ValidationUtils;
 
+
 public class GradeDataHandler
 {
     // constructor
@@ -28,6 +29,7 @@ public class GradeDataHandler
     {
 
     }
+
 
     // method to load the grades from the database
     public void loadGrades(Subject subject, JPanel gradeBox)
@@ -49,13 +51,14 @@ public class GradeDataHandler
                 double score = currentGrade.getDouble("score");
                 double percentage = currentGrade.getDouble("percentage");
 
-                // Construir objeto Grade con toda la información
+                // create grade object with all the information
                 Grade newGrade = new Grade(id, idSubject, name, score, percentage);
 
                 // Crear y agregar panel visual
                 GradePanel newPanel = new GradePanel(subject, newGrade, gradeBox);
                 newPanel.setScoreText(String.valueOf(score));
                 newPanel.setPercentageText(String.valueOf(percentage));
+                newPanel.setValueText(String.format("%.2f", getValue(id, gradeBox)));
             }
             // reload the panel to show the changes
             WindowComponent.reload(gradeBox);
@@ -69,6 +72,7 @@ public class GradeDataHandler
                                         JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     // method to create a new grade in the grades.txt file
     public void createGrade(int idSubject, String name, Container container)
@@ -91,6 +95,7 @@ public class GradeDataHandler
         }
     }
 
+
     // method to delete a grade in the database
     public void deleteGrade(Grade grade, Container container)
     {
@@ -112,6 +117,7 @@ public class GradeDataHandler
         }
     }
 
+
     // method to delete all grades of a subject in the database
     public void deleteAll(int idSubject)
     {
@@ -131,6 +137,7 @@ public class GradeDataHandler
                                     JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     // method to update the score of a grade
     public void updateScore(Grade grade, double newScore, Container container)
@@ -156,6 +163,7 @@ public class GradeDataHandler
         }
     }
 
+
     // method to update the percentage of a grade
     public void updatePercentage(Grade grade, double newPercentage, Container container)
     {
@@ -178,5 +186,34 @@ public class GradeDataHandler
                                         "Data error",
                                         JOptionPane.ERROR_MESSAGE);
         }
+    }
+
+
+    // method to get the value of a grade
+    public double getValue(int gradeID, Container container)
+    {
+        double totalScore = 0.0;
+        String query = "SELECT (score * (percentage/100.0)) AS value FROM Grade WHERE id = ?";
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement getGrade = isConnected.prepareStatement(query))
+        {
+            getGrade.setInt(1, gradeID);
+            try (ResultSet grade = getGrade.executeQuery())
+            {
+                if (grade.next())
+                {
+                    totalScore = grade.getDouble("value");
+                }
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(container,
+                                    "Error while getting the grade value.",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+        return totalScore;
     }
 }

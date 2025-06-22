@@ -70,7 +70,7 @@ public class SettingsMenu extends JPanel
                                     WindowComponent.PRESSED_BUTTON_BACKGROUND);
 
         // title of the pass score text field
-        JLabel passTitle = WindowComponent.setText("passing score",
+        JLabel passTitle = WindowComponent.setText("Passing score",
                                                 (inputPanel.getWidth()-130)/2,
                                                 20,
                                                 130,
@@ -134,7 +134,7 @@ public class SettingsMenu extends JPanel
 
 
         // title of the max score text field
-        JLabel maxTitle = WindowComponent.setText("max score",
+        JLabel maxTitle = WindowComponent.setText("Max score",
                                                     (inputPanel.getWidth()-130)/2,
                                                     WindowComponent.yNegative(passScoreField,10),
                                                     130,
@@ -197,7 +197,7 @@ public class SettingsMenu extends JPanel
         });
 
         // title of the max credits text field
-        JLabel creditsTitle = WindowComponent.setText("max credits",
+        JLabel creditsTitle = WindowComponent.setText("Max credits",
                                                     (inputPanel.getWidth()-130)/2,
                                                     WindowComponent.yNegative(maxScoreField,10),
                                                     130,
