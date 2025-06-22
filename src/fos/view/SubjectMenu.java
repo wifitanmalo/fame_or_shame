@@ -26,14 +26,20 @@ public class SubjectMenu extends JPanel
     // panel where the subjects are shown
     public static final JPanel subjectBox = new JPanel();
 
-    // object of the create subject menu
+    // object of the creation subject/setting menu
     private final CreateSubject createSubject;
+    private final SettingsMenu settingsMenu;
 
     // constructor
     public SubjectMenu()
     {
+        // run the create subject menu object
         this.createSubject = new CreateSubject();
         createSubject.setVisible(false);
+        // run the settings menu object
+        this.settingsMenu = new SettingsMenu();
+        settingsMenu.setVisible(false);
+        // get the current container of the window
         this.container = WindowComponent.getContainer();
         initializePanel();
     }
@@ -78,7 +84,7 @@ public class SubjectMenu extends JPanel
         WindowComponent.buttonEvent(addButton,
                                     () ->
                                     {
-                                        if(ValidationUtils.equals(SubjectDataHandler.SIGNED_CREDITS, SubjectDataHandler.MAX_CREDITS))
+                                        if(ValidationUtils.equals(SubjectDataHandler.SIGNED_CREDITS, SettingsMenu.CURRENT_USER.getMaxCredits()))
                                         {
                                             WindowComponent.messageBox(subjectBox,
                                                                         "You have already reached the credit limit.",
@@ -94,14 +100,39 @@ public class SubjectMenu extends JPanel
                                     Color.decode("#C5EF48"),
                                     Color.decode("#9DD100"));
 
+        // create the button to enter the settings menu of the system
+        JButton settingsButton = WindowComponent.setButton("@",
+                                                        addButton.getX(),
+                                                        WindowComponent.yNegative(addButton, 10),
+                                                        50,
+                                                        50,
+                                                        WindowComponent.BUTTON_BACKGROUND);
+        WindowComponent.configureText(settingsButton,
+                                        WindowComponent.FONT_FOREGROUND,
+                                        1,
+                                        16);
+        WindowComponent.buttonEvent(settingsButton,
+                                    () ->
+                                    {
+                                        // create the default user in the database if not exists
+                                        SettingsMenu.dataHandler.createUser(2704, 3.0, 5, 21, this);
+                                        // switch to the settings menu
+                                        WindowComponent.switchPanel(this, settingsMenu);
+                                    },
+                                    WindowComponent.BUTTON_BACKGROUND,
+                                    WindowComponent.ENTERED_BUTTON_BACKGROUND,
+                                    WindowComponent.PRESSED_BUTTON_BACKGROUND);
+
         // add the components to the panel
         add(addButton);
+        add(settingsButton);
         add(subjectsTitle);
         add(scrollSubject);
 
         // add the panels to the container
         container.add(this);
         container.add(createSubject);
+        container.add(settingsMenu);
 
         // load the panels of the subjects in the subject box
         dataHandler.loadSubjects();

@@ -233,11 +233,11 @@ public class GradeMenu extends JPanel
     {
         score = SubjectMenu.twoDecimals(score);
         scoreText.setText(String.valueOf(score));
-        if (score >= Subject.PASSING_SCORE)
+        if (score >= SettingsMenu.CURRENT_USER.getPassScore())
         {
             scoreText.setForeground(Color.decode("#C5EF48")); // green, you pass!
         }
-        else if (ValidationUtils.getRemainingScore(score, percentage) > Subject.MAX_SCORE)
+        else if (ValidationUtils.getRemainingScore(score, percentage) > SettingsMenu.CURRENT_USER.getMaxScore())
         {
             scoreText.setForeground(Color.decode("#FF6865")); // red, you lose...
         }

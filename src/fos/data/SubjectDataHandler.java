@@ -23,13 +23,15 @@ import fos.service.ValidationUtils;
 public class SubjectDataHandler
 {
     // credits constants
-    public static int SIGNED_CREDITS = 0, MAX_CREDITS = 21;
+    public static int SIGNED_CREDITS = 0;
+
 
     // constructor
     public SubjectDataHandler()
     {
 
     }
+
 
     // method to get the total score of a subject
     public double getTotalScore(int subjectId, Container container)
@@ -60,6 +62,7 @@ public class SubjectDataHandler
         return totalScore;
     }
 
+
     // method to get the sum of the total percentage
     public double getTotalPercentage(int id, Container container)
     {
@@ -84,6 +87,7 @@ public class SubjectDataHandler
         }
         return 0.0;
     }
+
 
     // method to load the subjects from the database
     public void loadSubjects()
@@ -134,6 +138,7 @@ public class SubjectDataHandler
         }
     }
 
+
     // method to create a subject in the database
     public void createSubject(Subject subject)
     {
@@ -160,6 +165,7 @@ public class SubjectDataHandler
                                         JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     // method to update the total score/evaluated of a subject in the database
     public void updateSubject(int id, Container container)
@@ -197,6 +203,7 @@ public class SubjectDataHandler
                                         JOptionPane.ERROR_MESSAGE);
         }
     }
+
 
     // method to delete a subject in the database
     public void deleteSubject(int id)

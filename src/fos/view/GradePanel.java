@@ -7,7 +7,11 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 // swing imports
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JPanel;
+import javax.swing.JOptionPane;
+import javax.swing.JTextField;
 
 // package imports
 import fos.service.Grade;
@@ -48,9 +52,9 @@ public class GradePanel extends JPanel
 
         // create the text box of the grade score
         scoreBox = WindowComponent.setTextField(94,
-                                                    25,
-                                                    80,
-                                                    30);
+                                                25,
+                                                80,
+                                                30);
         WindowComponent.configureText(scoreBox,
                                         WindowComponent.BUTTON_BACKGROUND,
                                         1,
@@ -71,10 +75,10 @@ public class GradePanel extends JPanel
                                                 JOptionPane.ERROR_MESSAGE);
                         throw new NumberFormatException("----- negative number -----");
                     }
-                    else if (ValidationUtils.exceedsLimit(newScore, Subject.MAX_SCORE))
+                    else if (ValidationUtils.exceedsLimit(newScore, SettingsMenu.CURRENT_USER.getMaxScore()))
                     {
                         WindowComponent.messageBox(gradeBox,
-                                                "Score cannot be higher than " + Subject.MAX_SCORE+ ".",
+                                                "Score cannot be higher than " + SettingsMenu.CURRENT_USER.getMaxScore() + ".",
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
                         throw new NumberFormatException("----- limit error -----");
@@ -109,12 +113,12 @@ public class GradePanel extends JPanel
                                         12);
 
         // title of the score text box
-        JLabel score_text = WindowComponent.setText("Score:",
+        JLabel scoreText = WindowComponent.setText("Score:",
                                                     WindowComponent.xNegative(scoreBox, 0),
                                                     scoreBox.getY(),
                                                     64,
                                                     30);
-        WindowComponent.configureText(score_text,
+        WindowComponent.configureText(scoreText,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
@@ -175,7 +179,7 @@ public class GradePanel extends JPanel
         // percentage symbol of the percentage text box
         JLabel percentage_symbol = WindowComponent.setText("%",
                                                             WindowComponent.xPositive(percentageBox, 14),
-                                                            score_text.getY(),
+                                                            scoreText.getY(),
                                                             50,
                                                             30);
         WindowComponent.configureText(percentage_symbol,
@@ -208,7 +212,7 @@ public class GradePanel extends JPanel
 
         // add the components to the panel
         add(gradeName);
-        add(score_text);
+        add(scoreText);
         add(scoreBox);
         add(percentageBox);
         add(percentage_symbol);

@@ -1,7 +1,7 @@
 package fos.service;
 
 // awt import
-import java.awt.*;
+import java.awt.Container;
 
 // sql imports
 import java.sql.Connection;
@@ -17,11 +17,12 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
 // package imports
-import fos.data.SubjectDataHandler;
 import fos.view.Main;
+import fos.view.SettingsMenu;
 import fos.view.SubjectMenu;
-import fos.view.SubjectPanel;
 import fos.view.WindowComponent;
+import fos.data.SubjectDataHandler;
+
 
 public class ValidationUtils
 {
@@ -31,17 +32,20 @@ public class ValidationUtils
         return number < 0;
     }
 
+
     // method to verify if a number exceeds the limit
     public static boolean exceedsLimit(double number, double limit)
     {
         return number > limit;
     }
 
+
     // method to verify if a number is equal to another
     public static boolean equals(double current_number, double number)
     {
         return current_number == number;
     }
+
 
     // method to verify if the database is connected
     public static Connection connectDB() throws SQLException
@@ -59,10 +63,20 @@ public class ValidationUtils
         }
     }
 
+
     // method to insert the database squema if it does not exist
     private static void setSchema(Connection isConnected) throws SQLException
     {
         Statement squema = isConnected.createStatement();
+        // insert the user table in the database
+        squema.execute("""
+            CREATE TABLE IF NOT EXISTS User (
+                id INT PRIMARY KEY,
+                passScore REAL NOT NULL,
+                maxScore REAL NOT NULL,
+                maxCredits INT NOT NULL
+            );
+        """);
         // insert the subject table in the database
         squema.execute("""
             CREATE TABLE IF NOT EXISTS Subject (
@@ -89,6 +103,7 @@ public class ValidationUtils
         squema.close();
     }
 
+
     // method to verify if a subject already exists
     public static boolean subjectExists(int id, Container container)
     {
@@ -112,6 +127,7 @@ public class ValidationUtils
             return false;
         }
     }
+
 
     // method to verify if subject data is valid
     public static void subjectValidation(Container container,
@@ -155,10 +171,10 @@ public class ValidationUtils
                                             JOptionPane.ERROR_MESSAGE);
             }
             else if(ValidationUtils.exceedsLimit(SubjectDataHandler.SIGNED_CREDITS + credits,
-                    SubjectDataHandler.MAX_CREDITS))
+                    SettingsMenu.CURRENT_USER.getMaxCredits()))
             {
                 WindowComponent.messageBox(container,
-                                            "Credits cannot be higher than " + SubjectDataHandler.MAX_CREDITS + ".",
+                                            "Credits cannot be higher than " + SettingsMenu.CURRENT_USER.getMaxCredits() + ".",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
@@ -183,25 +199,27 @@ public class ValidationUtils
         }
     }
 
+
     // method to get the remaining score to pass
     public static double getRemainingScore(double currentScore, double evaluatedPercentage)
     {
         // the subject has been fully evaluated
         if (evaluatedPercentage >= 100.0)
         {
-            return (currentScore >= Subject.PASSING_SCORE) ? 0.0 : Double.POSITIVE_INFINITY;
+            return (currentScore >= SettingsMenu.CURRENT_USER.getPassScore()) ? 0.0 : Double.POSITIVE_INFINITY;
         }
         // no more score are needed to pass
-        if (currentScore >= Subject.PASSING_SCORE)
+        if (currentScore >= SettingsMenu.CURRENT_USER.getPassScore())
         {
             return 0.0;
         }
         // remaining percentage to be evaluated
         double remainingPercentage = 100.0 - evaluatedPercentage;
         // remaining score to pass the subject
-        double remainingGrade = (Subject.PASSING_SCORE - currentScore) * 100.0 / remainingPercentage;
+        double remainingGrade = (SettingsMenu.CURRENT_USER.getPassScore() - currentScore) * 100.0 / remainingPercentage;
         return Math.max(remainingGrade, 0.0);
     }
+
 
     // method for verify the risk threshold of a subject
     public static void riskThreshold(double currentScore,
@@ -209,7 +227,7 @@ public class ValidationUtils
                                      JScrollPane gradeBox)
     {
         double remainingGrade = getRemainingScore(currentScore, evaluatedPercentage);
-        if (currentScore >= Subject.PASSING_SCORE) // the subject has been passed
+        if (currentScore >= SettingsMenu.CURRENT_USER.getPassScore()) // the subject has been passed
         {
             WindowComponent.messageBox(gradeBox,
                                         "You pass the subject!",
@@ -217,7 +235,7 @@ public class ValidationUtils
                                         JOptionPane.INFORMATION_MESSAGE
             );
         }
-        else if (remainingGrade > Subject.MAX_SCORE) // the subject has been lost
+        else if (remainingGrade > SettingsMenu.CURRENT_USER.getMaxScore()) // the subject has been lost
         {
 
             WindowComponent.messageBox(gradeBox,

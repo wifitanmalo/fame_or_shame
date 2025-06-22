@@ -7,11 +7,10 @@ public class Subject
     private String name;
     private int credits;
 
+
     // performance attributes
     private double totalScore, totalEvaluated;
 
-    // score constants
-    public static final double PASSING_SCORE = 3.0, MAX_SCORE = 5.0;
 
     // constructor
     public Subject(int id,
@@ -24,6 +23,7 @@ public class Subject
         this.totalScore = 0.0;
         this.totalEvaluated = 0.0;
     }
+
 
     // setters and getters
     public void setId(int id)

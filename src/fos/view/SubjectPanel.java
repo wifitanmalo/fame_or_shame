@@ -196,14 +196,14 @@ public class SubjectPanel extends JPanel
                                  double evaluatedPercentage)
     {
         double remainingGrade = ValidationUtils.getRemainingScore(currentScore, evaluatedPercentage);
-        if (currentScore >= Subject.PASSING_SCORE) // the subject has been passed
+        if (currentScore >= SettingsMenu.CURRENT_USER.getPassScore()) // the subject has been passed
         {
             this.panelColor(Color.decode("#C5EF48"),
                             Color.decode("#64820A"),
                             Color.decode("#7D9E19"),
                             Color.decode("#7D9E19"));
         }
-        else if (remainingGrade > Subject.MAX_SCORE) // the subject has been lost
+        else if (remainingGrade > SettingsMenu.CURRENT_USER.getMaxScore()) // the subject has been lost
         {
             this.panelColor(Color.decode("#FF746C"),
                             Color.decode("#B3352E"),

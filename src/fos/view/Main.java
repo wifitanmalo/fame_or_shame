@@ -4,13 +4,16 @@ package fos.view;
 import javax.swing.JFrame;
 import javax.swing.SwingUtilities;
 
+
 public class Main extends JFrame
 {
     // window size values
     public static final int WINDOW_WIDTH = 600, WINDOW_HEIGHT = 400;
 
+
     // subject menu object
     public static SubjectMenu subjectMenu;
+
 
     // constructor
     public Main()
@@ -19,6 +22,7 @@ public class Main extends JFrame
         WindowComponent.setContainer(this.getContentPane());
         subjectMenu = new SubjectMenu();
     }
+
 
     // method to run the main window
     public void initializeWindow()
@@ -30,6 +34,7 @@ public class Main extends JFrame
         setVisible(true);
         setDefaultCloseOperation(EXIT_ON_CLOSE);
     }
+
 
     // here is where the magic starts
     public static void main(String[] args)
