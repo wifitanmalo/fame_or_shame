@@ -22,19 +22,22 @@ video game [_Grand Theft Auto V_](https://www.rockstargames.com/gta-v).
 >  `If you are going to run the project with the Main class, copy the \database
 > folder to the root of the project. When you finish, you can delete it.`
 
+
 ## Program start
 
 -------------
 
 To use the program, you must go to the `\run` folder and open the `fame_or_shame.jar` file.
-When you run the program, a window will appear with a box showing the subjects and a `+`
-button to create a new one.
+When you run the program, a window will appear with a box showing the subjects
+and a `+` button to create a new one.
+
 
 ### Create a subject
 
-When you click the `+` button, a window will appear with three text fields to enter
-the subject id, name, and credits. Additionally, there will be a "Back" button to
-return to the subject menu and an "Add" button to confirm the creation of the subject.
+When you click the `+` button, a window will appear with three text fields
+to enter the subject id, name, and credits. Additionally, there will be a
+`Back` button to return to the subject menu and an "Add" button to confirm
+the creation of the subject.
 
 > [!CAUTION]
 > - The ID and credits must be **positive integers** not exceeding 9 digits.
@@ -43,32 +46,39 @@ return to the subject menu and an "Add" button to confirm the creation of the su
 > - The name cannot exceed **50 characters**.
 > - The number of credits cannot exceed the program's **allowed limit**.
  
-After finalizing the subject creation, the data will be stored in the `Subject` table
-of `fos.db` in the following order: `id, name, credits, totalScore, totalEvaluated`. The
-last two values will be set to `0.0` when a new subject is created.
+After finalizing the subject creation, the data will be stored in the `Subject`
+table of `fos.db` in the following order: `id, name, credits, totalScore,
+totalEvaluated`. The last two values will be set to `0.0` when a new subject
+is created.
+
 > _**Example of a subject:**_
     
     111021, Univariate Calculus, 3, 0.0, 0.0
 
-You will then be redirected back to the subject menu, where the new subject will be
-displayed in the box with two buttons: `+` to enter the grades menu and `x` to delete
-the subject.
+You will then be redirected back to the subject menu, where the new subject
+will be displayed in the box with two buttons: `+` to enter the grades menu
+and `x` to delete the subject.
+
 
 ### Create a grade
 
-When you click the `+` button on the subject, a similar window to the previous one
-will appear, but with two new buttons: `Total` to calculate the total grades and a
-`Back` button to return to the subject menu. Above the `+` button, the calculated
-value of the subject will be shown, displayed in green `#C5EF48` if you passed and
-in red `#FF6865` if you failed.
+When you click the `+` button on the subject, a similar window to the
+previous one will appear, but with two new buttons: `Total` to calculate
+the total grades and a `Back` button to return to the subject menu. Above
+the `+` button, the calculated value of the subject will be shown, displayed
+in green `#C5EF48` if you passed and in red `#FF6865` if you failed.
 
-The operation will be similar to the previous menu, but with a small change: the click
-the `+` button now will show a window with a text field where you can set a name for the 
-grade **(no more than 30 characters).** When you press `OK`, a new grade is added with
-two text fields for the score and percentage, as well as an `x` button to delete the grade.
-Each grade will be stored in the `Grade` table of `fos.db` in the following order:
-`id,idSubject,name,score,percentage,idSuperGrade`, and the database will be updated as you
-make changes to the text fields.
+The operation will be similar to the previous menu, but with a small change:
+the click the `+` button now will show a window with a text field where you
+can set a name for the grade **(no more than 30 characters).** When you press
+`OK`, a new grade is added with two text fields for the score and percentage,
+an `x` button to delete the grade and text showing the value the grade adds
+to the total score, which changes in real time as the values ​​in both fields
+change.
+
+Each grade will be stored in the `Grade` table of `fos.db` in the following
+order: `id,idSubject,name,score,percentage,idSuperGrade`, and the database
+will be updated as you make changes to the text fields.
 
 > _**Example of grades:**_
 
@@ -79,10 +89,12 @@ make changes to the text fields.
     5, 111021, workshop III, 5.0, 10.0, NULL
     6, 111021, final exam, 0.5, 20.0, NULL
 
+
 ### Calculate Total Grade
 
-After adding all the grades for your course, you can press the `Total` button to
-calculate the total you obtained and whether you successfully passed the subject.
+After adding all the grades for your course, you can press the `Total`
+button to calculate the total you obtained and whether you successfully
+passed the subject.
 
 > [!CAUTION]
 > - Grades and percentages must be **positive doubles**.
@@ -90,27 +102,36 @@ calculate the total you obtained and whether you successfully passed the subject
 > - Percentages must be higher than **0%.**
 > - The sum of percentages cannot exceed **100%**.
 
+
 ## Settings
 
 -------------
 
-### Minimum and Maximum Grade
+Below the `+` button of the subject menu, you will find a `@` button
+that sends you to the settings menu where there will be three text fields.
 
-In the attributes of the Subject class, you will find the following variables:
 
-    // minimum score to approve
-    public static final double PASSING_SCORE = 3.0, double MAX-SCORE = 5.0;
+### Passing/Maximum score
 
-You can change them to the grading values used by your institution.
+The first two are for the `passing` and `maximum score`, you can
+change them to the grading values used by your institution and the
+program will now work based on those values.
+
+> [!CAUTION]
+> - Both scores must be **positive doubles**.
+> - The passing score must be **less than or equal** to the maximum
+score.
+
 
 ### Credit Limit
 
-In the attributes of the SubjectFileHandler class, you will find the following variable: 
+And below the previous fields you will find the field for the `maximum
+credits` your institution allows you to enroll in per semester or change
+it for a much larger number so you can add as many courses as you want.
 
-    // maximum amount of credits
-    public static final int MAX_CREDITS = 21;
-
-You can change it to the maximum credit limit used by your institution.
+> [!CAUTION]
+> - Credits must be a **positive integer.**
+> - Credits must be **less than or equal to 2147483647.**
 
 ## Author's Note
 
