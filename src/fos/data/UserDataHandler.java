@@ -35,7 +35,7 @@ public class UserDataHandler
                            Container container)
     {
         String sql = """
-        INSERT INTO User (id, passScore, maxScore, maxCredits)
+        INSERT INTO User (id, pass_score, max_score, max_credits)
         SELECT ?, ?, ?, ?
         WHERE NOT EXISTS (
             SELECT 1 FROM User WHERE id = ?
@@ -78,9 +78,9 @@ public class UserDataHandler
             if (user.next())
             {
                 int id = user.getInt("id");
-                double passScore = user.getDouble("passScore");
-                double maxScore = user.getDouble("maxScore");
-                int maxCredits = user.getInt("maxCredits");
+                double passScore = user.getDouble("pass_score");
+                double maxScore = user.getDouble("max_score");
+                int maxCredits = user.getInt("max_credits");
 
                 return new User(id, passScore, maxScore, maxCredits);
             }
@@ -100,7 +100,7 @@ public class UserDataHandler
     // method to update the passing score in the database
     public void updatePassScore(int userID, double passScore, Container container)
     {
-        String query = "UPDATE User SET passScore = ? WHERE id = ?";
+        String query = "UPDATE User SET pass_score = ? WHERE id = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {
@@ -123,7 +123,7 @@ public class UserDataHandler
     // method to update the max score in the database
     public void updateMaxScore(int userID, double maxScore, Container container)
     {
-        String query = "UPDATE User SET maxScore = ? WHERE id = ?";
+        String query = "UPDATE User SET max_score = ? WHERE id = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {
@@ -146,7 +146,7 @@ public class UserDataHandler
     // method to update the max credits in the database
     public void updateMaxCredits(int userID, int credits, Container container)
     {
-        String query = "UPDATE User SET maxCredits = ? WHERE id = ?";
+        String query = "UPDATE User SET max_credits = ? WHERE id = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {

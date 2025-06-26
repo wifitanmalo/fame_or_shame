@@ -12,6 +12,7 @@ import java.sql.SQLException;
 // swing imports
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
+import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 // package imports
 import fos.view.GradePanel;
@@ -34,7 +35,7 @@ public class GradeDataHandler
     // method to load the grades from the database
     public void loadGrades(Subject subject, JPanel gradeBox)
     {
-        String query = "SELECT * FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL";
+        String query = "SELECT * FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL";
 
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement state = isConnected.prepareStatement(query))
@@ -46,13 +47,14 @@ public class GradeDataHandler
             while (currentGrade.next())
             {
                 int id = currentGrade.getInt("id");
-                int idSubject = currentGrade.getInt("idSubject");
+                int idSubject = currentGrade.getInt("id_subject");
                 String name = currentGrade.getString("name");
                 double score = currentGrade.getDouble("score");
                 double percentage = currentGrade.getDouble("percentage");
+                Integer idSuperGrade = currentGrade.getInt("id_super_grade");
 
                 // create grade object with all the information
-                Grade newGrade = new Grade(id, idSubject, name, score, percentage);
+                Grade newGrade = new Grade(id, idSubject, name, score, percentage, idSuperGrade);
 
                 // Crear y agregar panel visual
                 GradePanel newPanel = new GradePanel(subject, newGrade, gradeBox);
@@ -77,7 +79,7 @@ public class GradeDataHandler
     // method to create a new grade in the grades.txt file
     public void createGrade(int idSubject, String name, Container container)
     {
-        String query = "INSERT INTO Grade(idSubject, name) VALUES(?, ?)";
+        String query = "INSERT INTO Grade(id_subject, name) VALUES(?, ?)";
         try (Connection conn = ValidationUtils.connectDB();
              PreparedStatement create = conn.prepareStatement(query))
         {
@@ -99,7 +101,7 @@ public class GradeDataHandler
     // method to delete a grade in the database
     public void deleteGrade(Grade grade, Container container)
     {
-        String query = "DELETE FROM Grade WHERE id = ? AND idSubject = ?";
+        String query = "DELETE FROM Grade WHERE id = ? AND id_subject = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toDelete = isConnected.prepareStatement(query))
         {
@@ -121,7 +123,7 @@ public class GradeDataHandler
     // method to delete all grades of a subject in the database
     public void deleteAll(int idSubject)
     {
-        String query = "DELETE FROM Grade WHERE idSubject = ?";
+        String query = "DELETE FROM Grade WHERE id_subject = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toDelete = isConnected.prepareStatement(query))
         {
@@ -142,7 +144,7 @@ public class GradeDataHandler
     // method to update the score of a grade
     public void updateScore(Grade grade, double newScore, Container container)
     {
-        String query = "UPDATE Grade SET score = ? WHERE id = ? AND idSubject = ?";
+        String query = "UPDATE Grade SET score = ? WHERE id = ? AND id_subject = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {
@@ -167,7 +169,7 @@ public class GradeDataHandler
     // method to update the percentage of a grade
     public void updatePercentage(Grade grade, double newPercentage, Container container)
     {
-        String query = "UPDATE Grade SET percentage = ? WHERE id = ? AND idSubject = ?";
+        String query = "UPDATE Grade SET percentage = ? WHERE id = ? AND id_subject = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {

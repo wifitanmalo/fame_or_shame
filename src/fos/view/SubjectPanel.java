@@ -11,7 +11,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 // package imports
-import fos.service.Grade;
 import fos.service.Subject;
 import fos.service.ValidationUtils;
 
@@ -20,14 +19,18 @@ public class SubjectPanel extends JPanel
     // subject object
     private final Subject subject;
 
+
     // object of the grade menu
     private GradeMenu gradeMenu;
+
 
     // performance values texts
     private JLabel subjectName, totalScore, totalEvaluated;
 
+
     // buttons of the panel
     private JButton gradeButton, deleteButton;
+
 
     // constructor
     public SubjectPanel(Subject subject)
@@ -35,6 +38,7 @@ public class SubjectPanel extends JPanel
         this.subject = subject;
         subjectPanel();
     }
+
 
     // method to add a subject
     public void subjectPanel()
@@ -120,6 +124,7 @@ public class SubjectPanel extends JPanel
         WindowComponent.reload(SubjectMenu.subjectBox);
     }
 
+
     // method to set the subject name size based in its length
     public int nameSize(JLabel subject_name)
     {
@@ -134,6 +139,7 @@ public class SubjectPanel extends JPanel
         return WindowComponent.getHeight(subject_name);
     }
 
+
     // method to change the name/score/evaluated text colors
     public void panelColor(Color panelColor, Color nameColor, Color scoreEvaluatedColor, Color buttonColor)
     {
@@ -147,6 +153,7 @@ public class SubjectPanel extends JPanel
         // change the default color of the buttons
         buttonColor(buttonColor);
     }
+
 
     // method to change the color of the buttons to the same as the score/percentage text
     public void buttonColor(Color color)
@@ -191,6 +198,7 @@ public class SubjectPanel extends JPanel
                                     Color.decode("#FF1D18"));
     }
 
+
     // method for change the panel colors based in the risk threshold
     public void performanceColor(double currentScore,
                                  double evaluatedPercentage)
@@ -219,6 +227,7 @@ public class SubjectPanel extends JPanel
         }
     }
 
+
     // setters and getters
     public void setScoreLabel(double score)
     {
@@ -239,6 +248,10 @@ public class SubjectPanel extends JPanel
         return totalEvaluated;
     }
 
+    public void setGradeMenu(GradeMenu menu)
+    {
+        this.gradeMenu = menu;
+    }
     public GradeMenu getGradeMenu()
     {
         return gradeMenu;

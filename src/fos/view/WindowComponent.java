@@ -17,10 +17,12 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
 
+
 public class WindowComponent
 {
     // default system font
     public static final String DEFAULT_FONT = "Verdana";
+
 
     // default color values
     public static final Color FONT_FOREGROUND = Color.decode("#FFFFFF");
@@ -29,8 +31,10 @@ public class WindowComponent
     public static final Color PRESSED_BUTTON_BACKGROUND = Color.decode("#AAAAAA");
     public static final Color FRAME_BACKGROUND = Color.decode("#1F1F1F");
 
+
     // container object
     public static Container currentContainer;
+
 
     // method to add a panel
     public static JPanel setPanel(Color color,
@@ -46,6 +50,7 @@ public class WindowComponent
         return panel;
     }
 
+
     // method to switch to another panel
     public static void switchPanel(Container previous_panel,
                                    Container next_panel)
@@ -53,6 +58,7 @@ public class WindowComponent
         previous_panel.setVisible(false);
         next_panel.setVisible(true);
     }
+
 
     // method to add a scroll bar to a panel
     public static JScrollPane setScrollBar(JPanel panel,
@@ -71,6 +77,7 @@ public class WindowComponent
         return scrollPanel;
     }
 
+
     // method to add a label
     public static JLabel setText(String text,
                                  int x,
@@ -83,6 +90,7 @@ public class WindowComponent
         return label;
     }
 
+
     // method to configure the text settings of a container
     public static void configureText(Container container,
                                      Color color,
@@ -92,6 +100,7 @@ public class WindowComponent
         container.setForeground(color);
         container.setFont(new Font(WindowComponent.DEFAULT_FONT, style, size));
     }
+
 
     // method to add a text field
     public static JTextField setTextField(int x,
@@ -104,11 +113,13 @@ public class WindowComponent
         return textBox;
     }
 
+
     // method to clear the text boxes
     public static void clearBox(JTextField textBox)
     {
         textBox.setText("");
     }
+
 
     // method to add a button
     public static JButton setButton(String text,
@@ -127,6 +138,7 @@ public class WindowComponent
         button.setBounds(x, y, width, height);
         return button;
     }
+
 
     // method to set a button event
     public static void buttonEvent(JButton button,
@@ -167,6 +179,7 @@ public class WindowComponent
         });
     }
 
+
     // method to show a message box
     public static void messageBox(Container container,
                                   String message,
@@ -179,12 +192,14 @@ public class WindowComponent
                                     option);
     }
 
+
     // method to reload the window components
     public static void reload(Container container)
     {
         container.revalidate();
         container.repaint();
     }
+
 
     // methods to move a container in x
     public static int xPositive(Container container, int distance)
@@ -196,6 +211,7 @@ public class WindowComponent
         return (container.getX()-container.getWidth()) - distance;
     }
 
+
     // methods to move a container in y
     public static int yPositive(Container container, int distance)
     {
@@ -205,6 +221,7 @@ public class WindowComponent
     {
         return (container.getY()+container.getHeight()) + distance;
     }
+
 
     // setters and getters
     public static void setContainer(Container container)

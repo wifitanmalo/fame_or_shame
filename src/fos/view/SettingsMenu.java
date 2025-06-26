@@ -5,12 +5,17 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 // swing imports
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JTextField;
 
 // package imports
-import fos.data.UserDataHandler;
 import fos.service.User;
 import fos.service.ValidationUtils;
+import fos.data.SubjectDataHandler;
+import fos.data.UserDataHandler;
 
 
 public class SettingsMenu extends JPanel
@@ -124,7 +129,7 @@ public class SettingsMenu extends JPanel
                 }
                 catch (NumberFormatException ex)
                 {
-                    ex.getStackTrace();
+                    ex.printStackTrace();
                     // set the failed score to the default value
                     setPassText(String.valueOf(CURRENT_USER.getPassScore()));
                 }
@@ -188,7 +193,7 @@ public class SettingsMenu extends JPanel
                 }
                 catch (NumberFormatException ex)
                 {
-                    ex.getStackTrace();
+                    ex.printStackTrace();
                     // set the failed score to the default value
                     setMaxText(String.valueOf(CURRENT_USER.getMaxScore()));
                 }
@@ -224,7 +229,8 @@ public class SettingsMenu extends JPanel
             {
                 try
                 {
-                    int newCredits = Integer.parseInt(maxScoreField.getText().trim());
+                    // 2147483647
+                    int newCredits = Integer.parseInt(maxCredits.getText().trim());
                     if (ValidationUtils.isNegative(newCredits))
                     {
                         WindowComponent.messageBox(inputPanel,
@@ -232,6 +238,22 @@ public class SettingsMenu extends JPanel
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
                         throw new NumberFormatException("----- negative number -----");
+                    }
+                    else if (newCredits == 0)
+                    {
+                        WindowComponent.messageBox(inputPanel,
+                                                "Max credits must be higher than 0.",
+                                                "Input error",
+                                                JOptionPane.ERROR_MESSAGE);
+                        throw new NumberFormatException("----- equal to 0 -----");
+                    }
+                    else if (newCredits < SubjectDataHandler.SIGNED_CREDITS)
+                    {
+                        WindowComponent.messageBox(inputPanel,
+                                                "Max credits cannot be lower than signed credits.",
+                                                "Input error",
+                                                JOptionPane.ERROR_MESSAGE);
+                        throw new NumberFormatException("----- lower than signed -----");
                     }
                     else
                     {
@@ -243,7 +265,7 @@ public class SettingsMenu extends JPanel
                 }
                 catch (NumberFormatException ex)
                 {
-                    ex.getStackTrace();
+                    ex.printStackTrace();
                     // set the failed score to the default value
                     setCreditsText(String.valueOf(CURRENT_USER.getMaxCredits()));
                 }

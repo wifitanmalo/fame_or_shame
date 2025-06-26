@@ -12,16 +12,19 @@ import javax.swing.JTextField;
 // package imports
 import fos.service.ValidationUtils;
 
+
 public class CreateSubject extends JPanel
 {
     // text boxes
     private JTextField idTextBox, nameTextBox, creditsTextBox;
+
 
     // constructor
     public CreateSubject()
     {
         initializePanel();
     }
+
 
     // method to initialize the subject panel
     private void initializePanel()
@@ -161,6 +164,7 @@ public class CreateSubject extends JPanel
         inputPanel.add(creditsTitle);
         inputPanel.add(creditsTextBox);
     }
+
 
     // method to clear all the text boxes
     public void clearBoxes()

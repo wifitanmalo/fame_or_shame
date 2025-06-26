@@ -37,7 +37,7 @@ public class SubjectDataHandler
     public double getTotalScore(int subjectId, Container container)
     {
         double totalScore = 0.0;
-        String query = "SELECT totalScore FROM Subject WHERE id = ?";
+        String query = "SELECT total_score FROM Subject WHERE id = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement getSubject = isConnected.prepareStatement(query))
         {
@@ -46,7 +46,7 @@ public class SubjectDataHandler
             {
                 if (subject.next())
                 {
-                    totalScore = subject.getDouble("totalScore");
+                    totalScore = subject.getDouble("total_score");
                 }
             }
 
@@ -66,7 +66,7 @@ public class SubjectDataHandler
     // method to get the sum of the total percentage
     public double getTotalPercentage(int id, Container container)
     {
-        String query = "SELECT IFNULL(SUM(percentage), 0) FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL;";
+        String query = "SELECT IFNULL(SUM(percentage), 0) FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL;";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement state = isConnected.prepareStatement(query))
         {
@@ -106,8 +106,8 @@ public class SubjectDataHandler
                 int id = currentSubject.getInt("id");
                 String name = currentSubject.getString("name");
                 int credits = currentSubject.getInt("credits");
-                double totalScore = currentSubject.getDouble("totalScore");
-                double totalEvaluated = currentSubject.getDouble("totalEvaluated");
+                double totalScore = currentSubject.getDouble("total_score");
+                double totalEvaluated = currentSubject.getDouble("total_evaluated");
 
                 // create the subject with the values
                 Subject subject = new Subject(id,name,credits);
@@ -142,7 +142,7 @@ public class SubjectDataHandler
     // method to create a subject in the database
     public void createSubject(Subject subject)
     {
-        String query = "INSERT INTO Subject(id, name, credits, totalScore, totalEvaluated) VALUES(?, ?, ?, ?, ?)";
+        String query = "INSERT INTO Subject(id, name, credits, total_score, total_evaluated) VALUES(?, ?, ?, ?, ?)";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toCreate = isConnected.prepareStatement(query))
         {
@@ -171,8 +171,8 @@ public class SubjectDataHandler
     public void updateSubject(int id, Container container)
     {
         String query = "UPDATE Subject " +
-                        "SET totalScore = (SELECT IFNULL(SUM(score * (percentage/100.0)), 0) FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL), " +
-                        "    totalEvaluated = (SELECT IFNULL(SUM(percentage), 0) FROM Grade WHERE idSubject = ? AND idSuperGrade IS NULL) " +
+                        "SET total_score = (SELECT IFNULL(SUM(score * (percentage/100.0)), 0) FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL), " +
+                        "    total_evaluated = (SELECT IFNULL(SUM(percentage), 0) FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL) " +
                         "WHERE id = ?;";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))

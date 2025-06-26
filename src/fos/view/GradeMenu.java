@@ -27,15 +27,19 @@ public class GradeMenu extends JPanel
     // object to use the grades data
     public static final GradeDataHandler dataHandler = new GradeDataHandler();
 
+
     // subject/panel object
     private final Subject subject;
+
 
     // panel where the grades are shown
     private JPanel gradeBox;
     private JScrollPane scrollGrade;
 
+
     // text of the subject score
     private JLabel scoreText;
+
 
     // constructor
     public GradeMenu(Subject subject)
@@ -43,6 +47,7 @@ public class GradeMenu extends JPanel
         this.subject = subject;
         initializePanel();
     }
+
 
     // method to initialize the panel
     public void initializePanel()
@@ -186,6 +191,7 @@ public class GradeMenu extends JPanel
         dataHandler.loadGrades(subject, gradeBox);
     }
 
+
     // method to show the box where the grade name is set
     public void nameDialogBox(Component container,
                               String text,
@@ -228,6 +234,7 @@ public class GradeMenu extends JPanel
         dialog.setVisible(true);
     }
 
+
     // method to change the color/value of the total score
     public void setTextScore(double score, double percentage)
     {
@@ -248,6 +255,7 @@ public class GradeMenu extends JPanel
         // reload the panel to show the changes
         WindowComponent.reload(scoreText);
     }
+
 
     // method to get the subject box
     public JPanel getGradeBox()

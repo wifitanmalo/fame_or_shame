@@ -131,7 +131,9 @@ it for a much larger number so you can add as many courses as you want.
 
 > [!CAUTION]
 > - Credits must be a **positive integer.**
-> - Credits must be **less than or equal to 2147483647.**
+> - credits must be **higher** than 0.
+> - Credits must be **higher** than or **equal** to the signed credits.
+> - Credits must be **lower** than or **equal** to 2147483647.
 
 ## Author's Note
 

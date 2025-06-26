@@ -72,9 +72,9 @@ public class ValidationUtils
         squema.execute("""
             CREATE TABLE IF NOT EXISTS User (
                 id INT PRIMARY KEY,
-                passScore REAL NOT NULL,
-                maxScore REAL NOT NULL,
-                maxCredits INT NOT NULL
+                pass_score REAL NOT NULL,
+                max_score REAL NOT NULL,
+                max_credits INT NOT NULL
             );
         """);
         // insert the subject table in the database
@@ -83,21 +83,21 @@ public class ValidationUtils
                 id INTEGER PRIMARY KEY,
                 name VARCHAR(50) NOT NULL,
                 credits INTEGER NOT NULL,
-                totalScore REAL DEFAULT 0,
-                totalEvaluated REAL DEFAULT 0
+                total_score REAL DEFAULT 0,
+                total_evaluated REAL DEFAULT 0
             );
         """);
         // insert the grade table in the database
         squema.execute("""
             CREATE TABLE IF NOT EXISTS Grade (
                 id INTEGER PRIMARY KEY AUTOINCREMENT,
-                idSubject INTEGER NOT NULL,
+                id_subject INTEGER NOT NULL,
                 name VARCHAR(30),
                 score REAL DEFAULT 0,
                 percentage REAL DEFAULT 0,
-                idSuperGrade INTEGER,
-                FOREIGN KEY (idSubject) REFERENCES Subject(id),
-                FOREIGN KEY (idSuperGrade) REFERENCES Grade(id)
+                id_super_grade INTEGER,
+                FOREIGN KEY (id_subject) REFERENCES Subject(id),
+                FOREIGN KEY (id_super_grade) REFERENCES Grade(id)
             );
         """);
         squema.close();

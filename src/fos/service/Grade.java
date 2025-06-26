@@ -8,20 +8,25 @@ public class Grade
     private String name;
     private double score;
     private double percentage;
+    private Integer idSuperGrade;
+
 
     // constructor
     public Grade(int id,
                 int subjectID,
                 String name,
                 double score,
-                double percentage)
+                double percentage,
+                Integer idSuperGrade)
     {
         this.id = id;
         this.subjectID = subjectID;
         this.name = name;
         this.score = score;
         this.percentage = percentage;
+        this.idSuperGrade = idSuperGrade;
     }
+
 
     // setters and getters
     public void setID(int id) {
@@ -57,5 +62,12 @@ public class Grade
     }
     public double getPercentage() {
         return percentage;
+    }
+
+    public void setSuperID(Integer id) {
+        this.idSuperGrade = id;
+    }
+    public Integer getSuperID() {
+        return idSuperGrade;
     }
 }
