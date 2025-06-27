@@ -12,7 +12,6 @@ import java.sql.SQLException;
 // swing imports
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
-import javax.swing.plaf.basic.BasicInternalFrameTitlePane;
 
 // package imports
 import fos.view.GradePanel;
@@ -77,14 +76,27 @@ public class GradeDataHandler
 
 
     // method to create a new grade in the grades.txt file
-    public void createGrade(int idSubject, String name, Container container)
+    public void createGrade(int idSubject,
+                            String name,
+                            Integer idSuperGrade,
+                            Container container)
     {
-        String query = "INSERT INTO Grade(id_subject, name) VALUES(?, ?)";
+        String query = "INSERT INTO Grade(id_subject, name, id_super_grade) VALUES(?, ?, ?)";
         try (Connection conn = ValidationUtils.connectDB();
              PreparedStatement create = conn.prepareStatement(query))
         {
             create.setInt(1, idSubject);
             create.setString(2, name);
+
+            // verify if the value is not null
+            if (idSuperGrade != null)
+            {
+                create.setInt(3, idSuperGrade);
+            }
+            else
+            {
+                create.setNull(3, java.sql.Types.INTEGER);
+            }
             create.executeUpdate();
         }
         catch (SQLException e)
@@ -120,6 +132,54 @@ public class GradeDataHandler
     }
 
 
+    // method to get the total amount of subgrades
+    public int getSubgradesAmount(int idSuperGrade, Container container)
+    {
+        String query = "SELECT Count(*) FROM Grade WHERE id_super_grade = ?";
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement state = isConnected.prepareStatement(query))
+        {
+            state.setInt(1, idSuperGrade);
+            ResultSet amount = state.executeQuery();
+            if (amount.next())
+            {
+                return amount.getInt(1);
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(container,
+                                    "Error while getting the amount of subgrades.",
+                                    "Data error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+        return 0;
+    }
+
+
+    // method to delete a grade in the database
+    public void deleteSubgrade(Grade grade, Container container)
+    {
+        String query = "DELETE FROM Grade WHERE id = ? AND id_super_grade = ?";
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement toDelete = isConnected.prepareStatement(query))
+        {
+            toDelete.setInt(1, grade.getID());
+            toDelete.setInt(2, grade.getSuperID());
+            toDelete.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(container,
+                                    "Error while deleting sub grade.",
+                                    "Data error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
     // method to delete all grades of a subject in the database
     public void deleteAll(int idSubject)
     {
@@ -128,6 +188,27 @@ public class GradeDataHandler
              PreparedStatement toDelete = isConnected.prepareStatement(query))
         {
             toDelete.setInt(1, idSubject);
+            toDelete.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(SubjectMenu.subjectBox,
+                                    "Error while deleting the grades.",
+                                    "Data error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    // method to delete all sub grades of a grade in the database
+    public void deleteAllSub(int idSuperGrade)
+    {
+        String query = "DELETE FROM Grade WHERE id_super_grade = ?";
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement toDelete = isConnected.prepareStatement(query))
+        {
+            toDelete.setInt(1, idSuperGrade);
             toDelete.executeUpdate();
         }
         catch (SQLException e)

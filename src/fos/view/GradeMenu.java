@@ -8,14 +8,7 @@ import java.awt.FlowLayout;
 import java.awt.Window;
 
 // swing imports
-import javax.swing.JButton;
-import javax.swing.JDialog;
-import javax.swing.JLabel;
-import javax.swing.JOptionPane;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.JTextField;
-import javax.swing.SwingUtilities;
+import javax.swing.*;
 
 // package imports
 import fos.service.Subject;
@@ -66,7 +59,7 @@ public class GradeMenu extends JPanel
 
         // button to back to the subject menu
         JButton backButton = WindowComponent.setButton("Back",
-                                                        40,
+                                                    (scrollGrade.getX()-78)/2,
                                                         WindowComponent.yNegative(scrollGrade, -50),
                                                         78,
                                                         50,
@@ -117,7 +110,7 @@ public class GradeMenu extends JPanel
 
         // button to create a grade
         JButton addButton = WindowComponent.setButton("+",
-                                                        backButton.getX() - 16,
+                                                    (scrollGrade.getX()-50)/2,
                                                         WindowComponent.yPositive(totalButton, 20),
                                                         50,
                                                         50,
@@ -130,27 +123,7 @@ public class GradeMenu extends JPanel
                                     () ->
                                     {
                                         // show the box to set the grade name
-                                        nameDialogBox(scrollGrade, "Name: ", "Grade name");
-                                    },
-                                    WindowComponent.BUTTON_BACKGROUND,
-                                    Color.decode("#C5EF48"),
-                                    Color.decode("#9DD100"));
-
-        // button to create a grade
-        JButton subButton = WindowComponent.setButton("|",
-                                                        WindowComponent.xPositive(addButton, 8),
-                                                        addButton.getY(),
-                                                        50,
-                                                        50,
-                                                        WindowComponent.BUTTON_BACKGROUND);
-        WindowComponent.configureText(subButton,
-                                        WindowComponent.FONT_FOREGROUND,
-                                        1,
-                                        18);
-        WindowComponent.buttonEvent(subButton,
-                                    () ->
-                                    {
-                                       System.out.println("add a sub grade");
+                                        nameDialogBox(scrollGrade, "Name: ", "Grade name", null);
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#C5EF48"),
@@ -169,14 +142,15 @@ public class GradeMenu extends JPanel
 
         // create the text box of the garde score
         scoreText = WindowComponent.setText(String.valueOf(subject.getTotalScore()),
-                                            backButton.getX() + 20,
+                                        (scrollGrade.getX()-70)/2,
                                             WindowComponent.yPositive(addButton, 4),
-                                            80,
+                                            70,
                                             20);
         WindowComponent.configureText(scoreText,
                                         WindowComponent.PRESSED_BUTTON_BACKGROUND,
                                         3,
                                         WindowComponent.getHeight(nameText));
+        scoreText.setHorizontalAlignment(SwingConstants.CENTER);
 
         // add the components to the main panel
         add(scrollGrade);
@@ -184,7 +158,6 @@ public class GradeMenu extends JPanel
         add(backButton);
         add(totalButton);
         add(addButton);
-        add(subButton);
         add(scoreText);
 
         // load the saved grades in the database
@@ -195,7 +168,8 @@ public class GradeMenu extends JPanel
     // method to show the box where the grade name is set
     public void nameDialogBox(Component container,
                               String text,
-                              String title)
+                              String title,
+                              Integer idSuperGrade)
     {
         Window window = SwingUtilities.getWindowAncestor(container);
         JDialog dialog = new JDialog(window, title, Dialog.ModalityType.APPLICATION_MODAL);
@@ -212,7 +186,7 @@ public class GradeMenu extends JPanel
             if(nameField.getText().length() <= 30)
             {
                 // create a new grade in the database
-                dataHandler.createGrade(this.subject.getId(), nameField.getText(), this);
+                dataHandler.createGrade(this.subject.getId(), nameField.getText(), idSuperGrade, this);
                 // load the saved grades in the database
                 dataHandler.loadGrades(subject, gradeBox);
                 // close the current box

@@ -53,8 +53,8 @@ public class SettingsMenu extends JPanel
 
         // create the back button
         JButton backButton = WindowComponent.setButton("Back",
-                                                        inputPanel.getX()/4,
-                                                        161,
+                                                    (inputPanel.getX()-78)/2,
+                                                    (Main.WINDOW_HEIGHT-50)/2,
                                                         78,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);

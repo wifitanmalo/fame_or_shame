@@ -9,9 +9,10 @@ import java.awt.event.KeyEvent;
 // swing imports
 import javax.swing.JButton;
 import javax.swing.JLabel;
-import javax.swing.JPanel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 
 // package imports
 import fos.service.Grade;
@@ -60,14 +61,14 @@ public class GradePanel extends JPanel
         setLayout(null);
 
         // create the text box of the grade score
-        scoreBox = WindowComponent.setTextField(400/4,
+        scoreBox = WindowComponent.setTextField(260/3,
                                                 25,
-                                                80,
+                                                70,
                                                 30);
         WindowComponent.configureText(scoreBox,
                                         WindowComponent.BUTTON_BACKGROUND,
                                         1,
-                                        18);
+                                        14);
         scoreBox.addKeyListener(new KeyAdapter()
         {
             @Override
@@ -125,9 +126,9 @@ public class GradePanel extends JPanel
 
         // title of the grade value text box
         JLabel valueTitle = WindowComponent.setText("Value:",
-                                                    scoreBox.getX() / 4,
+                                                (scoreBox.getX()-48)/ 2,
                                                     gradeName.getY() + 8,
-                                                    64,
+                                                    48,
                                                     30);
         WindowComponent.configureText(valueTitle,
                                     Color.LIGHT_GRAY,
@@ -136,14 +137,15 @@ public class GradePanel extends JPanel
 
         // percentage symbol of the percentage text box
         gradeValue = WindowComponent.setText("0.0",
-                                            valueTitle.getX(),
+                                            valueTitle.getX() - 12,
                                             scoreBox.getY(),
-                                            50,
+                                            64,
                                             30);
         WindowComponent.configureText(gradeValue,
                                     Color.LIGHT_GRAY,
                                     1,
-                                    18);
+                                    12);
+        gradeValue.setHorizontalAlignment(SwingConstants.CENTER);
 
         // create the text box of the grade percentage
         percentageBox = WindowComponent.setTextField(WindowComponent.xPositive(scoreBox, 16),
@@ -153,7 +155,7 @@ public class GradePanel extends JPanel
         WindowComponent.configureText(percentageBox,
                                         WindowComponent.BUTTON_BACKGROUND,
                                         1,
-                                        18);
+                                        14);
         percentageBox.addKeyListener(new KeyAdapter()
         {
             @Override
@@ -201,17 +203,17 @@ public class GradePanel extends JPanel
         });
 
         // create the button to delete a grade
-        JButton delete_button = WindowComponent.setButton("x",
-                                                            320,
-                                                            15,
-                                                            50,
-                                                            50,
-                                                            WindowComponent.FRAME_BACKGROUND);
-        WindowComponent.configureText(delete_button,
+        JButton deleteButton = WindowComponent.setButton("x",
+                                                        320,
+                                                        15,
+                                                        50,
+                                                        50,
+                                                        WindowComponent.FRAME_BACKGROUND);
+        WindowComponent.configureText(deleteButton,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
-        WindowComponent.buttonEvent(delete_button,
+        WindowComponent.buttonEvent(deleteButton,
                                     () ->
                                     {
                                         // delete the current grade in the database
@@ -219,9 +221,29 @@ public class GradePanel extends JPanel
                                         // load the saved grades in the database
                                         GradeMenu.dataHandler.loadGrades(subject, gradeBox);
                                     },
-                                    delete_button.getBackground(),
+                                    WindowComponent.FRAME_BACKGROUND,
                                     Color.decode("#FF4F4B"),
                                     Color.decode("#FF1D18"));
+
+        // button to create a grade
+        JButton subButton = WindowComponent.setButton("+",
+                                                        WindowComponent.xNegative(deleteButton, 10),
+                                                        deleteButton.getY(),
+                                                        50,
+                                                        50,
+                                                        WindowComponent.FRAME_BACKGROUND);
+        WindowComponent.configureText(subButton,
+                                        WindowComponent.FONT_FOREGROUND,
+                                        1,
+                                        18);
+        WindowComponent.buttonEvent(subButton,
+                                    () ->
+                                    {
+                                        System.out.println("add a sub grade");
+                                    },
+                                    WindowComponent.FRAME_BACKGROUND,
+                                    Color.decode("#C5EF48"),
+                                    Color.decode("#9DD100"));
 
         // add the components to the panel
         add(gradeName);
@@ -229,13 +251,21 @@ public class GradePanel extends JPanel
         add(gradeValue);
         add(scoreBox);
         add(percentageBox);
-        add(delete_button);
+        add(deleteButton);
+        add(subButton);
 
         // add the panel to the grade box
         gradeBox.add(this);
 
         // reload the panel to show the changes
         WindowComponent.reload(gradeBox);
+    }
+
+
+    // method to set the super grade configuration
+    public void superGrade()
+    {
+        scoreBox.setVisible(false);
     }
 
 

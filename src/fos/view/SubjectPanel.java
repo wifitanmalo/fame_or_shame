@@ -14,6 +14,7 @@ import javax.swing.JPanel;
 import fos.service.Subject;
 import fos.service.ValidationUtils;
 
+
 public class SubjectPanel extends JPanel
 {
     // subject object
@@ -88,11 +89,11 @@ public class SubjectPanel extends JPanel
 
         // create the button to delete the subject
         deleteButton = WindowComponent.setButton("x",
-                                                            320,
-                                                            15,
-                                                            50,
-                                                            50,
-                                                            WindowComponent.FRAME_BACKGROUND);
+                                                320,
+                                                15,
+                                                50,
+                                                50,
+                                                WindowComponent.FRAME_BACKGROUND);
         WindowComponent.configureText(deleteButton,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
@@ -100,11 +101,11 @@ public class SubjectPanel extends JPanel
 
         // button to enter on the grades menu
         gradeButton = WindowComponent.setButton("+",
-                                                            (deleteButton.getX()-60),
-                                                            deleteButton.getY(),
-                                                            50,
-                                                            50,
-                                                            WindowComponent.FRAME_BACKGROUND);
+                                                (deleteButton.getX()-60),
+                                                deleteButton.getY(),
+                                                50,
+                                                50,
+                                                WindowComponent.FRAME_BACKGROUND);
         WindowComponent.configureText(gradeButton,
                                         WindowComponent.FONT_FOREGROUND,
                                         1,

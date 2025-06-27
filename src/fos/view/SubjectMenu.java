@@ -72,7 +72,7 @@ public class SubjectMenu extends JPanel
 
         // create the button to create a new subject
         JButton addButton = WindowComponent.setButton("+",
-                                                        50,
+                                                    (scrollSubject.getX()-50)/2,
                                                         scrollSubject.getY() + ((scrollSubject.getHeight()-50)/2),
                                                         50,
                                                         50,
