@@ -2,21 +2,13 @@ package fos.view;
 
 // awt imports
 import java.awt.Color;
-import java.awt.Component;
-import java.awt.Dialog;
-import java.awt.FlowLayout;
-import java.awt.Window;
 
 // swing imports
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JLabel;
-import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
-import javax.swing.JTextField;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 
 // package imports
 import fos.service.Subject;
@@ -138,7 +130,15 @@ public class GradeMenu extends JPanel
                                     () ->
                                     {
                                         // show the box to set the grade name
-                                        nameDialogBox(scrollGrade, "Name: ", "Grade name", null);
+                                        WindowComponent.gradeNameDialog("Name: ",
+                                                                "Grade name",
+                                                                this.subject,
+                                                                0.0,
+                                                                null,
+                                                                scrollGrade);
+
+                                        // load the saved grades in the database
+                                        GradeMenu.dataHandler.loadGrades(subject, null, gradeBox);
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#C5EF48"),
@@ -177,57 +177,6 @@ public class GradeMenu extends JPanel
 
         // load the saved grades in the database
         dataHandler.loadGrades(subject, null, gradeBox);
-    }
-
-
-    // method to show the box where the grade name is set
-    public void nameDialogBox(Component container,
-                              String text,
-                              String title,
-                              Integer idSuperGrade)
-    {
-        Window window = SwingUtilities.getWindowAncestor(container);
-        JDialog dialog = new JDialog(window, title, Dialog.ModalityType.APPLICATION_MODAL);
-        dialog.setSize(250, 100);
-        dialog.setLayout(new FlowLayout());
-        dialog.setLocationRelativeTo(container);
-
-        JTextField nameField = new JTextField(10);
-        WindowComponent.configureText(nameField, WindowComponent.BUTTON_BACKGROUND, 1, 14);
-        JButton okButton = new JButton("OK");
-
-        okButton.addActionListener(e ->
-        {
-            if(nameField.getText().length() <= 30)
-            {
-                // create a new grade in the database
-                dataHandler.createGrade(this.subject.getId(),
-                                        nameField.getText(),
-                                        0.0,
-                                        0.0,
-                                        idSuperGrade,
-                                        this);
-
-                // load the saved grades in the database
-                dataHandler.loadGrades(subject, idSuperGrade, gradeBox);
-
-                // close the current box
-                dialog.dispose();
-            }
-            else
-            {
-                // clear the name text field
-                nameField.setText("");
-                WindowComponent.messageBox(scrollGrade,
-                                        "Name cannot be longer than 30 characters.",
-                                        "Name too long",
-                                        JOptionPane.ERROR_MESSAGE);
-            }
-        });
-        dialog.add(new JLabel(text));
-        dialog.add(nameField);
-        dialog.add(okButton);
-        dialog.setVisible(true);
     }
 
 

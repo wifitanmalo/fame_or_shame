@@ -266,13 +266,13 @@ public class GradePanel extends JPanel
         WindowComponent.buttonEvent(subButton,
                                     () ->
                                     {
-                                        // create a sub grade in the database
-                                        GradeMenu.dataHandler.createGrade(grade.getSubjectID(),
-                                                                        "",
-                                                                        0.0,
-                                                                        grade.getPercentage(),
-                                                                        grade.getID(),
-                                                                        this);
+                                        // show the box to set the sub grade name
+                                        WindowComponent.gradeNameDialog("Name: ",
+                                                                    "Grade name",
+                                                                    subject,
+                                                                    grade.getPercentage(),
+                                                                    grade.getID(),
+                                                                    this);
 
                                         // load the saved grades in the database
                                         GradeMenu.dataHandler.loadGrades(subject, null, gradeBox);

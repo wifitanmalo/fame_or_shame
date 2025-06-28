@@ -2,21 +2,29 @@ package fos.view;
 
 // awt imports
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Container;
 import java.awt.Cursor;
+import java.awt.Dialog;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.FlowLayout;
 import java.awt.Font;
+import java.awt.Window;
 
 // swing imports
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
+import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTextField;
+import javax.swing.SwingUtilities;
 
+// package imports
+import fos.service.Subject;
 
 public class WindowComponent
 {
@@ -190,6 +198,55 @@ public class WindowComponent
                                     message,
                                     title,
                                     option);
+    }
+
+
+    // method to show a dialog box for entering the name of a grade
+    public static void gradeNameDialog(String text,
+                                       String title,
+                                       Subject subject,
+                                       double percentage,
+                                       Integer idSuperGrade,
+                                       Container container)
+    {
+        Window window = SwingUtilities.getWindowAncestor(container);
+        JDialog dialog = new JDialog(window, title, Dialog.ModalityType.APPLICATION_MODAL);
+        dialog.setSize(250, 100);
+        dialog.setLayout(new FlowLayout());
+        dialog.setLocationRelativeTo(container);
+
+        JTextField nameField = new JTextField(10);
+        WindowComponent.configureText(nameField, WindowComponent.BUTTON_BACKGROUND, 1, 14);
+        JButton okButton = new JButton("OK");
+
+        okButton.addActionListener(e -> {
+            if(nameField.getText().length() <= 30)
+            {
+                // create a new grade in the database
+                GradeMenu.dataHandler.createGrade(subject.getId(),
+                                                    nameField.getText(),
+                                                    0.0,
+                                                    percentage,
+                                                    idSuperGrade,
+                                                    container);
+
+                // close the dialog box
+                dialog.dispose();
+            }
+            else
+            {
+                // clear the name text field
+                nameField.setText("");
+                WindowComponent.messageBox(container,
+                                        "Name cannot be longer than 30 characters.",
+                                        "Name too long",
+                                        JOptionPane.ERROR_MESSAGE);
+            }
+        });
+        dialog.add(new JLabel(text));
+        dialog.add(nameField);
+        dialog.add(okButton);
+        dialog.setVisible(true);
     }
 
 
