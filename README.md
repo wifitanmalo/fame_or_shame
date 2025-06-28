@@ -72,9 +72,9 @@ The operation will be similar to the previous menu, but with a small change:
 the click the `+` button now will show a window with a text field where you
 can set a name for the grade **(no more than 30 characters).** When you press
 `OK`, a new grade is added with two text fields for the score and percentage,
-an `x` button to delete the grade and text showing the value the grade adds
-to the total score, which changes in real time as the values ​​in both fields
-change.
+an `+` button to create a subgrade, an `x` button to delete the grade and text
+showing the value the grade adds to the total score, which changes in real
+time as the values in both fields change.
 
 Each grade will be stored in the `Grade` table of `fos.db` in the following
 order: `id,idSubject,name,score,percentage,idSuperGrade`, and the database
@@ -86,24 +86,67 @@ will be updated as you make changes to the text fields.
     2, 111021, exam I, 3.4, 30.0, NULL
     3, 111021, workshop II, 4.2, 10.0, NULL
     4, 111021, exam II, 1.4, 20.0, NULL
-    5, 111021, workshop III, 5.0, 10.0, NULL
-    6, 111021, final exam, 0.5, 20.0, NULL
+    5, 111021, final exam, 2.0, 30.0, NULL
+
+
+### Create a subgrade
+
+When you click the `+` button on the grade, the same dialog window with the
+text field will appear to set the grade name, but now when you press the `OK`
+button, the `score` text field of the grade will disappear and a sub grade will
+be added below without the `percentage` text field and `+` button. Each subgrade
+will be stored in the `Grade` table of `fos.db` in the same order as the normal
+grades, with the difference that now the `idSuperField` will not be _NULL,_ but
+will have the `id` of the supergrade and the `percentage` will be the same as
+the supergrade.
+
+The rest of the functionality is the same, except now the supergrade `score` is
+defined by the subgrades and the subgrades `percentage` is defined by the supergrade.
+In other words, a change in one affects the others.
+
+> _**Example of subgrades:**_
+
+    5, 111021, final exam, 2.0, 30.0, NULL // supergrade
+    6, 111021, workshop III, 3.0, 30.0, 5
+    7, 111021, exam III, 1.0, 30.0, 5
 
 
 ### Calculate Total Grade
 
 After adding all the grades for your course, you can press the `Total`
 button to calculate the total you obtained and whether you successfully
-passed the subject.
+passed the subject. This will calculate the score needed to pass the
+subject as follows:
+
+$$
+P_{rem} = 100.0 - P_{curr}
+$$
+
+$$
+S_{rem} = [(S_{pass} - S_{curr}) * 100.0] / P_{rem}
+$$
+
+Where $S$ is the `score` and $P$ is the `percentage`.
+
+First, the remaining percentage is calculated by subtracting the current
+percentage from 100. Then, the remaining score is calculated by subtracting
+the passing score from the current score, multiplying the result by 100
+and finally dividing it by the remaining percentage.
+
+Based on the result, the subject will be colored one of the following
+colors, based on the risk threshold:
+
+- `Gray:` no risk, there is still a chance to pass.
+- `Red:` failed subject, the remaining score exceeds the maximum.
+- `Green:` passed subject, the passing score has been obtained.
 
 > [!CAUTION]
-> - Grades and percentages must be **positive doubles**.
-> - Grades cannot exceed the program's **allowed limit**.
-> - Percentages must be higher than **0%.**
+> - The scores and percentages must be **positive doubles**.
+> - The scores cannot exceed the program's **allowed limit**.
 > - The sum of percentages cannot exceed **100%**.
 
 
-## Settings
+# Settings
 
 -------------
 
@@ -119,8 +162,8 @@ program will now work based on those values.
 
 > [!CAUTION]
 > - Both scores must be **positive doubles**.
-> - The passing score must be **less than or equal** to the maximum
-score.
+> - The passing score cannot **exceed** the maximum score.
+> - The maximum score cannot **exceed** 100.
 
 
 ### Credit Limit
@@ -130,10 +173,11 @@ credits` your institution allows you to enroll in per semester or change
 it for a much larger number so you can add as many courses as you want.
 
 > [!CAUTION]
-> - Credits must be a **positive integer.**
-> - credits must be **higher** than 0.
-> - Credits must be **higher** than or **equal** to the signed credits.
-> - Credits must be **lower** than or **equal** to 2147483647.
+> - The credits must be a **positive integer.**
+> - The credits must be **higher** than 0.
+> - The credits must be **higher** than or **equal** to the signed credits.
+> - The credits cannot **exceed** 100.
+
 
 ## Author's Note
 

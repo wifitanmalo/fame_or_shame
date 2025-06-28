@@ -68,6 +68,7 @@ public class ValidationUtils
     private static void setSchema(Connection isConnected) throws SQLException
     {
         Statement squema = isConnected.createStatement();
+
         // insert the user table in the database
         squema.execute("""
             CREATE TABLE IF NOT EXISTS User (
@@ -77,6 +78,7 @@ public class ValidationUtils
                 max_credits INT NOT NULL
             );
         """);
+
         // insert the subject table in the database
         squema.execute("""
             CREATE TABLE IF NOT EXISTS Subject (
@@ -87,6 +89,7 @@ public class ValidationUtils
                 total_evaluated REAL DEFAULT 0
             );
         """);
+
         // insert the grade table in the database
         squema.execute("""
             CREATE TABLE IF NOT EXISTS Grade (
@@ -108,11 +111,13 @@ public class ValidationUtils
     public static boolean subjectExists(int id, Container container)
     {
         String query = "SELECT 1 FROM Subject WHERE id = ? LIMIT 1";
+
         try (Connection isConnected = connectDB();
              PreparedStatement exists = isConnected.prepareStatement(query))
         {
             // subject ID
             exists.setInt(1, id);
+
             // run the query
             ResultSet subject = exists.executeQuery();
             return subject.next();
@@ -166,7 +171,7 @@ public class ValidationUtils
             else if(ValidationUtils.exceedsLimit(nameTextBox.getText().length(), 50))
             {
                 WindowComponent.messageBox(container,
-                                            "Name cannot be longer than 50 characters.",
+                                            "Name cannot exceed 50 characters.",
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
@@ -174,7 +179,8 @@ public class ValidationUtils
                     SettingsMenu.CURRENT_USER.getMaxCredits()))
             {
                 WindowComponent.messageBox(container,
-                                            "Credits cannot be higher than " + SettingsMenu.CURRENT_USER.getMaxCredits() + ".",
+                                            String.format("Credits cannot exceed %d.",
+                                                        SettingsMenu.CURRENT_USER.getMaxCredits()),
                                             "Input error",
                                             JOptionPane.ERROR_MESSAGE);
             }
@@ -208,13 +214,16 @@ public class ValidationUtils
         {
             return (currentScore >= SettingsMenu.CURRENT_USER.getPassScore()) ? 0.0 : Double.POSITIVE_INFINITY;
         }
+
         // no more score are needed to pass
         if (currentScore >= SettingsMenu.CURRENT_USER.getPassScore())
         {
             return 0.0;
         }
+
         // remaining percentage to be evaluated
         double remainingPercentage = 100.0 - evaluatedPercentage;
+
         // remaining score to pass the subject
         double remainingGrade = (SettingsMenu.CURRENT_USER.getPassScore() - currentScore) * 100.0 / remainingPercentage;
         return Math.max(remainingGrade, 0.0);

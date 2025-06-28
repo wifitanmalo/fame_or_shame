@@ -1,6 +1,7 @@
 package fos.view;
 
 // awt imports
+import java.awt.Color;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
@@ -21,7 +22,7 @@ import fos.data.UserDataHandler;
 public class SettingsMenu extends JPanel
 {
     // text fields
-    private JTextField passScoreField, maxScoreField, maxCredits;
+    private JTextField passScoreField, maxScoreField, maxCreditsField;
 
 
     // object to use the user data
@@ -53,8 +54,8 @@ public class SettingsMenu extends JPanel
 
         // create the back button
         JButton backButton = WindowComponent.setButton("Back",
-                                                    (inputPanel.getX()-78)/2,
-                                                    (Main.WINDOW_HEIGHT-50)/2,
+                                                        (inputPanel.getX()-78)/2,
+                                                        (Main.WINDOW_HEIGHT-50)/2,
                                                         78,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
@@ -67,6 +68,7 @@ public class SettingsMenu extends JPanel
                                     {
                                         // refresh the subjects on the subject box
                                         SubjectMenu.dataHandler.loadSubjects();
+
                                         // switch to the subject menu
                                         WindowComponent.switchPanel(this, Main.subjectMenu);
                                     },
@@ -109,29 +111,31 @@ public class SettingsMenu extends JPanel
                                                 "Passing score cannot be negative.",
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- negative number -----");
+                        throw new NumberFormatException("----- negative score -----");
                     }
                     else if (ValidationUtils.exceedsLimit(newPass, CURRENT_USER.getMaxScore()))
                     {
                         WindowComponent.messageBox(inputPanel,
-                                                "Passing score cannot be higher than max score.",
+                                                "Passing score cannot exceed max score.",
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- limit error -----");
+                        throw new NumberFormatException("----- passing score exceeds max -----");
                     }
                     else
                     {
+                        // keep/change the field font color to dark gray if the value is valid
+                        passScoreField.setForeground(WindowComponent.BUTTON_BACKGROUND);
+
                         // set the new passing score in the database
                         dataHandler.updatePassScore(CURRENT_USER.getId(), newPass, inputPanel);
-                        // set the new passing score to the user object
-                        CURRENT_USER.setPassScore(newPass);
                     }
                 }
                 catch (NumberFormatException ex)
                 {
                     ex.printStackTrace();
-                    // set the failed score to the default value
-                    setPassText(String.valueOf(CURRENT_USER.getPassScore()));
+
+                    // change the field font color to red if the value is invalid
+                    passScoreField.setForeground(Color.decode("#FF746C"));
                 }
                 super.keyReleased(e);
             }
@@ -173,29 +177,37 @@ public class SettingsMenu extends JPanel
                                                 "Max score cannot be negative.",
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- negative number -----");
+                        throw new NumberFormatException("----- negative score -----");
                     }
                     else if (newMax < CURRENT_USER.getPassScore())
                     {
                         WindowComponent.messageBox(inputPanel,
-                                                "Max score cannot be lower than passing score.",
+                                                "Max score cannot be less than the passing score.",
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- limit error -----");
+                        throw new NumberFormatException("----- max less than passing score -----");
                     }
-                    else
+                    else if (newMax > 100)
                     {
-                        // set the new max score in the database
-                        dataHandler.updateMaxScore(CURRENT_USER.getId(), newMax, inputPanel);
-                        // set the new max to the user object
-                        CURRENT_USER.setMaxScore(newMax);
+                        WindowComponent.messageBox(inputPanel,
+                                                "Max score cannot exceed 100.",
+                                                "Input error",
+                                                JOptionPane.ERROR_MESSAGE);
+                        throw new NumberFormatException("----- max score exceeds 100 -----");
                     }
+
+                    // keep/change the field font color to dark gray if the value is valid
+                    maxScoreField.setForeground(WindowComponent.BUTTON_BACKGROUND);
+
+                    // set the new max score in the database
+                    dataHandler.updateMaxScore(CURRENT_USER.getId(), newMax, inputPanel);
                 }
                 catch (NumberFormatException ex)
                 {
                     ex.printStackTrace();
-                    // set the failed score to the default value
-                    setMaxText(String.valueOf(CURRENT_USER.getMaxScore()));
+
+                    // change the field font color to red if the value is invalid
+                    maxScoreField.setForeground(Color.decode("#FF746C"));
                 }
                 super.keyReleased(e);
             }
@@ -213,61 +225,61 @@ public class SettingsMenu extends JPanel
                                         WindowComponent.getHeight(creditsTitle));
 
         // create the text box of the max credits
-        maxCredits = WindowComponent.setTextField(passTitle.getX(),
-                WindowComponent.yNegative(creditsTitle, 4),
-                130,
-                30);
-        WindowComponent.configureText(maxCredits,
+        maxCreditsField = WindowComponent.setTextField(passTitle.getX(),
+                                                        WindowComponent.yNegative(creditsTitle, 4),
+                                                        130,
+                                                        30);
+        WindowComponent.configureText(maxCreditsField,
                                     WindowComponent.BUTTON_BACKGROUND,
                                     1,
                                     18);
         setCreditsText(String.valueOf(CURRENT_USER.getMaxCredits()));
-        maxCredits.addKeyListener(new KeyAdapter()
+        maxCreditsField.addKeyListener(new KeyAdapter()
         {
             @Override
             public void keyReleased(KeyEvent e)
             {
                 try
                 {
-                    // 2147483647
-                    int newCredits = Integer.parseInt(maxCredits.getText().trim());
-                    if (ValidationUtils.isNegative(newCredits))
+                    int newCredits = Integer.parseInt(maxCreditsField.getText().trim());
+                    if (newCredits <= 0)
                     {
                         WindowComponent.messageBox(inputPanel,
-                                                "Max credits cannot be negative.",
+                                                "Max credits must be greater than 0.",
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- negative number -----");
-                    }
-                    else if (newCredits == 0)
-                    {
-                        WindowComponent.messageBox(inputPanel,
-                                                "Max credits must be higher than 0.",
-                                                "Input error",
-                                                JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- equal to 0 -----");
+                        throw new NumberFormatException("----- credits less than/equal to zero -----");
                     }
                     else if (newCredits < SubjectDataHandler.SIGNED_CREDITS)
                     {
                         WindowComponent.messageBox(inputPanel,
-                                                "Max credits cannot be lower than signed credits.",
+                                                String.format("Max credits cannot be less than signed credits (%d).",
+                                                                SubjectDataHandler.SIGNED_CREDITS),
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- lower than signed -----");
+                        throw new NumberFormatException("----- max credits less than signed -----");
                     }
-                    else
+                    else if (newCredits > 100)
                     {
-                        // set the new credits in the database
-                        dataHandler.updateMaxCredits(CURRENT_USER.getId(), newCredits, inputPanel);
-                        // set the new score to the grade
-                        CURRENT_USER.setMaxCredits(newCredits);
+                        WindowComponent.messageBox(inputPanel,
+                                                "Max credits cannot exceed 100.",
+                                                "Input error",
+                                                JOptionPane.ERROR_MESSAGE);
+                        throw new NumberFormatException("----- max credits exceeds 100 -----");
                     }
+
+                    // keep/change the field font color to dark gray if the value is valid
+                    maxCreditsField.setForeground(WindowComponent.BUTTON_BACKGROUND);
+
+                    // set the new credits in the database
+                    dataHandler.updateMaxCredits(CURRENT_USER.getId(), newCredits, inputPanel);
                 }
                 catch (NumberFormatException ex)
                 {
                     ex.printStackTrace();
-                    // set the failed score to the default value
-                    setCreditsText(String.valueOf(CURRENT_USER.getMaxCredits()));
+
+                    // change the field font color to red if the value is invalid
+                    maxCreditsField.setForeground(Color.decode("#FF746C"));
                 }
                 super.keyReleased(e);
             }
@@ -278,14 +290,33 @@ public class SettingsMenu extends JPanel
         add(inputPanel);
         add(backButton);
 
-
         // add the components to the panel
         inputPanel.add(passTitle);
         inputPanel.add(passScoreField);
         inputPanel.add(maxTitle);
         inputPanel.add(maxScoreField);
         inputPanel.add(creditsTitle);
-        inputPanel.add(maxCredits);
+        inputPanel.add(maxCreditsField);
+    }
+
+
+    // method to set the user values to the fields
+    public void setUserValues(User user, Color color)
+    {
+        // get the values from the current user
+        double passScore = user.getPassScore();
+        double maxScore = user.getMaxScore();
+        int maxCredits = user.getMaxCredits();
+
+        // set the values in the respective text field
+        passScoreField.setText(String.valueOf(passScore));
+        maxScoreField.setText(String.valueOf(maxScore));
+        maxCreditsField.setText(String.valueOf(maxCredits));
+
+        // set the fields font color
+        passScoreField.setForeground(color);
+        maxScoreField.setForeground(color);
+        maxCreditsField.setForeground(color);
     }
 
 
@@ -310,10 +341,10 @@ public class SettingsMenu extends JPanel
 
     public void setCreditsText(String credits)
     {
-        this.maxCredits.setText(credits);
+        this.maxCreditsField.setText(credits);
     }
     public String getCreditsText()
     {
-        return maxCredits.getText().trim();
+        return maxCreditsField.getText().trim();
     }
 }

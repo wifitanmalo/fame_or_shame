@@ -4,11 +4,7 @@ package fos.view;
 import java.awt.Color;
 
 // swing imports
-import javax.swing.JButton;
-import javax.swing.JLabel;
-import javax.swing.JPanel;
-import javax.swing.JScrollPane;
-import javax.swing.SwingConstants;
+import javax.swing.*;
 
 // package imports
 import fos.service.Subject;
@@ -59,7 +55,7 @@ public class GradeMenu extends JPanel
 
         // button to back to the subject menu
         JButton backButton = WindowComponent.setButton("Back",
-                                                    (scrollGrade.getX()-78)/2,
+                                                        (scrollGrade.getX()-78)/2,
                                                         WindowComponent.yNegative(scrollGrade, -50),
                                                         78,
                                                         50,
@@ -95,18 +91,32 @@ public class GradeMenu extends JPanel
         WindowComponent.buttonEvent(totalButton,
                                     () ->
                                     {
-                                        // calculate the subject score/percentage in the database
-                                        SubjectMenu.dataHandler.updateSubject(subject.getId(), gradeBox);
+                                        // get the current subject score/percentage
+                                        double score = SubjectMenu.dataHandler.getTotalScore(subject.getId(), scrollGrade);
+                                        double percentage = SubjectMenu.dataHandler.getTotalPercentage(subject.getId(), scrollGrade);
 
-                                        // get the current values of the subject
-                                        double score = SubjectMenu.dataHandler.getTotalScore(subject.getId(), gradeBox);
-                                        double percentage = SubjectMenu.dataHandler.getTotalPercentage(subject.getId(), gradeBox);
+                                        // verify if the evaluated percentage exceeds 100%
+                                        if (ValidationUtils.exceedsLimit(percentage, 100))
+                                        {
+                                            WindowComponent.messageBox(scrollGrade,
+                                                                    "The sum of the percentages cannot exceed 100.",
+                                                                    "Limit error",
+                                                                    JOptionPane.ERROR_MESSAGE);
+                                        }
+                                        else
+                                        {
+                                            // update the subject score/percentage in the database
+                                            SubjectMenu.dataHandler.updateSubject(score,
+                                                                                percentage,
+                                                                                subject.getId(),
+                                                                                scrollGrade);
 
-                                        // update the score text of the menu
-                                        setTextScore(score, percentage);
+                                            // update the score text of the menu
+                                            setTextScore(score, percentage);
 
-                                        // displays a message box with the remaining score to pass
-                                        ValidationUtils.riskThreshold(score, percentage, scrollGrade);
+                                            // displays a message box with the remaining score to pass
+                                            ValidationUtils.riskThreshold(score, percentage, scrollGrade);
+                                        }
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#91BAD6"),

@@ -91,16 +91,20 @@ public class GradePanel extends JPanel
                                                 "Score cannot be negative.",
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- negative number -----");
+                        throw new NumberFormatException("----- negative score -----");
                     }
                     else if (ValidationUtils.exceedsLimit(newScore, SettingsMenu.CURRENT_USER.getMaxScore()))
                     {
                         WindowComponent.messageBox(gradeBox,
-                                                "Score cannot be higher than " + SettingsMenu.CURRENT_USER.getMaxScore() + ".",
+                                                String.format("Score cannot exceed %.2f.",
+                                                            SettingsMenu.CURRENT_USER.getMaxScore()),
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- limit error -----");
+                        throw new NumberFormatException("----- score exceeds 100 -----");
                     }
+
+                    // keep/change the font color to black if hte value is valid
+                    scoreField.setForeground(WindowComponent.BUTTON_BACKGROUND);
 
                     // set the new score to the grade
                     GradeMenu.dataHandler.updateScore(grade, newScore, gradeBox);
@@ -119,6 +123,9 @@ public class GradePanel extends JPanel
                 catch (NumberFormatException ex)
                 {
                     ex.printStackTrace();
+
+                    // change the font color to red if the value is invalid
+                    scoreField.setForeground(Color.decode("#FF746C"));
 
                     // set the failed score to the default value
                     GradeMenu.dataHandler.updateScore(grade, 0.0, gradeBox);
@@ -177,16 +184,19 @@ public class GradePanel extends JPanel
                                                 "Percentage cannot be negative.",
                                                 "Input error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- negative number -----");
+                        throw new NumberFormatException("----- negative percentage -----");
                     }
                     else if (ValidationUtils.exceedsLimit(newPercentage,100.0))
                     {
                         WindowComponent.messageBox(gradeBox,
-                                                "Percentage cannot be higher than 100%.",
+                                                "Percentage cannot exceeds 100%.",
                                                 "Limit error",
                                                 JOptionPane.ERROR_MESSAGE);
-                        throw new NumberFormatException("----- limit error -----");
+                        throw new NumberFormatException("----- percentage exceeds 100% -----");
                     }
+
+                    // keep/change the font color to dark gray if the value is valid
+                    percentageField.setForeground(WindowComponent.BUTTON_BACKGROUND);
 
                     // set the new percentage to the grade
                     GradeMenu.dataHandler.updatePercentage(grade, newPercentage, gradeBox);
@@ -195,6 +205,9 @@ public class GradePanel extends JPanel
                 catch (NumberFormatException ex)
                 {
                     ex.printStackTrace();
+
+                    // change the font color to red if the value is invalid
+                    percentageField.setForeground(Color.decode("#FF746C"));
 
                     // sets the failed percentage to the default value
                     GradeMenu.dataHandler.updatePercentage(grade, 0.0, gradeBox);

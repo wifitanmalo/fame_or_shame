@@ -238,7 +238,7 @@ public class WindowComponent
                 // clear the name text field
                 nameField.setText("");
                 WindowComponent.messageBox(container,
-                                        "Name cannot be longer than 30 characters.",
+                                        "Name cannot exceed 30 characters.",
                                         "Name too long",
                                         JOptionPane.ERROR_MESSAGE);
             }

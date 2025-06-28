@@ -33,23 +33,20 @@ public class SubjectDataHandler
     }
 
 
-    // method to get the total score of a subject
+    // method to get the sum of the total score
     public double getTotalScore(int subjectId, Container container)
     {
         double totalScore = 0.0;
-        String query = "SELECT total_score FROM Subject WHERE id = ?";
+        String query = "SELECT IFNULL(SUM(score * (percentage/100.0)), 0) FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement getSubject = isConnected.prepareStatement(query))
         {
             getSubject.setInt(1, subjectId);
-            try (ResultSet subject = getSubject.executeQuery())
+            ResultSet subject = getSubject.executeQuery();
+            if (subject.next())
             {
-                if (subject.next())
-                {
-                    totalScore = subject.getDouble("total_score");
-                }
+                return subject.getDouble(1);
             }
-
         }
         catch (SQLException e)
         {
@@ -68,10 +65,10 @@ public class SubjectDataHandler
     {
         String query = "SELECT IFNULL(SUM(percentage), 0) FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL;";
         try (Connection isConnected = ValidationUtils.connectDB();
-             PreparedStatement state = isConnected.prepareStatement(query))
+             PreparedStatement getPercentage = isConnected.prepareStatement(query))
         {
-            state.setInt(1, id);
-            ResultSet percentage = state.executeQuery();
+            getPercentage.setInt(1, id);
+            ResultSet percentage = getPercentage.executeQuery();
             if (percentage.next())
             {
                 return percentage.getDouble(1);
@@ -168,31 +165,22 @@ public class SubjectDataHandler
 
 
     // method to update the total score/evaluated of a subject in the database
-    public void updateSubject(int id, Container container)
+    public void updateSubject(double score,
+                              double percentage,
+                              int id,
+                              Container container)
     {
-        String query = "UPDATE Subject " +
-                        "SET total_score = (SELECT IFNULL(SUM(score * (percentage/100.0)), 0) FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL), " +
-                        "    total_evaluated = (SELECT IFNULL(SUM(percentage), 0) FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL) " +
-                        "WHERE id = ?;";
+        String query = "UPDATE Subject SET total_score = ?, total_evaluated = ? WHERE id = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {
-            if(ValidationUtils.exceedsLimit(getTotalPercentage(id, container), 100))
-            {
-                WindowComponent.messageBox(container,
-                                        "The sum of the percentages cannot be higher than 100.",
-                                        "Limit error",
-                                        JOptionPane.ERROR_MESSAGE);
-            }
-            else
-            {
-                // subject attributes
-                toUpdate.setInt(1, id);
-                toUpdate.setInt(2, id);
-                toUpdate.setInt(3, id);
-                // run the query
-                toUpdate.executeUpdate();
-            }
+            // subject attributes
+            toUpdate.setDouble(1, score);
+            toUpdate.setDouble(2, percentage);
+            toUpdate.setInt(3, id);
+
+            // run the query
+            toUpdate.executeUpdate();
         }
         catch (SQLException e)
         {

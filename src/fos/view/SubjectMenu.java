@@ -15,20 +15,25 @@ import javax.swing.JScrollPane;
 import fos.service.ValidationUtils;
 import fos.data.SubjectDataHandler;
 
+
 public class SubjectMenu extends JPanel
 {
     // container object
     private final Container container;
 
+
     // object to use the subject data
     public static final SubjectDataHandler dataHandler = new SubjectDataHandler();
+
 
     // panel where the subjects are shown
     public static final JPanel subjectBox = new JPanel();
 
+
     // object of the creation subject/setting menu
     private final CreateSubject createSubject;
     private final SettingsMenu settingsMenu;
+
 
     // constructor
     public SubjectMenu()
@@ -43,6 +48,7 @@ public class SubjectMenu extends JPanel
         this.container = WindowComponent.getContainer();
         initializePanel();
     }
+
 
     // method to initialize the main panel
     public void initializePanel()
@@ -116,6 +122,10 @@ public class SubjectMenu extends JPanel
                                     {
                                         // create the default user in the database if not exists
                                         SettingsMenu.dataHandler.createUser(2704, 3.0, 5, 21, this);
+
+                                        // set the current values to the text fields
+                                        settingsMenu.setUserValues(SettingsMenu.CURRENT_USER, WindowComponent.BUTTON_BACKGROUND);
+
                                         // switch to the settings menu
                                         WindowComponent.switchPanel(this, settingsMenu);
                                     },
@@ -140,6 +150,7 @@ public class SubjectMenu extends JPanel
         // reload the panel to show the changes
         WindowComponent.reload(this);
     }
+
 
     // method to cut the first two decimals of a number
     public static double twoDecimals(double number)
