@@ -2,6 +2,7 @@ package fos.view;
 
 // awt imports
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
@@ -13,6 +14,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
+
+// util imports
+import java.util.Objects;
 
 // package imports
 import fos.service.Grade;
@@ -97,10 +101,19 @@ public class GradePanel extends JPanel
                                                 JOptionPane.ERROR_MESSAGE);
                         throw new NumberFormatException("----- limit error -----");
                     }
-                    else
+
+                    // set the new score to the grade
+                    GradeMenu.dataHandler.updateScore(grade, newScore, gradeBox);
+
+                    // verify if the grade is subgrade of another
+                    if (grade.getSuperID() != null)
                     {
-                        // set the new score to the grade
-                        GradeMenu.dataHandler.updateScore(grade, newScore, gradeBox);
+                        // get the super grade value/object
+                        Grade superGrade = GradeMenu.dataHandler.getGrade(grade.getSuperID(), gradeBox);
+                        double superValue = GradeMenu.dataHandler.getSuperValue(superGrade, gradeBox);
+
+                        // set the new score to the super grade
+                        GradeMenu.dataHandler.updateScore(superGrade, superValue, gradeBox);
                     }
                 }
                 catch (NumberFormatException ex)
@@ -109,40 +122,11 @@ public class GradePanel extends JPanel
 
                     // set the failed score to the default value
                     GradeMenu.dataHandler.updateScore(grade, 0.0, gradeBox);
-
-                    // reload the grades to show the changes
-                    GradeMenu.dataHandler.loadGrades(subject, null, gradeBox);
                 }
 
-                // verify if the grade is subgrade of another
-                if (grade.getSuperID() != null)
-                {
-                    // get the super grade value/object
-                    Grade superGrade = GradeMenu.dataHandler.getGrade(grade.getSuperID(), gradeBox);
-                    double value = GradeMenu.dataHandler.getSuperValue(superGrade, gradeBox);
-
-                    // get the amount of subgrades linked to the super grade
-                    int amount = GradeMenu.dataHandler.getSubgradesAmount(grade.getSuperID(), gradeBox);
-
-                    // set the new score to the super grade
-                    GradeMenu.dataHandler.updateScore(superGrade, value, gradeBox);
-
-                    if (amount > 0)
-                    {
-                        // set the grade value divided by the amount of subgrades in the value text
-                        setValueText(String.format("%.2f", GradeMenu.dataHandler.getValue(grade.getID(), gradeBox)/amount));
-                    }
-                    else
-                    {
-                        // set the normal value of the grade in the value text
-                        setValueText(String.format("%.2f", GradeMenu.dataHandler.getValue(grade.getID(), gradeBox)));
-                    }
-                }
-                else
-                {
-                    // set the value of the grade in the value text
-                    setValueText(String.format("%.2f", GradeMenu.dataHandler.getValue(grade.getID(), gradeBox)));
-                }
+                // refresh the panels to show the changes
+                refreshValue();
+                refreshSuperValue();
                 super.keyReleased(e);
             }
         });
@@ -160,7 +144,7 @@ public class GradePanel extends JPanel
 
         // value that adds the grade to the total score
         gradeValue = WindowComponent.setText("0.0",
-                                        (scoreField.getX()-64)/ 2,
+                                            (scoreField.getX()-64)/ 2,
                                             scoreField.getY(),
                                             64,
                                             30);
@@ -203,12 +187,10 @@ public class GradePanel extends JPanel
                                                 JOptionPane.ERROR_MESSAGE);
                         throw new NumberFormatException("----- limit error -----");
                     }
-                    else
-                    {
-                        // set the new percentage to the grade
-                        GradeMenu.dataHandler.updatePercentage(grade, newPercentage, gradeBox);
-                        GradeMenu.dataHandler.updateSubPercentages(grade, newPercentage, gradeBox);
-                    }
+
+                    // set the new percentage to the grade
+                    GradeMenu.dataHandler.updatePercentage(grade, newPercentage, gradeBox);
+                    GradeMenu.dataHandler.updateSubPercentages(grade, newPercentage, gradeBox);
                 }
                 catch (NumberFormatException ex)
                 {
@@ -217,16 +199,16 @@ public class GradePanel extends JPanel
                     // sets the failed percentage to the default value
                     GradeMenu.dataHandler.updatePercentage(grade, 0.0, gradeBox);
                     GradeMenu.dataHandler.updateSubPercentages(grade, 0.0, gradeBox);
-
-                    // reload the subjects to show the changes
-                    GradeMenu.dataHandler.loadGrades(subject, null, gradeBox);
                 }
-                setValueText(String.format("%.2f", GradeMenu.dataHandler.getValue(grade.getID(), gradeBox)));
+
+                // refresh the panel to show the changes
+                refreshValue();
+                refreshSubValues();
+                refreshSuperValue();
                 super.keyReleased(e);
             }
         });
-        percentageField.addKeyListener(new KeyAdapter() {
-        });
+
 
         // create the button to delete a grade
         deleteButton = WindowComponent.setButton("x",
@@ -242,6 +224,9 @@ public class GradePanel extends JPanel
         WindowComponent.buttonEvent(deleteButton,
                                     () ->
                                     {
+                                        // delete the subgrades linked to the grade in the database
+                                        GradeMenu.dataHandler.deleteAllSubgrades(grade.getID(), this);
+
                                         // delete the current grade in the database
                                         GradeMenu.dataHandler.deleteGrade(grade, this);
 
@@ -350,6 +335,75 @@ public class GradePanel extends JPanel
                                     Color.decode("#FF1D18"));
     }
 
+
+    // method to refresh the value of the grade
+    public void refreshValue()
+    {
+        // get the value/super ID of the current grade
+        double value = GradeMenu.dataHandler.getValue(grade.getID(), gradeBox);
+        Integer idSuper = grade.getSuperID();
+
+        // verify if the grade is subgrade of another
+        if (idSuper != null)
+        {
+            // get the amount of subgrades linked to the super grade
+            int amount = GradeMenu.dataHandler.getSubgradesAmount(idSuper, gradeBox);
+
+            // set the grade value divided by the amount of subgrades in the value text
+            setValueText(String.format("%.2f", amount > 0 ? value / amount : value));
+        }
+        else
+        {
+            // set the normal value of the grade in the value text
+            setValueText(String.format("%.2f", value));
+        }
+    }
+
+
+    // method to refresh the super grade value
+    public void refreshSuperValue()
+    {
+        Integer idSuper = grade.getSuperID();
+        if (idSuper != null)
+        {
+            for (Component panel : gradeBox.getComponents())
+            {
+                if (panel instanceof GradePanel superGrade)
+                {
+                    if (Objects.equals(superGrade.grade.getID(), idSuper))
+                    {
+                        // get the value of every super grade
+                        superGrade.refreshValue();
+
+                        // recursive call to refresh the super grade value
+                        superGrade.refreshSuperValue();
+                        break;
+                    }
+                }
+            }
+        }
+    }
+
+
+    // method to refresh the value of all subgrades linked to a grade
+    public void refreshSubValues()
+    {
+        // cycle through all panels in the grade box
+        for (Component panel : gradeBox.getComponents())
+        {
+            if (panel instanceof GradePanel subgrade)
+            {
+                if (Objects.equals(subgrade.grade.getSuperID(), this.grade.getID()))
+                {
+                    // get the value of every subgrade
+                    subgrade.refreshValue();
+
+                    // recursive call to refresh subgrades values
+                    subgrade.refreshSubValues();
+                }
+            }
+        }
+    }
 
     // setters and getters
     public void setSubjectId(int id)

@@ -107,9 +107,6 @@ public class GradeMenu extends JPanel
 
                                         // displays a message box with the remaining score to pass
                                         ValidationUtils.riskThreshold(score, percentage, scrollGrade);
-
-                                        // load the saved grades in the database
-                                        dataHandler.loadGrades(subject, null, gradeBox);
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#91BAD6"),

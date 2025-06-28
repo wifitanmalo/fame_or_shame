@@ -116,6 +116,7 @@ public class GradeDataHandler
                 int superIdRaw = currentGrade.getInt("id_super_grade");
                 Integer idSuperGrade = currentGrade.wasNull() ? null : superIdRaw;
                 int amount = getSubgradesAmount(Objects.requireNonNullElse(idSuper, id), gradeBox);
+                double gradeValue = getValue(id, gradeBox);
 
                 // create a grade object with all the information
                 Grade newGrade = new Grade(id, idSubject, name, score, percentage, idSuperGrade);
@@ -124,7 +125,7 @@ public class GradeDataHandler
                 GradePanel newPanel = new GradePanel(subject, newGrade, gradeBox);
                 newPanel.setScoreText(String.valueOf(score));
                 newPanel.setPercentageText(String.valueOf(percentage));
-                newPanel.setValueText(String.format("%.2f", getValue(id, gradeBox)));
+                newPanel.setValueText(String.format("%.2f", gradeValue));
 
                 if (idSuper != null)
                 {
@@ -134,12 +135,12 @@ public class GradeDataHandler
                     if (amount > 0)
                     {
                         // set the grade value divided by the amount of subgrades in the value text
-                        newPanel.setValueText(String.format("%.2f", getValue(newGrade.getID(), gradeBox)/amount));
+                        newPanel.setValueText(String.format("%.2f", gradeValue/amount));
                     }
                     else
                     {
                         // set the normal value of the grade in the value text
-                        newPanel.setValueText(String.format("%.2f", getValue(newGrade.getID(), gradeBox)));
+                        newPanel.setValueText(String.format("%.2f", gradeValue));
                     }
                 }
                 else
@@ -309,6 +310,30 @@ public class GradeDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(SubjectMenu.subjectBox,
                                     "Error while deleting the grades.",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    // method to delete all sub grades of a grade in the database
+    public void deleteAllSubgrades(int idSuper, Container container)
+    {
+        String query = "DELETE FROM Grade WHERE id_super_grade = ?";
+
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement toDelete = isConnected.prepareStatement(query))
+        {
+            toDelete.setInt(1, idSuper);
+
+            // run the query
+            toDelete.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(container,
+                                    "Error while deleting the sub grades.",
                                     "Database error",
                                     JOptionPane.ERROR_MESSAGE);
         }
