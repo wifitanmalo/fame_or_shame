@@ -8,12 +8,20 @@ import java.awt.FlowLayout;
 import java.awt.Window;
 
 // swing imports
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JDialog;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTextField;
+import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 
 // package imports
 import fos.service.Subject;
-import fos.data.GradeDataHandler;
 import fos.service.ValidationUtils;
+import fos.data.GradeDataHandler;
 
 public class GradeMenu extends JPanel
 {
@@ -73,6 +81,7 @@ public class GradeMenu extends JPanel
                                     {
                                         // refresh the subjects in the subject box
                                         SubjectMenu.dataHandler.loadSubjects();
+
                                         // switch to the subject menu
                                         WindowComponent.switchPanel(this, Main.subjectMenu);
                                     },
@@ -96,13 +105,19 @@ public class GradeMenu extends JPanel
                                     {
                                         // calculate the subject score/percentage in the database
                                         SubjectMenu.dataHandler.updateSubject(subject.getId(), gradeBox);
+
                                         // get the current values of the subject
                                         double score = SubjectMenu.dataHandler.getTotalScore(subject.getId(), gradeBox);
                                         double percentage = SubjectMenu.dataHandler.getTotalPercentage(subject.getId(), gradeBox);
+
                                         // update the score text of the menu
                                         setTextScore(score, percentage);
+
                                         // displays a message box with the remaining score to pass
                                         ValidationUtils.riskThreshold(score, percentage, scrollGrade);
+
+                                        // load the saved grades in the database
+                                        dataHandler.loadGrades(subject, null, gradeBox);
                                     },
                                     WindowComponent.BUTTON_BACKGROUND,
                                     Color.decode("#91BAD6"),
@@ -110,7 +125,7 @@ public class GradeMenu extends JPanel
 
         // button to create a grade
         JButton addButton = WindowComponent.setButton("+",
-                                                    (scrollGrade.getX()-50)/2,
+                                                        (scrollGrade.getX()-50)/2,
                                                         WindowComponent.yPositive(totalButton, 20),
                                                         50,
                                                         50,
@@ -142,7 +157,7 @@ public class GradeMenu extends JPanel
 
         // create the text box of the garde score
         scoreText = WindowComponent.setText(String.valueOf(subject.getTotalScore()),
-                                        (scrollGrade.getX()-70)/2,
+                                            (scrollGrade.getX()-70)/2,
                                             WindowComponent.yPositive(addButton, 4),
                                             70,
                                             20);
@@ -161,7 +176,7 @@ public class GradeMenu extends JPanel
         add(scoreText);
 
         // load the saved grades in the database
-        dataHandler.loadGrades(subject, gradeBox);
+        dataHandler.loadGrades(subject, null, gradeBox);
     }
 
 
@@ -186,9 +201,16 @@ public class GradeMenu extends JPanel
             if(nameField.getText().length() <= 30)
             {
                 // create a new grade in the database
-                dataHandler.createGrade(this.subject.getId(), nameField.getText(), idSuperGrade, this);
+                dataHandler.createGrade(this.subject.getId(),
+                                        nameField.getText(),
+                                        0.0,
+                                        0.0,
+                                        idSuperGrade,
+                                        this);
+
                 // load the saved grades in the database
-                dataHandler.loadGrades(subject, gradeBox);
+                dataHandler.loadGrades(subject, idSuperGrade, gradeBox);
+
                 // close the current box
                 dialog.dispose();
             }
@@ -198,7 +220,7 @@ public class GradeMenu extends JPanel
                 nameField.setText("");
                 WindowComponent.messageBox(scrollGrade,
                                         "Name cannot be longer than 30 characters.",
-                                        "Input error",
+                                        "Name too long",
                                         JOptionPane.ERROR_MESSAGE);
             }
         });

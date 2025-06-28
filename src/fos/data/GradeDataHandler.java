@@ -13,6 +13,9 @@ import java.sql.SQLException;
 import javax.swing.JPanel;
 import javax.swing.JOptionPane;
 
+// util imports
+import java.util.Objects;
+
 // package imports
 import fos.view.GradePanel;
 import fos.view.SubjectMenu;
@@ -31,36 +34,127 @@ public class GradeDataHandler
     }
 
 
-    // method to load the grades from the database
-    public void loadGrades(Subject subject, JPanel gradeBox)
+    // method to get a grade by the ID
+    public Grade getGrade(int id, Container container)
     {
-        String query = "SELECT * FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL";
+        String query = "SELECT * FROM Grade WHERE id = ?";
+
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement getGrade = isConnected.prepareStatement(query))
+        {
+            getGrade.setInt(1, id);
+            ResultSet grade = getGrade.executeQuery();
+
+            if (grade.next())
+            {
+                // grade attributes
+                int gradeId = grade.getInt("id");
+                int idSubject = grade.getInt("id_subject");
+                String name = grade.getString("name");
+                double score = grade.getDouble("score");
+                double percentage = grade.getDouble("percentage");
+                int idSuperRaw = grade.getInt("id_super_grade");
+                Integer idSuperGrade = grade.wasNull() ? null : idSuperRaw;
+
+                // returns the grade with all the information
+                return new Grade(gradeId, idSubject, name, score, percentage, idSuperGrade);
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(container,
+                                    "Error while getting the grade.",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+
+        // returns null in case of error/non-existence
+        return null;
+    }
+
+
+    // method to load the grades from the database
+    public void loadGrades(Subject subject, Integer idSuper, JPanel gradeBox)
+    {
+        if (idSuper == null)
+        {
+            // clear the grades box only at the top level
+            gradeBox.removeAll();
+        }
+
+        String query;
+        if (idSuper == null)
+        {
+            // query for normal/super grades
+            query = "SELECT * FROM Grade WHERE id_subject = ? AND id_super_grade IS NULL";
+        }
+        else
+        {
+            // query for sub grades
+            query = "SELECT * FROM Grade WHERE id_subject = ? AND id_super_grade = ?";
+        }
 
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement state = isConnected.prepareStatement(query))
         {
             state.setInt(1, subject.getId());
+            if (idSuper != null)
+            {
+                state.setInt(2, idSuper);
+            }
             ResultSet currentGrade = state.executeQuery();
-            // clear the grades box
-            gradeBox.removeAll();
+
             while (currentGrade.next())
             {
+                // grade attributes
                 int id = currentGrade.getInt("id");
                 int idSubject = currentGrade.getInt("id_subject");
                 String name = currentGrade.getString("name");
                 double score = currentGrade.getDouble("score");
                 double percentage = currentGrade.getDouble("percentage");
-                Integer idSuperGrade = currentGrade.getInt("id_super_grade");
+                int superIdRaw = currentGrade.getInt("id_super_grade");
+                Integer idSuperGrade = currentGrade.wasNull() ? null : superIdRaw;
+                int amount = getSubgradesAmount(Objects.requireNonNullElse(idSuper, id), gradeBox);
 
-                // create grade object with all the information
+                // create a grade object with all the information
                 Grade newGrade = new Grade(id, idSubject, name, score, percentage, idSuperGrade);
 
-                // Crear y agregar panel visual
+                // create the panel of the grade
                 GradePanel newPanel = new GradePanel(subject, newGrade, gradeBox);
                 newPanel.setScoreText(String.valueOf(score));
                 newPanel.setPercentageText(String.valueOf(percentage));
                 newPanel.setValueText(String.format("%.2f", getValue(id, gradeBox)));
+
+                if (idSuper != null)
+                {
+                    // apply the subgrade settings to the panel
+                    newPanel.subgradeSettings();
+
+                    if (amount > 0)
+                    {
+                        // set the grade value divided by the amount of subgrades in the value text
+                        newPanel.setValueText(String.format("%.2f", getValue(newGrade.getID(), gradeBox)/amount));
+                    }
+                    else
+                    {
+                        // set the normal value of the grade in the value text
+                        newPanel.setValueText(String.format("%.2f", getValue(newGrade.getID(), gradeBox)));
+                    }
+                }
+                else
+                {
+                    if (amount > 0)
+                    {
+                        // remove the score text field of the panel
+                        newPanel.remove(newPanel.getScoreField());
+
+                        // recursive call to load the subgrades
+                        loadGrades(subject, id, gradeBox);
+                    }
+                }
             }
+
             // reload the panel to show the changes
             WindowComponent.reload(gradeBox);
         }
@@ -68,35 +162,43 @@ public class GradeDataHandler
         {
             e.printStackTrace();
             WindowComponent.messageBox(gradeBox,
-                                        "Error while reading the database.",
-                                        "Data error",
-                                        JOptionPane.ERROR_MESSAGE);
+                                    "Error while reading the grades.",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
 
-    // method to create a new grade in the grades.txt file
+    // method to create a new grade in the database
     public void createGrade(int idSubject,
                             String name,
+                            double score,
+                            double percentage,
                             Integer idSuperGrade,
                             Container container)
     {
-        String query = "INSERT INTO Grade(id_subject, name, id_super_grade) VALUES(?, ?, ?)";
+        String query = "INSERT INTO Grade(id_subject, name, score, percentage, id_super_grade) VALUES(?, ?, ?, ?, ?)";
+
         try (Connection conn = ValidationUtils.connectDB();
              PreparedStatement create = conn.prepareStatement(query))
         {
+            // grade attributes
             create.setInt(1, idSubject);
             create.setString(2, name);
+            create.setDouble(3, score);
+            create.setDouble(4, percentage);
 
-            // verify if the value is not null
+            // verify if the grade is linked to another
             if (idSuperGrade != null)
             {
-                create.setInt(3, idSuperGrade);
+                create.setInt(5, idSuperGrade);
             }
             else
             {
-                create.setNull(3, java.sql.Types.INTEGER);
+                create.setNull(5, java.sql.Types.INTEGER);
             }
+
+            // run the query
             create.executeUpdate();
         }
         catch (SQLException e)
@@ -104,7 +206,7 @@ public class GradeDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(container,
                                         "Error while creating the grade.",
-                                        "Data error",
+                                        "Database error",
                                         JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -114,11 +216,14 @@ public class GradeDataHandler
     public void deleteGrade(Grade grade, Container container)
     {
         String query = "DELETE FROM Grade WHERE id = ? AND id_subject = ?";
+
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toDelete = isConnected.prepareStatement(query))
         {
             toDelete.setInt(1, grade.getID());
             toDelete.setInt(2, grade.getSubjectID());
+
+            // run the query
             toDelete.executeUpdate();
         }
         catch (SQLException e)
@@ -126,7 +231,7 @@ public class GradeDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(container,
                                         "Error while deleting grade.",
-                                        "Data error",
+                                        "Database error",
                                         JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -136,13 +241,16 @@ public class GradeDataHandler
     public int getSubgradesAmount(int idSuperGrade, Container container)
     {
         String query = "SELECT Count(*) FROM Grade WHERE id_super_grade = ?";
+
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement state = isConnected.prepareStatement(query))
         {
             state.setInt(1, idSuperGrade);
             ResultSet amount = state.executeQuery();
+
             if (amount.next())
             {
+                // return the amount od subgrades linked to the grade
                 return amount.getInt(1);
             }
         }
@@ -151,7 +259,7 @@ public class GradeDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(container,
                                     "Error while getting the amount of subgrades.",
-                                    "Data error",
+                                    "Database error",
                                     JOptionPane.ERROR_MESSAGE);
         }
         return 0;
@@ -162,11 +270,14 @@ public class GradeDataHandler
     public void deleteSubgrade(Grade grade, Container container)
     {
         String query = "DELETE FROM Grade WHERE id = ? AND id_super_grade = ?";
+
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toDelete = isConnected.prepareStatement(query))
         {
             toDelete.setInt(1, grade.getID());
             toDelete.setInt(2, grade.getSuperID());
+
+            // run the query
             toDelete.executeUpdate();
         }
         catch (SQLException e)
@@ -174,7 +285,7 @@ public class GradeDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(container,
                                     "Error while deleting sub grade.",
-                                    "Data error",
+                                    "Database error",
                                     JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -184,10 +295,13 @@ public class GradeDataHandler
     public void deleteAll(int idSubject)
     {
         String query = "DELETE FROM Grade WHERE id_subject = ?";
+
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toDelete = isConnected.prepareStatement(query))
         {
             toDelete.setInt(1, idSubject);
+
+            // run the query
             toDelete.executeUpdate();
         }
         catch (SQLException e)
@@ -195,37 +309,19 @@ public class GradeDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(SubjectMenu.subjectBox,
                                     "Error while deleting the grades.",
-                                    "Data error",
-                                    JOptionPane.ERROR_MESSAGE);
-        }
-    }
-
-
-    // method to delete all sub grades of a grade in the database
-    public void deleteAllSub(int idSuperGrade)
-    {
-        String query = "DELETE FROM Grade WHERE id_super_grade = ?";
-        try (Connection isConnected = ValidationUtils.connectDB();
-             PreparedStatement toDelete = isConnected.prepareStatement(query))
-        {
-            toDelete.setInt(1, idSuperGrade);
-            toDelete.executeUpdate();
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-            WindowComponent.messageBox(SubjectMenu.subjectBox,
-                                    "Error while deleting the grades.",
-                                    "Data error",
+                                    "Database error",
                                     JOptionPane.ERROR_MESSAGE);
         }
     }
 
 
     // method to update the score of a grade
-    public void updateScore(Grade grade, double newScore, Container container)
+    public void updateScore(Grade grade,
+                            double newScore,
+                            Container container)
     {
         String query = "UPDATE Grade SET score = ? WHERE id = ? AND id_subject = ?";
+
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {
@@ -233,6 +329,7 @@ public class GradeDataHandler
             toUpdate.setDouble(1, newScore);
             toUpdate.setInt(2, grade.getID());
             toUpdate.setInt(3, grade.getSubjectID());
+
             // run the query
             toUpdate.executeUpdate();
         }
@@ -241,14 +338,16 @@ public class GradeDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(container,
                                         "Error while updating the grade score.",
-                                        "Data error",
+                                        "Database error",
                                         JOptionPane.ERROR_MESSAGE);
         }
     }
 
 
     // method to update the percentage of a grade
-    public void updatePercentage(Grade grade, double newPercentage, Container container)
+    public void updatePercentage(Grade grade,
+                                 double newPercentage,
+                                 Container container)
     {
         String query = "UPDATE Grade SET percentage = ? WHERE id = ? AND id_subject = ?";
         try (Connection isConnected = ValidationUtils.connectDB();
@@ -258,6 +357,7 @@ public class GradeDataHandler
             toUpdate.setDouble(1, newPercentage);
             toUpdate.setInt(2, grade.getID());
             toUpdate.setInt(3, grade.getSubjectID());
+
             // run the query
             toUpdate.executeUpdate();
         }
@@ -265,9 +365,36 @@ public class GradeDataHandler
         {
             e.printStackTrace();
             WindowComponent.messageBox(container,
-                                        "Error while updating the grade percentage.",
-                                        "Data error",
-                                        JOptionPane.ERROR_MESSAGE);
+                                    "Error while updating the grade percentage.",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+    }
+
+
+    // method to update all the subgrades percentage of a grade
+    public void updateSubPercentages(Grade superGrade,
+                                     double newPercentage,
+                                     Container container)
+    {
+        String query = "UPDATE Grade SET percentage = ? WHERE id_super_grade = ?";
+
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement update = isConnected.prepareStatement(query))
+        {
+            update.setDouble(1, newPercentage);
+            update.setInt(2, superGrade.getID());
+
+            // run the query
+            update.executeUpdate();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(container,
+                                    "Error while updating the sub percentages.",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
         }
     }
 
@@ -275,8 +402,8 @@ public class GradeDataHandler
     // method to get the value of a grade
     public double getValue(int gradeID, Container container)
     {
-        double totalScore = 0.0;
         String query = "SELECT (score * (percentage/100.0)) AS value FROM Grade WHERE id = ?";
+
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement getGrade = isConnected.prepareStatement(query))
         {
@@ -285,7 +412,7 @@ public class GradeDataHandler
             {
                 if (grade.next())
                 {
-                    totalScore = grade.getDouble("value");
+                    return grade.getDouble("value");
                 }
             }
         }
@@ -297,6 +424,45 @@ public class GradeDataHandler
                                     "Database error",
                                     JOptionPane.ERROR_MESSAGE);
         }
-        return totalScore;
+        return 0.0;
+    }
+
+
+    // method to get the score of a super grade
+    public double getSuperValue(Grade superGrade, Container gradeBox)
+    {
+        String query = "SELECT SUM(score) AS total_score FROM Grade WHERE id_super_grade = ?";
+
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement getSuper = isConnected.prepareStatement(query))
+        {
+            getSuper.setInt(1, superGrade.getID());
+            ResultSet grade = getSuper.executeQuery();
+
+            if (grade.next())
+            {
+                // get the amount of sub grades linked to the grade
+                int amount = getSubgradesAmount(superGrade.getID(), gradeBox);
+
+                if (amount > 0) // super grade
+                {
+                    // return the sum of the subgrades divided by the amount
+                    return grade.getDouble("total_score")/amount;
+                }
+                else // normal grade
+                {
+                    return getValue(superGrade.getID(), gradeBox);
+                }
+            }
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(gradeBox,
+                                    "Error whilte getting the value.",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
+        }
+        return 0.0;
     }
 }

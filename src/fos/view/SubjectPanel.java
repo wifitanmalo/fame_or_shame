@@ -165,7 +165,7 @@ public class SubjectPanel extends JPanel
                                     () ->
                                     {
                                         // load the panels of the grades in the grades box
-                                        GradeMenu.dataHandler.loadGrades(subject, gradeMenu.getGradeBox());
+                                        GradeMenu.dataHandler.loadGrades(subject, null, gradeMenu.getGradeBox());
                                         // update the subject score on the grade menu
                                         gradeMenu.setTextScore(subject.getTotalScore(), subject.getTotalEvaluated());
                                         // switch to the grade menu

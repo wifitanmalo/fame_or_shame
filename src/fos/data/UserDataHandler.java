@@ -34,23 +34,25 @@ public class UserDataHandler
                            int maxCredits,
                            Container container)
     {
-        String sql = """
-        INSERT INTO User (id, pass_score, max_score, max_credits)
-        SELECT ?, ?, ?, ?
-        WHERE NOT EXISTS (
-            SELECT 1 FROM User WHERE id = ?
-        );
-    """;
+        String query = """
+            INSERT INTO User (id, pass_score, max_score, max_credits)
+            SELECT ?, ?, ?, ?
+            WHERE NOT EXISTS (
+                SELECT 1 FROM User WHERE id = ?
+            );
+        """;
 
         try (Connection isConnected = ValidationUtils.connectDB();
-             PreparedStatement user = isConnected.prepareStatement(sql))
+             PreparedStatement user = isConnected.prepareStatement(query))
         {
+            // user attributes
             user.setInt(1, userID);
             user.setDouble(2, passScore);
             user.setDouble(3, maxScore);
             user.setInt(4, maxCredits);
             user.setInt(5, userID);
 
+            // run the query
             user.executeUpdate();
         }
         catch (SQLException e)
@@ -77,11 +79,13 @@ public class UserDataHandler
 
             if (user.next())
             {
+                // user attributes
                 int id = user.getInt("id");
                 double passScore = user.getDouble("pass_score");
                 double maxScore = user.getDouble("max_score");
                 int maxCredits = user.getInt("max_credits");
 
+                // return the user object with the information
                 return new User(id, passScore, maxScore, maxCredits);
             }
         }
@@ -93,6 +97,8 @@ public class UserDataHandler
                                     "Database error",
                                     JOptionPane.ERROR_MESSAGE);
         }
+
+        // returns the default user in case of error/nonexistence
         return new User(2704, 3.0, 5.0, 21);
     }
 
@@ -101,11 +107,13 @@ public class UserDataHandler
     public void updatePassScore(int userID, double passScore, Container container)
     {
         String query = "UPDATE User SET pass_score = ? WHERE id = ?";
+
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {
             toUpdate.setDouble(1, passScore);
             toUpdate.setInt(2, userID);
+
             // run the query
             toUpdate.executeUpdate();
         }
@@ -124,11 +132,13 @@ public class UserDataHandler
     public void updateMaxScore(int userID, double maxScore, Container container)
     {
         String query = "UPDATE User SET max_score = ? WHERE id = ?";
+
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {
             toUpdate.setDouble(1, maxScore);
             toUpdate.setInt(2, userID);
+
             // run the query
             toUpdate.executeUpdate();
         }
@@ -147,11 +157,13 @@ public class UserDataHandler
     public void updateMaxCredits(int userID, int credits, Container container)
     {
         String query = "UPDATE User SET max_credits = ? WHERE id = ?";
+
         try (Connection isConnected = ValidationUtils.connectDB();
              PreparedStatement toUpdate = isConnected.prepareStatement(query))
         {
             toUpdate.setInt(1, credits);
             toUpdate.setInt(2, userID);
+
             // run the query
             toUpdate.executeUpdate();
         }
