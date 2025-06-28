@@ -36,7 +36,7 @@ and a `+` button to create a new one.
 
 When you click the `+` button, a window will appear with three text fields
 to enter the subject id, name, and credits. Additionally, there will be a
-`Back` button to return to the subject menu and an "Add" button to confirm
+`<` button to return to the subject menu and an "Add" button to confirm
 the creation of the subject.
 
 > [!CAUTION]
@@ -64,7 +64,7 @@ and `x` to delete the subject.
 
 When you click the `+` button on the subject, a similar window to the
 previous one will appear, but with two new buttons: `Total` to calculate
-the total grades and a `Back` button to return to the subject menu. Above
+the total grades and a `<` button to return to the subject menu. Above
 the `+` button, the calculated value of the subject will be shown, displayed
 in green `#C5EF48` if you passed and in red `#FF6865` if you failed.
 

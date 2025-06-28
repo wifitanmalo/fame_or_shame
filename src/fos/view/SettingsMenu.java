@@ -47,16 +47,16 @@ public class SettingsMenu extends JPanel
 
         // create the panel with the text boxes
         JPanel inputPanel = WindowComponent.setPanel(WindowComponent.BUTTON_BACKGROUND,
-                                                        (this.getWidth()/2) - (200/2),
+                                                        (this.getWidth()/2) - (216/2),
                                                         (this.getHeight()-270)/2,
                                                         200,
                                                         240);
 
         // create the back button
-        JButton backButton = WindowComponent.setButton("Back",
-                                                        (inputPanel.getX()-78)/2,
-                                                        (Main.WINDOW_HEIGHT-50)/2,
-                                                        78,
+        JButton backButton = WindowComponent.setButton("<",
+                                                        (inputPanel.getX()-50)/2,
+                                                        160,
+                                                        50,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
         WindowComponent.configureText(backButton,
@@ -95,7 +95,7 @@ public class SettingsMenu extends JPanel
         WindowComponent.configureText(passScoreField,
                                     WindowComponent.BUTTON_BACKGROUND,
                                     1,
-                                    18);
+                                    20);
         setPassText(String.valueOf(SettingsMenu.CURRENT_USER.getPassScore()));
         passScoreField.addKeyListener(new KeyAdapter()
         {
@@ -161,7 +161,7 @@ public class SettingsMenu extends JPanel
         WindowComponent.configureText(maxScoreField,
                                     WindowComponent.BUTTON_BACKGROUND,
                                     1,
-                                    18);
+                                    20);
         setMaxText(String.valueOf(SettingsMenu.CURRENT_USER.getMaxScore()));
         maxScoreField.addKeyListener(new KeyAdapter()
         {
@@ -232,7 +232,7 @@ public class SettingsMenu extends JPanel
         WindowComponent.configureText(maxCreditsField,
                                     WindowComponent.BUTTON_BACKGROUND,
                                     1,
-                                    18);
+                                    20);
         setCreditsText(String.valueOf(CURRENT_USER.getMaxCredits()));
         maxCreditsField.addKeyListener(new KeyAdapter()
         {

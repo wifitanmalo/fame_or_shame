@@ -54,10 +54,10 @@ public class GradeMenu extends JPanel
                                                     270);
 
         // button to back to the subject menu
-        JButton backButton = WindowComponent.setButton("Back",
-                                                        (scrollGrade.getX()-78)/2,
+        JButton backButton = WindowComponent.setButton("<",
+                                                        (scrollGrade.getX()-50)/2,
                                                         WindowComponent.yNegative(scrollGrade, -50),
-                                                        78,
+                                                        50,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
         WindowComponent.configureText(backButton,
@@ -79,8 +79,8 @@ public class GradeMenu extends JPanel
 
         // button to calculate the total score/percentage
         JButton totalButton = WindowComponent.setButton("Total",
-                                                        backButton.getX(),
-                                                        WindowComponent.yPositive(backButton, 20),
+                                                        (scrollGrade.getX()-78)/2,
+                                                        WindowComponent.yPositive(backButton, 10),
                                                         78,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
@@ -124,8 +124,8 @@ public class GradeMenu extends JPanel
 
         // button to create a grade
         JButton addButton = WindowComponent.setButton("+",
-                                                        (scrollGrade.getX()-50)/2,
-                                                        WindowComponent.yPositive(totalButton, 20),
+                                                        backButton.getX(),
+                                                        WindowComponent.yPositive(totalButton, 10),
                                                         50,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);

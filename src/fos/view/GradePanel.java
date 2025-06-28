@@ -142,7 +142,7 @@ public class GradePanel extends JPanel
         gradeName = WindowComponent.setText(grade.getName(),
                                                     scoreField.getX(),
                                                     scoreField.getY() - 26,
-                                                    176,
+                                                    156,
                                                     30);
         WindowComponent.configureText(gradeName,
                                         Color.lightGray,
