@@ -4,7 +4,12 @@ package fos.view;
 import java.awt.Color;
 
 // swing imports
-import javax.swing.*;
+import javax.swing.JButton;
+import javax.swing.JLabel;
+import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.SwingConstants;
 
 // package imports
 import fos.service.Subject;
@@ -55,7 +60,7 @@ public class GradeMenu extends JPanel
 
         // button to back to the subject menu
         JButton backButton = WindowComponent.setButton("<",
-                                                        (scrollGrade.getX()-50)/2,
+                                                        (scrollGrade.getX()/2) - 25,
                                                         WindowComponent.yNegative(scrollGrade, -50),
                                                         50,
                                                         50,
@@ -79,8 +84,8 @@ public class GradeMenu extends JPanel
 
         // button to calculate the total score/percentage
         JButton totalButton = WindowComponent.setButton("Total",
-                                                        (scrollGrade.getX()-78)/2,
-                                                        WindowComponent.yPositive(backButton, 10),
+                                                        (scrollGrade.getX()/2) - 39,
+                                                        WindowComponent.yPositive(backButton, 8),
                                                         78,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
@@ -125,7 +130,7 @@ public class GradeMenu extends JPanel
         // button to create a grade
         JButton addButton = WindowComponent.setButton("+",
                                                         backButton.getX(),
-                                                        WindowComponent.yPositive(totalButton, 10),
+                                                        WindowComponent.yPositive(totalButton, 8),
                                                         50,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
@@ -164,8 +169,8 @@ public class GradeMenu extends JPanel
 
         // create the text box of the garde score
         scoreText = WindowComponent.setText(String.valueOf(subject.getTotalScore()),
-                                            (scrollGrade.getX()-70)/2,
-                                            WindowComponent.yPositive(addButton, 4),
+                                            (scrollGrade.getX()/2) - 35,
+                                            WindowComponent.yPositive(addButton, 6),
                                             70,
                                             20);
         WindowComponent.configureText(scoreText,
@@ -190,8 +195,7 @@ public class GradeMenu extends JPanel
     // method to change the color/value of the total score
     public void setTextScore(double score, double percentage)
     {
-        score = SubjectMenu.twoDecimals(score);
-        scoreText.setText(String.valueOf(score));
+        scoreText.setText(String.format("%.2f", score));
         if (score >= SettingsMenu.CURRENT_USER.getPassScore())
         {
             scoreText.setForeground(Color.decode("#C5EF48")); // green, you pass!

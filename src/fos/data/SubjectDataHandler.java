@@ -20,6 +20,7 @@ import fos.view.WindowComponent;
 import fos.service.Subject;
 import fos.service.ValidationUtils;
 
+
 public class SubjectDataHandler
 {
     // credits constants
@@ -53,7 +54,7 @@ public class SubjectDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(container,
                                     "Error while getting the score.",
-                                    "Data error",
+                                    "Database error",
                                     JOptionPane.ERROR_MESSAGE);
         }
         return totalScore;
@@ -78,9 +79,9 @@ public class SubjectDataHandler
         {
             e.printStackTrace();
             WindowComponent.messageBox(container,
-                    "Error while getting the total percentage.",
-                    "Data error",
-                    JOptionPane.ERROR_MESSAGE);
+                                    "Error while getting the total percentage.",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
         }
         return 0.0;
     }
@@ -136,6 +137,33 @@ public class SubjectDataHandler
     }
 
 
+    // method to verify if a subject already exists
+    public boolean subjectExists(int id, Container container)
+    {
+        String query = "SELECT 1 FROM Subject WHERE id = ?";
+
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement exists = isConnected.prepareStatement(query))
+        {
+            // subject ID
+            exists.setInt(1, id);
+
+            // run the query
+            ResultSet subject = exists.executeQuery();
+            return subject.next();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(container,
+                                        "Error while searching the subject.",
+                                        "Database error",
+                                        JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+
     // method to create a subject in the database
     public void createSubject(Subject subject)
     {
@@ -187,7 +215,7 @@ public class SubjectDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(container,
                                         "Error while updating the subject.",
-                                        "Data error",
+                                        "Database error",
                                         JOptionPane.ERROR_MESSAGE);
         }
     }
@@ -210,7 +238,7 @@ public class SubjectDataHandler
             e.printStackTrace();
             WindowComponent.messageBox(SubjectMenu.subjectBox,
                                         "Error while deleting subject.",
-                                        "Data error",
+                                        "Database error",
                                         JOptionPane.ERROR_MESSAGE);
         }
     }

@@ -27,6 +27,33 @@ public class UserDataHandler
     }
 
 
+    // method to verify if a user already exists
+    public boolean userExists(int id, Container container)
+    {
+        String query = "SELECT 1 FROM User WHERE id = ? LIMIT 1";
+
+        try (Connection isConnected = ValidationUtils.connectDB();
+             PreparedStatement exists = isConnected.prepareStatement(query))
+        {
+            // user ID
+            exists.setInt(1, id);
+
+            // run the query
+            ResultSet user = exists.executeQuery();
+            return user.next();
+        }
+        catch (SQLException e)
+        {
+            e.printStackTrace();
+            WindowComponent.messageBox(container,
+                                    "Error while searching the user.",
+                                    "Database error",
+                                    JOptionPane.ERROR_MESSAGE);
+            return false;
+        }
+    }
+
+
     // method to create a user in the database
     public void createUser(int userID,
                            double passScore,

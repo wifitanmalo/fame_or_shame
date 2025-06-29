@@ -53,40 +53,6 @@ public class SubjectPanel extends JPanel
         gradeMenu.setVisible(false);
         WindowComponent.getContainer().add(gradeMenu);
 
-        // name of the subject
-        subjectName = WindowComponent.setText(subject.getId() + " " + subject.getName(),
-                                                        10,
-                                                        10,
-                                                        241,
-                                                        18);
-
-        WindowComponent.configureText(subjectName,
-                                        WindowComponent.FONT_FOREGROUND,
-                                        1,
-                                        nameSize(subjectName));
-
-        // text of the total score
-        totalScore = WindowComponent.setText(("Total score: 0.0"),
-                                                10,
-                                                WindowComponent.yNegative(subjectName, 2),
-                                                350,
-                                                16);
-        WindowComponent.configureText(totalScore,
-                                        Color.lightGray,
-                                        3,
-                                        WindowComponent.getHeight(totalScore));
-
-        // text of the total percentage evaluated
-        totalEvaluated = WindowComponent.setText(("Total evaluated: 0.0%"),
-                                                    10,
-                                                    WindowComponent.yNegative(totalScore, 2),
-                                                    350,
-                                                    16);
-        WindowComponent.configureText(totalEvaluated,
-                                        Color.lightGray,
-                                        3,
-                                        WindowComponent.getHeight(totalEvaluated));
-
         // create the button to delete the subject
         deleteButton = WindowComponent.setButton("x",
                                                 320,
@@ -101,7 +67,7 @@ public class SubjectPanel extends JPanel
 
         // button to enter on the grades menu
         gradeButton = WindowComponent.setButton("+",
-                                                (deleteButton.getX()-60),
+                                                WindowComponent.xNegative(deleteButton, 10),
                                                 deleteButton.getY(),
                                                 50,
                                                 50,
@@ -110,6 +76,40 @@ public class SubjectPanel extends JPanel
                                         WindowComponent.FONT_FOREGROUND,
                                         1,
                                         18);
+
+        // name of the subject
+        subjectName = WindowComponent.setText(subject.getId() + " " + subject.getName(),
+                                                10,
+                                                10,
+                                                gradeButton.getX()-20,
+                                                18);
+
+        WindowComponent.configureText(subjectName,
+                                        WindowComponent.FONT_FOREGROUND,
+                                        1,
+                                        nameSize(subjectName));
+
+        // text of the total score
+        totalScore = WindowComponent.setText(String.format("Total score: %.2f", subject.getTotalScore()),
+                                            10,
+                                            WindowComponent.yNegative(subjectName, 2),
+                                            subjectName.getWidth(),
+                                            16);
+        WindowComponent.configureText(totalScore,
+                                        Color.lightGray,
+                                        3,
+                                        WindowComponent.getHeight(totalScore));
+
+        // text of the total percentage evaluated
+        totalEvaluated = WindowComponent.setText(String.format("Total percentage: %.2f", subject.getTotalEvaluated()),
+                                                10,
+                                                WindowComponent.yNegative(totalScore, 2),
+                                                subjectName.getWidth(),
+                                                16);
+        WindowComponent.configureText(totalEvaluated,
+                                        Color.lightGray,
+                                        3,
+                                        WindowComponent.getHeight(totalEvaluated));
 
         // add the components on the panel
         add(subjectName);
@@ -146,11 +146,14 @@ public class SubjectPanel extends JPanel
     {
         // change the color of the panel
         this.setBackground(panelColor);
+
         // change the color of the subject name
         subjectName.setForeground(nameColor);
+
         // change the color of the total score/evaluated
         totalScore.setForeground(scoreEvaluatedColor);
         totalEvaluated.setForeground(scoreEvaluatedColor);
+
         // change the default color of the buttons
         buttonColor(buttonColor);
     }
@@ -188,8 +191,10 @@ public class SubjectPanel extends JPanel
                                         {
                                             // remove the subject from the database
                                             SubjectMenu.dataHandler.deleteSubject(subject.getId());
+
                                             // remove all the grades of the subject from the database
                                             GradeMenu.dataHandler.deleteAll(subject.getId());
+
                                             // reload the subjects to show the changes
                                             SubjectMenu.dataHandler.loadSubjects();
                                         }
@@ -232,8 +237,7 @@ public class SubjectPanel extends JPanel
     // setters and getters
     public void setScoreLabel(double score)
     {
-        score = SubjectMenu.twoDecimals(score);
-        totalScore.setText("Total score: " + score);
+        totalScore.setText(String.format("Total score: %.2f", score));
     }
     public JLabel getScoreLabel()
     {
@@ -242,7 +246,7 @@ public class SubjectPanel extends JPanel
 
     public void setEvaluatedLabel(double percentage)
     {
-        totalEvaluated.setText("Evaluated percentage: " + SubjectMenu.twoDecimals(percentage) + "%");
+        totalEvaluated.setText(String.format("Total percentage: %.2f", percentage) + "%");
     }
     public JLabel getEvaluatedLabel()
     {

@@ -151,7 +151,7 @@ public class GradePanel extends JPanel
 
         // value that adds the grade to the total score
         gradeValue = WindowComponent.setText("0.0",
-                                            (scoreField.getX()-64)/ 2,
+                                            (scoreField.getX()/2) - 32,
                                             scoreField.getY(),
                                             64,
                                             30);

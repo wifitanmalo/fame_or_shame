@@ -107,33 +107,6 @@ public class ValidationUtils
     }
 
 
-    // method to verify if a subject already exists
-    public static boolean subjectExists(int id, Container container)
-    {
-        String query = "SELECT 1 FROM Subject WHERE id = ? LIMIT 1";
-
-        try (Connection isConnected = connectDB();
-             PreparedStatement exists = isConnected.prepareStatement(query))
-        {
-            // subject ID
-            exists.setInt(1, id);
-
-            // run the query
-            ResultSet subject = exists.executeQuery();
-            return subject.next();
-        }
-        catch (SQLException e)
-        {
-            e.printStackTrace();
-            WindowComponent.messageBox(container,
-                                        "Error while searching the ID.",
-                                        "Data error",
-                                        JOptionPane.ERROR_MESSAGE);
-            return false;
-        }
-    }
-
-
     // method to verify if subject data is valid
     public static void subjectValidation(Container container,
                                          JTextField idTextBox,
@@ -147,7 +120,7 @@ public class ValidationUtils
             String name = nameTextBox.getText().trim();
             int credits = Integer.parseInt(creditsTextBox.getText().trim());
 
-            if(ValidationUtils.subjectExists(id, container))
+            if(SubjectMenu.dataHandler.subjectExists(id, container))
             {
                 WindowComponent.messageBox(container,
                                             "ID already exists.",

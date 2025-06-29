@@ -47,14 +47,14 @@ public class SettingsMenu extends JPanel
 
         // create the panel with the text boxes
         JPanel inputPanel = WindowComponent.setPanel(WindowComponent.BUTTON_BACKGROUND,
-                                                        (this.getWidth()/2) - (216/2),
-                                                        (this.getHeight()-270)/2,
+                                                        (this.getWidth()/2) - 100,
+                                                        (this.getHeight()/2) - 138,
                                                         200,
                                                         240);
 
         // create the back button
         JButton backButton = WindowComponent.setButton("<",
-                                                        (inputPanel.getX()-50)/2,
+                                                        (inputPanel.getX()/2) - 25,
                                                         160,
                                                         50,
                                                         50,

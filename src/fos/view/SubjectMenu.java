@@ -78,8 +78,8 @@ public class SubjectMenu extends JPanel
 
         // create the button to create a new subject
         JButton addButton = WindowComponent.setButton("+",
-                                                    (scrollSubject.getX()-50)/2,
-                                                        scrollSubject.getY() + ((scrollSubject.getHeight()-50)/2),
+                                                        (scrollSubject.getX()/2) - 25,
+                                                        scrollSubject.getY() + ((scrollSubject.getHeight()/2) - 25),
                                                         50,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
@@ -109,7 +109,7 @@ public class SubjectMenu extends JPanel
         // create the button to enter the settings menu of the system
         JButton settingsButton = WindowComponent.setButton("@",
                                                         addButton.getX(),
-                                                        WindowComponent.yNegative(addButton, 10),
+                                                        WindowComponent.yNegative(addButton, 8),
                                                         50,
                                                         50,
                                                         WindowComponent.BUTTON_BACKGROUND);
@@ -121,9 +121,17 @@ public class SubjectMenu extends JPanel
                                     () ->
                                     {
                                         // create the default user in the database if not exists
-                                        SettingsMenu.dataHandler.createUser(2704, 3.0, 5, 21, this);
+                                        if(!SettingsMenu.dataHandler.userExists(2704, scrollSubject))
+                                        {
+                                            SettingsMenu.dataHandler.createUser(2704,
+                                                    3.0,
+                                                    5,
+                                                    21,
+                                                    this);
+                                        }
 
                                         // set the current values to the text fields
+                                        SettingsMenu.CURRENT_USER = SettingsMenu.dataHandler.getUser(2704, this);
                                         settingsMenu.setUserValues(SettingsMenu.CURRENT_USER, WindowComponent.BUTTON_BACKGROUND);
 
                                         // switch to the settings menu
@@ -149,12 +157,5 @@ public class SubjectMenu extends JPanel
 
         // reload the panel to show the changes
         WindowComponent.reload(this);
-    }
-
-
-    // method to cut the first two decimals of a number
-    public static double twoDecimals(double number)
-    {
-        return (int)(number * 100) / 100.0;
     }
 }

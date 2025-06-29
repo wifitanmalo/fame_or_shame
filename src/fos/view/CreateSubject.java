@@ -35,14 +35,14 @@ public class CreateSubject extends JPanel
 
         // create the panel with the text boxes
         JPanel inputPanel = WindowComponent.setPanel(WindowComponent.BUTTON_BACKGROUND,
-                                                    (this.getWidth()/2) - (216/2),
-                                                    (this.getHeight()-270)/2,
+                                                    (Main.WINDOW_WIDTH/2) - 100,
+                                                    (Main.WINDOW_HEIGHT/2) - 138,
                                                     200,
                                                     240);
 
         // create the back button
         JButton backButton = WindowComponent.setButton("<",
-                                                        (inputPanel.getX()-50)/2,
+                                                        (inputPanel.getX()/2) - 25,
                                                         160,
                                                         50,
                                                         50,
@@ -67,9 +67,10 @@ public class CreateSubject extends JPanel
                                     WindowComponent.ENTERED_BUTTON_BACKGROUND,
                                     WindowComponent.PRESSED_BUTTON_BACKGROUND);
 
-        // create the add button(inputPanel.getX()-50)/2
+        // create the add button
         JButton addButton = WindowComponent.setButton("Add",
-                                                        392 + ((inputPanel.getX()-78)/2),
+                                                        ((inputPanel.getX()/2) - 39)
+                                                        + WindowComponent.xPositive(inputPanel,0),
                                                         backButton.getY(),
                                                         78,
                                                         50,
